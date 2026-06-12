@@ -104,6 +104,13 @@ class LanguageModelGroupedQueryAttention(nn.Module):
         self.v_proj = nn.Linear(self.embd_dim, self.head_dim * self.n_kv_heads, bias=False)
         self.out_proj = nn.Linear(self.embd_dim, self.embd_dim, bias=False)
 
+        # G1 gate (Qiu et al. 2505.06708): Y' = Y_sdpa ⊙ σ(X W_g), elementwise, post-SDPA pre-out_proj
+        self.use_gate = getattr(cfg, 'lm_attn_gate', False)
+        if self.use_gate:
+            self.gate_proj = nn.Linear(self.embd_dim, self.embd_dim, bias=False)
+        # 'sigmoid' replaces softmax with unnormalized sigmoid scores (Gu et al. 2410.10781)
+        self.attn_impl = getattr(cfg, 'lm_attn_impl', 'softmax')
+
         self.attn_dropout = nn.Dropout(self.dropout)
         self.resid_dropout = nn.Dropout(self.dropout)
 
@@ -133,7 +140,19 @@ class LanguageModelGroupedQueryAttention(nn.Module):
             # Convert to attention mask where 0 keeps values and -inf masks
             attention_mask = (1.0 - attention_mask) * torch.finfo(q.dtype).min
 
-        if self.sdpa:
+        if self.attn_impl == 'sigmoid':
+            # Unnormalized sigmoid attention: scores need not sum to 1 (no sink pressure).
+            attn = torch.matmul(q, k.transpose(2, 3)) / math.sqrt(self.head_dim)
+            causal_mask = torch.tril(torch.ones(T, T, device=x.device, dtype=torch.bool)).view(1, 1, T, T)
+            attn = attn.masked_fill(~causal_mask, float('-inf'))
+            if attention_mask is not None:
+                attn = attn + attention_mask
+            attn = torch.sigmoid(attn)
+            attn = self.attn_dropout(attn)
+            y = attn @ v
+            if attention_mask is not None:
+                y = y.masked_fill(padding_mask, 0.0)
+        elif self.sdpa:
             y = torch.nn.functional.scaled_dot_product_attention(
                 q, k, v,
                 attn_mask=attention_mask,
@@ -154,7 +173,11 @@ class LanguageModelGroupedQueryAttention(nn.Module):
             if attention_mask is not None:
                 y = y.masked_fill(padding_mask, 0.0) # Zero out the padded positions in the output
 
-        y = y.transpose(1, 2).contiguous().view(B, T, C)  
+        if self.use_gate:
+            gate = torch.sigmoid(self.gate_proj(x)).view(B, T, self.n_heads, self.head_dim).transpose(1, 2)
+            y = y * gate
+
+        y = y.transpose(1, 2).contiguous().view(B, T, C)
         y = self.out_proj(y)
         y = self.resid_dropout(y)
 
@@ -220,6 +243,9 @@ class LanguageModel(nn.Module):
             self.head.weight = self.token_embedding.weight
 
         self.apply(self._init_weights)
+        for block in self.blocks:
+            if block.attn.use_gate:
+                torch.nn.init.zeros_(block.attn.gate_proj.weight)  # σ(0)=0.5 at init
 
     def _init_weights(self, module):
         if isinstance(module, nn.Linear):

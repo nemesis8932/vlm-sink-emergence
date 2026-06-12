@@ -34,6 +34,10 @@ class VLMConfig:
 
     mp_pixel_shuffle_factor: int = 2
 
+    # Sink-emergence study knobs
+    lm_attn_gate: bool = False       # Qiu et al. G1: elementwise sigmoid output gate, zero-init
+    lm_attn_impl: str = 'softmax'    # 'softmax' | 'sigmoid' (sigmoid = no normalization, Gu et al.)
+
     vlm_load_backbone_weights: bool = True
     vlm_checkpoint_path: str = 'checkpoints/nanoVLM-222M'
 

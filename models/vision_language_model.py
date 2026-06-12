@@ -51,9 +51,8 @@ class VisionLanguageModel(nn.Module):
 
         loss = None
         if targets is not None:
-            # Only use the token part of the logits for loss computation
-            logits = self.decoder.head(logits)
-            logits = logits[:, image_embd.size(1):, :]
+            # Only use the token part of the logits for loss computation (slice before head to save memory)
+            logits = self.decoder.head(logits[:, image_embd.size(1):, :])
             loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1), ignore_index=-100)
 
         return logits, loss

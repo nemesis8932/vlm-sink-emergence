@@ -1,26 +1,5 @@
-# Python-generated files
 __pycache__/
-.pytest_cache/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
-
-# Virtual environments
-.venv
-*.pth
-.ruff_cache
+*.pt
+runs/*/ckpt_*.pt
+runs_*.out
 wandb/
-logs/
-*.csv
-
-.python-version
-pyproject.toml
-uv.lock
-
-.DS_Store
-
-checkpoints/
-notebooks/
-*.slurm
