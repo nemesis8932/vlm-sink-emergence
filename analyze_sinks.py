@@ -112,6 +112,22 @@ def main(out_dir='analysis'):
     fig.tight_layout()
     fig.savefig(f'{out_dir}/loss_curves.png', dpi=130)
 
+    # lead-lag table: first probe step where each sink signature crosses its threshold
+    print("\nFirst-crossing steps (lead-lag of sink signatures):")
+    print(f"{'arm':10s} {'h_ratio>2':>10s} {'h_ratio>4':>10s} {'v_ratio<0.8':>12s} {'maxA0>0.2':>10s} {'sink.2>0':>10s} {'sink.3>0':>10s}")
+    for name, (probes, _, _) in runs.items():
+        def first(cond):
+            for p in probes:
+                if cond(p['summary']):
+                    return str(p['step'])
+            return '-'
+        print(f"{name:10s} {first(lambda s: s['h_ratio_pos0'] > 2):>10s} "
+              f"{first(lambda s: s['h_ratio_pos0'] > 4):>10s} "
+              f"{first(lambda s: s['v_ratio_pos0'] < 0.8):>12s} "
+              f"{first(lambda s: s['max_attn_pos0'] > 0.2):>10s} "
+              f"{first(lambda s: s['sink_eps0.2'] > 0):>10s} "
+              f"{first(lambda s: s['sink_eps0.3'] > 0):>10s}")
+
     # summary table
     print(f"{'arm':10s} {'steps':>7s} {'Mtok':>7s} {'sink.2':>7s} {'sink.3':>7s} {'max_a0':>7s} "
           f"{'v_ratio':>8s} {'h_ratio':>8s} {'val_loss':>9s}")
