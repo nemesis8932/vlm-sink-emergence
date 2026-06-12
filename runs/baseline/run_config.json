@@ -16,7 +16,7 @@
     "workers": 16,
     "out_dir": "runs/baseline",
     "compile": true,
-    "max_hours": 1.75
+    "max_hours": 1.6
   },
   "vlm_cfg": {
     "vit_hidden_dim": 768,

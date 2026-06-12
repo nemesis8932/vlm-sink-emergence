@@ -35,10 +35,12 @@ class VQADataset(Dataset):  # Visual Question Answering Dataset
             processed_image = torch.zeros(
                 3, cfg.VLMConfig.vit_img_size, cfg.VLMConfig.vit_img_size)
 
-        # Process text (also a list)
+        # Process text (also a list). Cauldron packs ~several QA pairs per image;
+        # sample one per visit so repeated epochs see different text targets.
+        import random as _random
         text_data = item['texts']
         if isinstance(text_data, list) and len(text_data) > 0:
-            text = text_data[0]
+            text = _random.choice(text_data)
         else:
             text = text_data
 

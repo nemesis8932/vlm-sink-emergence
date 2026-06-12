@@ -22,6 +22,7 @@ from datasets import load_dataset, concatenate_datasets
 from torch.utils.data import DataLoader
 
 torch.manual_seed(0)
+random.seed(0)  # probe batch (random QA choice) must be identical across arms
 if torch.cuda.is_available():
     torch.cuda.manual_seed_all(0)
 
