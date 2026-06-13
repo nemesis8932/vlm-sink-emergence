@@ -31,3 +31,17 @@ GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
 [reprobe baseline] [reprobe baseline] step 4000 | v_ratio[min/mean/max] 0.672/0.824/1.246 | raw_to_pos0 max 0.146 | swap_v_cv 0.922 swap_attn0_std 0.0151
 [reprobe baseline] [reprobe baseline] step 6000 | v_ratio[min/mean/max] 0.589/0.751/1.287 | raw_to_pos0 max 0.121 | swap_v_cv 0.916 swap_attn0_std 0.0165
 [reprobe baseline] [reprobe baseline] step 10484 | v_ratio[min/mean/max] 0.548/0.687/1.246 | raw_to_pos0 max 0.128 | swap_v_cv 0.977 swap_attn0_std 0.0154
+ create mode 100644 runs/baseline_seed1/train_log.jsonl
+   99b17d0..5e900da  sink-emergence -> sink-emergence
+[s3 14:08:10] R2: textinit seed-1 repeated -> 100M
+[s3 15:04:50] R2 textinit done: [textinit] finished at step 10484, 100.0M tokens, 56.3 min
+[s3 15:04:50] reprobe textinit runs/textinit_seed1 (0,250,1000,2000,4000,6000,10484)
+[reprobe textinit] Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[reprobe textinit] Successfully loaded HuggingFaceTB/SmolLM2-135M weights from safetensors. Model has 134,515,008 parameters.
+[reprobe textinit] [reprobe textinit] step 0 | v_ratio[min/mean/max] 0.221/0.705/1.397 | raw_to_pos0 max 0.283 | swap_v_cv 1.443 swap_attn0_std 0.1139
+[reprobe textinit] [reprobe textinit] step 250 | v_ratio[min/mean/max] 0.027/0.356/2.103 | raw_to_pos0 max 0.846 | swap_v_cv 0.675 swap_attn0_std 0.1614
+[reprobe textinit] [reprobe textinit] step 1000 | v_ratio[min/mean/max] 0.026/0.351/2.120 | raw_to_pos0 max 0.836 | swap_v_cv 0.695 swap_attn0_std 0.1546
+[reprobe textinit] [reprobe textinit] step 2000 | v_ratio[min/mean/max] 0.035/0.598/1.992 | raw_to_pos0 max 0.695 | swap_v_cv 0.512 swap_attn0_std 0.0784
+[reprobe textinit] [reprobe textinit] step 4000 | v_ratio[min/mean/max] 0.047/0.640/2.372 | raw_to_pos0 max 0.688 | swap_v_cv 0.336 swap_attn0_std 0.0298
+[reprobe textinit] [reprobe textinit] step 6000 | v_ratio[min/mean/max] 0.062/0.636/2.554 | raw_to_pos0 max 0.634 | swap_v_cv 0.315 swap_attn0_std 0.0241
+[reprobe textinit] [reprobe textinit] step 10484 | v_ratio[min/mean/max] 0.063/0.564/3.009 | raw_to_pos0 max 0.527 | swap_v_cv 0.297 swap_attn0_std 0.0372
