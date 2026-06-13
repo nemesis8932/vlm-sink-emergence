@@ -87,3 +87,14 @@ GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
 [reprobe baseline] [reprobe baseline] step 12000 | v_ratio[min/mean/max] 0.406/0.751/2.152 | raw_to_pos0 max 0.181 | swap_v_cv 0.413 swap_attn0_std 0.0127
 [reprobe baseline] [reprobe baseline] step 16000 | v_ratio[min/mean/max] 0.437/0.731/2.136 | raw_to_pos0 max 0.169 | swap_v_cv 0.482 swap_attn0_std 0.0105
 [reprobe baseline] [reprobe baseline] step 18287 | v_ratio[min/mean/max] 0.423/0.710/2.088 | raw_to_pos0 max 0.165 | swap_v_cv 0.478 swap_attn0_std 0.0114
+ 3 files changed, 499 insertions(+), 1 deletion(-)
+   5ab3fb4..8cd9abf  sink-emergence -> sink-emergence
+[s3 17:05:44] reprobe g1gate runs/g1gate (0,250,1000,2000,4000,8000,10786)
+[reprobe g1gate] Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[reprobe g1gate] [reprobe g1gate] step 0 | v_ratio[min/mean/max] 0.954/1.005/1.053 | raw_to_pos0 max 0.055 | swap_v_cv 1.079 swap_attn0_std 0.0034
+[reprobe g1gate] [reprobe g1gate] step 250 | v_ratio[min/mean/max] 0.905/0.993/1.090 | raw_to_pos0 max 0.059 | swap_v_cv 0.609 swap_attn0_std 0.0023
+[reprobe g1gate] [reprobe g1gate] step 1000 | v_ratio[min/mean/max] 0.718/0.874/1.147 | raw_to_pos0 max 0.091 | swap_v_cv 0.552 swap_attn0_std 0.0028
+[reprobe g1gate] [reprobe g1gate] step 2000 | v_ratio[min/mean/max] 0.542/0.805/1.655 | raw_to_pos0 max 0.129 | swap_v_cv 0.576 swap_attn0_std 0.0068
+[reprobe g1gate] [reprobe g1gate] step 4000 | v_ratio[min/mean/max] 0.502/0.834/2.334 | raw_to_pos0 max 0.216 | swap_v_cv 0.503 swap_attn0_std 0.0181
+[reprobe g1gate] [reprobe g1gate] step 8000 | v_ratio[min/mean/max] 0.523/0.828/2.884 | raw_to_pos0 max 0.249 | swap_v_cv 0.678 swap_attn0_std 0.0218
+[reprobe g1gate] [reprobe g1gate] step 10786 | v_ratio[min/mean/max] 0.514/0.816/2.515 | raw_to_pos0 max 0.234 | swap_v_cv 0.692 swap_attn0_std 0.0181
