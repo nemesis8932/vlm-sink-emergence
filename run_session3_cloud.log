@@ -58,3 +58,16 @@ GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
 [reprobe g1gate] [reprobe g1gate] step 4000 | v_ratio[min/mean/max] 0.567/0.860/2.229 | raw_to_pos0 max 0.179 | swap_v_cv 0.434 swap_attn0_std 0.0150
 [reprobe g1gate] [reprobe g1gate] step 6000 | v_ratio[min/mean/max] 0.517/0.865/2.437 | raw_to_pos0 max 0.195 | swap_v_cv 0.578 swap_attn0_std 0.0189
 [reprobe g1gate] [reprobe g1gate] step 10484 | v_ratio[min/mean/max] 0.526/0.841/2.276 | raw_to_pos0 max 0.209 | swap_v_cv 0.642 swap_attn0_std 0.0210
+ create mode 100644 runs/g1gate_seed1/train_log.jsonl
+   13c89c8..954e8c3  sink-emergence -> sink-emergence
+[s3 16:04:56] R2: sigmoid seed-1 repeated -> 100M
+[s3 17:04:53] R2 sigmoid done: [sigmoid] finished at step 10484, 100.0M tokens, 59.6 min
+[s3 17:04:53] reprobe sigmoid runs/sigmoid_seed1 (0,250,1000,2000,4000,6000,10484)
+[reprobe sigmoid] Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[reprobe sigmoid] [reprobe sigmoid] step 0 | v_ratio[min/mean/max] 0.920/1.003/1.111 | raw_to_pos0 max 0.551 | swap_v_cv 1.091 swap_attn0_std 0.0341
+[reprobe sigmoid] [reprobe sigmoid] step 250 | v_ratio[min/mean/max] 0.849/1.031/1.387 | raw_to_pos0 max 0.699 | swap_v_cv 0.277 swap_attn0_std 0.0066
+[reprobe sigmoid] [reprobe sigmoid] step 1000 | v_ratio[min/mean/max] 0.922/1.260/2.091 | raw_to_pos0 max 0.726 | swap_v_cv 0.450 swap_attn0_std 0.0222
+[reprobe sigmoid] [reprobe sigmoid] step 2000 | v_ratio[min/mean/max] 0.888/1.455/2.823 | raw_to_pos0 max 0.732 | swap_v_cv 0.509 swap_attn0_std 0.0304
+[reprobe sigmoid] [reprobe sigmoid] step 4000 | v_ratio[min/mean/max] 0.823/1.707/3.579 | raw_to_pos0 max 0.702 | swap_v_cv 0.452 swap_attn0_std 0.0366
+[reprobe sigmoid] [reprobe sigmoid] step 6000 | v_ratio[min/mean/max] 0.678/1.719/4.224 | raw_to_pos0 max 0.659 | swap_v_cv 0.383 swap_attn0_std 0.0324
+[reprobe sigmoid] [reprobe sigmoid] step 10484 | v_ratio[min/mean/max] 0.835/1.601/3.469 | raw_to_pos0 max 0.664 | swap_v_cv 0.477 swap_attn0_std 0.0298
