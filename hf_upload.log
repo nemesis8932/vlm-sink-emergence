@@ -15920,3 +15920,160 @@ Finished hashing 10 files.
   ...robe/reprobe_step1000.npz: 100%|██████████| 1.39MB / 1.39MB            
   ...robe/reprobe_step4000.npz: 100%|██████████| 1.40MB / 1.40MB            
 https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/baseline/reprobe
+[33m⚠️  Warning: 'huggingface-cli upload' is deprecated. Use 'hf upload' instead.[0m
+Start hashing 8 files.
+Finished hashing 8 files.
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+  ...robe/reprobe_step4000.npz:  37%|███▋      |  526kB / 1.41MB            [A[A
+
+
+  ...robe/reprobe_step2000.npz:  37%|███▋      |  524kB / 1.40MB            [A[A[A
+
+
+
+  ...obe/reprobe_step10786.npz:  37%|███▋      |  527kB / 1.41MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step8000.npz:  37%|███▋      |  527kB / 1.41MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step1000.npz:  37%|███▋      |  523kB / 1.40MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...reprobe/reprobe_step0.npz:  37%|███▋      |  522kB / 1.39MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  37%|███▋      |  522kB / 1.40MB            [A[A[A[A[A[A[A[A
+
+  ...robe/reprobe_step4000.npz:  37%|███▋      |  526kB / 1.41MB            [A[A
+
+
+  ...robe/reprobe_step2000.npz:  37%|███▋      |  524kB / 1.40MB            [A[A[A
+
+
+
+  ...obe/reprobe_step10786.npz:  37%|███▋      |  527kB / 1.41MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step8000.npz:  37%|███▋      |  527kB / 1.41MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step1000.npz:  37%|███▋      |  523kB / 1.40MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...reprobe/reprobe_step0.npz:  37%|███▋      |  522kB / 1.39MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  37%|███▋      |  522kB / 1.40MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  37%|███▋      | 3.67MB / 9.81MB,   ???B/s  
+New Data Upload               :  37%|███▋      | 3.67MB / 9.81MB,   ???B/s  [A
+
+  ...robe/reprobe_step4000.npz:  96%|█████████▋| 1.35MB / 1.41MB            [A[A
+
+
+  ...robe/reprobe_step2000.npz:  96%|█████████▋| 1.35MB / 1.40MB            [A[A[A
+
+
+
+  ...obe/reprobe_step10786.npz:  96%|█████████▋| 1.36MB / 1.41MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step8000.npz:  96%|█████████▋| 1.36MB / 1.41MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step1000.npz:  96%|█████████▋| 1.34MB / 1.40MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...reprobe/reprobe_step0.npz:  96%|█████████▋| 1.34MB / 1.39MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  96%|█████████▋| 1.34MB / 1.40MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  96%|█████████▋| 9.44MB / 9.81MB,  917kB/s  
+New Data Upload               :  96%|█████████▋| 9.44MB / 9.81MB,  917kB/s  [A
+
+  ...robe/reprobe_step4000.npz: 100%|██████████| 1.41MB / 1.41MB            [A[A
+
+
+  ...robe/reprobe_step2000.npz: 100%|██████████| 1.40MB / 1.40MB            [A[A[A
+
+
+
+  ...obe/reprobe_step10786.npz: 100%|██████████| 1.41MB / 1.41MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step8000.npz: 100%|██████████| 1.41MB / 1.41MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step1000.npz: 100%|██████████| 1.40MB / 1.40MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...reprobe/reprobe_step0.npz: 100%|██████████| 1.39MB / 1.39MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz: 100%|██████████| 1.40MB / 1.40MB            [A[A[A[A[A[A[A[AProcessing Files (7 / 7)      : 100%|██████████| 9.81MB / 9.81MB,  930kB/s  
+New Data Upload               : 100%|██████████| 9.81MB / 9.81MB,  930kB/s  [AProcessing Files (7 / 7)      : 100%|██████████| 9.81MB / 9.81MB,  930kB/s  
+New Data Upload               : 100%|██████████| 9.81MB / 9.81MB,  930kB/s  
+  ...robe/reprobe_step4000.npz: 100%|██████████| 1.41MB / 1.41MB            
+  ...robe/reprobe_step2000.npz: 100%|██████████| 1.40MB / 1.40MB            
+  ...obe/reprobe_step10786.npz: 100%|██████████| 1.41MB / 1.41MB            
+  ...robe/reprobe_step8000.npz: 100%|██████████| 1.41MB / 1.41MB            
+  ...robe/reprobe_step1000.npz: 100%|██████████| 1.40MB / 1.40MB            
+  ...reprobe/reprobe_step0.npz: 100%|██████████| 1.39MB / 1.39MB            
+  ...probe/reprobe_step250.npz: 100%|██████████| 1.40MB / 1.40MB            
+https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/g1gate/reprobe
