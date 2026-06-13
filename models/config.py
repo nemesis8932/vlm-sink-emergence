@@ -37,6 +37,7 @@ class VLMConfig:
     # Sink-emergence study knobs
     lm_attn_gate: bool = False       # Qiu et al. G1: elementwise sigmoid output gate, zero-init
     lm_attn_impl: str = 'softmax'    # 'softmax' | 'sigmoid' (sigmoid = no normalization, Gu et al.)
+    data_mode: str = 'repeated'      # 'repeated' (4 cauldron subsets) | 'fresh' (FineVision natural pool)
 
     vlm_load_backbone_weights: bool = True
     vlm_checkpoint_path: str = 'checkpoints/nanoVLM-222M'
