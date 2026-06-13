@@ -15208,3 +15208,480 @@ Finished hashing 10 files.
 
   ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (3 / 7)      :  99%|█████████▉| 3.47GB / 3.51GB,  115MB/s  
 New Data Upload               :  98%|█████████▊| 2.63GB / 2.67GB, 91.6MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|█████████▉|  499MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt:  98%|█████████▊|  491MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  96%|█████████▌|  480MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (3 / 7)      :  99%|█████████▉| 3.47GB / 3.51GB,  113MB/s  
+New Data Upload               :  99%|█████████▉| 2.63GB / 2.67GB, 90.5MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|█████████▉|  500MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt:  98%|█████████▊|  493MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  96%|█████████▌|  482MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (3 / 7)      :  99%|█████████▉| 3.48GB / 3.51GB,  112MB/s  
+New Data Upload               :  99%|█████████▉| 2.64GB / 2.67GB, 89.2MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|█████████▉|  500MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt:  99%|█████████▊|  494MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  96%|█████████▋|  483MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (4 / 7)      :  99%|█████████▉| 3.48GB / 3.51GB,  110MB/s  
+New Data Upload               :  99%|█████████▉| 2.64GB / 2.67GB, 87.7MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|█████████▉|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt:  99%|█████████▉|  496MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  97%|█████████▋|  485MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (4 / 7)      :  99%|█████████▉| 3.49GB / 3.51GB,  108MB/s  
+New Data Upload               :  99%|█████████▉| 2.65GB / 2.67GB, 86.4MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|█████████▉|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt:  99%|█████████▉|  498MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  97%|█████████▋|  487MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (4 / 7)      :  99%|█████████▉| 3.49GB / 3.51GB,  106MB/s  
+New Data Upload               :  99%|█████████▉| 2.65GB / 2.67GB, 85.0MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|█████████▉|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  97%|█████████▋|  488MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (4 / 7)      : 100%|█████████▉| 3.49GB / 3.51GB,  105MB/s  
+New Data Upload               : 100%|█████████▉| 2.65GB / 2.67GB, 83.9MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  98%|█████████▊|  491MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (5 / 7)      : 100%|█████████▉| 3.50GB / 3.51GB,  103MB/s  
+New Data Upload               : 100%|█████████▉| 2.66GB / 2.67GB, 82.6MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  98%|█████████▊|  493MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (5 / 7)      : 100%|█████████▉| 3.50GB / 3.51GB,  101MB/s  
+New Data Upload               : 100%|█████████▉| 2.66GB / 2.67GB, 81.2MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  99%|█████████▉|  496MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (5 / 7)      : 100%|█████████▉| 3.50GB / 3.51GB, 99.7MB/s  
+New Data Upload               : 100%|█████████▉| 2.66GB / 2.67GB, 79.9MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt:  99%|█████████▉|  498MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (5 / 7)      : 100%|█████████▉| 3.50GB / 3.51GB, 98.0MB/s  
+New Data Upload               : 100%|█████████▉| 2.66GB / 2.67GB, 78.6MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt: 100%|█████████▉|  500MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (5 / 7)      : 100%|█████████▉| 3.51GB / 3.51GB, 96.4MB/s  
+New Data Upload               : 100%|█████████▉| 2.67GB / 2.67GB, 77.3MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt: 100%|█████████▉|  500MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (6 / 7)      : 100%|█████████▉| 3.51GB / 3.51GB, 94.7MB/s  
+New Data Upload               : 100%|█████████▉| 2.67GB / 2.67GB, 75.9MB/s  [A
+
+  ...id_seed1/ckpt_step6000.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...d_seed1/ckpt_step10484.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...id_seed1/ckpt_step2000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A[A[AProcessing Files (7 / 7)      : 100%|██████████| 3.51GB / 3.51GB, 89.6MB/s  
+New Data Upload               : 100%|██████████| 2.67GB / 2.67GB, 71.9MB/s  [AProcessing Files (7 / 7)      : 100%|██████████| 3.51GB / 3.51GB, 89.6MB/s  
+New Data Upload               : 100%|██████████| 2.67GB / 2.67GB, 71.9MB/s  
+  ...id_seed1/ckpt_step6000.pt: 100%|██████████|  501MB /  501MB            
+  ...oid_seed1/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            
+  ...d_seed1/ckpt_step10484.pt: 100%|██████████|  501MB /  501MB            
+  ...id_seed1/ckpt_step1000.pt: 100%|██████████|  501MB /  501MB            
+  ...id_seed1/ckpt_step2000.pt: 100%|██████████|  501MB /  501MB            
+  ...gmoid_seed1/ckpt_step0.pt: 100%|██████████|  501MB /  501MB            
+  ...id_seed1/ckpt_step4000.pt: 100%|██████████|  501MB /  501MB            
+https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/sigmoid_seed1
