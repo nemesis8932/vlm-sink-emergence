@@ -120,3 +120,28 @@ GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
 [reprobe textinit] [reprobe textinit] step 2000 | v_ratio[min/mean/max] 0.032/0.398/2.493 | raw_to_pos0 max 0.988 | swap_v_cv 0.368 swap_attn0_std 0.0380
 [reprobe textinit] [reprobe textinit] step 4000 | v_ratio[min/mean/max] 0.035/0.375/2.625 | raw_to_pos0 max 0.987 | swap_v_cv 0.267 swap_attn0_std 0.0361
 [reprobe textinit] [reprobe textinit] step 6244 | v_ratio[min/mean/max] 0.035/0.376/2.616 | raw_to_pos0 max 0.986 | swap_v_cv 0.277 swap_attn0_std 0.0392
+ create mode 100644 runs/textinit/reprobe/reprobe_summary.jsonl
+   1d3080a..fabe7c4  sink-emergence -> sink-emergence
+==============================================================================
+SESSION-2 ACCEPTANCE GATES
+==============================================================================
+
+[Gate A] baseline seed-0, full curve to 1.0B
+  final tokens: 854.6M  step 89600
+  Sink^0.2_1 @final: 0.0000   Sink^0.3_1 @final: 0.0000
+  max mean-attn->pos0 @final: 0.1389
+  first tokens any head crosses mean-attn->pos0 > 0.2: NEVER (no concentration sink by 1.0B)
+  v_ratio @final: 0.687   h_ratio @final: 2.462
+
+[Gate B] seed-0 (Session-1) vs seed-1, matched ~100M tokens
+  arm       seed   Mtok  sink.2  mean_a0  v_ratio  h_ratio
+  baseline  s0    101.1   0.000   0.0680    0.723    2.155
+  baseline  s1    100.0   0.000   0.0615    0.687    1.708
+  textinit  s0     59.6   0.852   0.6266    0.377   42.544
+  textinit  s1     60.1   0.556   0.2345    0.634    5.502
+  g1gate    s0    101.1   0.004   0.0681    0.805    1.674
+  g1gate    s1    100.0   0.011   0.0729    0.845    2.038
+  sigmoid   s0    101.7   0.830   0.3766    1.479    1.095
+  sigmoid   s1    100.0   0.756   0.3106    1.603    1.299
+
+Gate B reading: sigmoid expected large+robust (sink.2~0.8 vs ~0); g1gate is the fragile one (sink.2~0.004) -> if seeds disagree, do NOT trust it (needs seed-3). n=2 bar = tight agreement + large effect.

@@ -16486,3 +16486,126 @@ Finished hashing 8 files.
   ...robe/reprobe_step8000.npz: 100%|██████████| 1.42MB / 1.42MB            
   ...probe/reprobe_step250.npz: 100%|██████████| 1.39MB / 1.39MB            
 https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/sigmoid/reprobe
+[33m⚠️  Warning: 'huggingface-cli upload' is deprecated. Use 'hf upload' instead.[0m
+Start hashing 7 files.
+Finished hashing 7 files.
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+  ...robe/reprobe_step6244.npz:  50%|████▉     |  697kB / 1.40MB            [A[A
+
+
+  ...robe/reprobe_step4000.npz:  50%|████▉     |  696kB / 1.40MB            [A[A[A
+
+
+
+  ...probe/reprobe_step250.npz:  50%|████▉     |  700kB / 1.41MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  50%|████▉     |  699kB / 1.41MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  50%|████▉     |  697kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...reprobe/reprobe_step0.npz:  50%|████▉     |  707kB / 1.42MB            [A[A[A[A[A[A[A
+
+  ...robe/reprobe_step6244.npz:  50%|████▉     |  697kB / 1.40MB            [A[A
+
+
+  ...robe/reprobe_step4000.npz:  50%|████▉     |  696kB / 1.40MB            [A[A[A
+
+
+
+  ...probe/reprobe_step250.npz:  50%|████▉     |  700kB / 1.41MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  50%|████▉     |  699kB / 1.41MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  50%|████▉     |  697kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...reprobe/reprobe_step0.npz:  50%|████▉     |  707kB / 1.42MB            [A[A[A[A[A[A[AProcessing Files (0 / 6)      :  50%|████▉     | 4.20MB / 8.46MB,   ???B/s  
+New Data Upload               :  50%|████▉     | 4.20MB / 8.46MB,   ???B/s  [A
+
+  ...robe/reprobe_step6244.npz:  99%|█████████▉| 1.39MB / 1.40MB            [A[A
+
+
+  ...robe/reprobe_step4000.npz:  99%|█████████▉| 1.39MB / 1.40MB            [A[A[A
+
+
+
+  ...probe/reprobe_step250.npz:  99%|█████████▉| 1.40MB / 1.41MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  99%|█████████▉| 1.40MB / 1.41MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  99%|█████████▉| 1.39MB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...reprobe/reprobe_step0.npz:  99%|█████████▉| 1.41MB / 1.42MB            [A[A[A[A[A[A[AProcessing Files (0 / 6)      :  99%|█████████▉| 8.39MB / 8.46MB,  813kB/s  
+New Data Upload               :  99%|█████████▉| 8.39MB / 8.46MB,  813kB/s  [A
+
+  ...robe/reprobe_step6244.npz: 100%|██████████| 1.40MB / 1.40MB            [A[A
+
+
+  ...robe/reprobe_step4000.npz: 100%|██████████| 1.40MB / 1.40MB            [A[A[A
+
+
+
+  ...probe/reprobe_step250.npz: 100%|██████████| 1.41MB / 1.41MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz: 100%|██████████| 1.41MB / 1.41MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz: 100%|██████████| 1.41MB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...reprobe/reprobe_step0.npz: 100%|██████████| 1.42MB / 1.42MB            [A[A[A[A[A[A[AProcessing Files (6 / 6)      : 100%|██████████| 8.46MB / 8.46MB,  800kB/s  
+New Data Upload               : 100%|██████████| 8.46MB / 8.46MB,  800kB/s  [AProcessing Files (6 / 6)      : 100%|██████████| 8.46MB / 8.46MB,  800kB/s  
+New Data Upload               : 100%|██████████| 8.46MB / 8.46MB,  800kB/s  
+  ...robe/reprobe_step6244.npz: 100%|██████████| 1.40MB / 1.40MB            
+  ...robe/reprobe_step4000.npz: 100%|██████████| 1.40MB / 1.40MB            
+  ...probe/reprobe_step250.npz: 100%|██████████| 1.41MB / 1.41MB            
+  ...robe/reprobe_step1000.npz: 100%|██████████| 1.41MB / 1.41MB            
+  ...robe/reprobe_step2000.npz: 100%|██████████| 1.41MB / 1.41MB            
+  ...reprobe/reprobe_step0.npz: 100%|██████████| 1.42MB / 1.42MB            
