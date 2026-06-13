@@ -18,3 +18,16 @@ GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
 [s3 13:08:48] free disk after Run-1 cleanup: 15G
 [s3 13:08:48] G0.2: fresh FineVision loader smoke (streamed, real schema)
 [s3 13:11:04] G0.2 PASS: [baseline] image-swap self-check OK: pos0 v_cv 1.042 attn0_std 0.0040 (probe v1-repeatedtail-32)
+ create mode 100644 runs/fresh_smoke.out
+   e482bfc..99b17d0  sink-emergence -> sink-emergence
+[s3 13:11:05] R2: baseline seed-1 repeated -> 100M
+[s3 14:07:45] R2 baseline done: [baseline] finished at step 10484, 100.0M tokens, 56.3 min
+[s3 14:07:45] reprobe baseline runs/baseline_seed1 (0,250,1000,2000,4000,6000,10484)
+[reprobe baseline] Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[reprobe baseline] [reprobe baseline] step 0 | v_ratio[min/mean/max] 0.943/0.997/1.054 | raw_to_pos0 max 0.057 | swap_v_cv 1.091 swap_attn0_std 0.0035
+[reprobe baseline] [reprobe baseline] step 250 | v_ratio[min/mean/max] 0.858/0.978/1.086 | raw_to_pos0 max 0.062 | swap_v_cv 0.559 swap_attn0_std 0.0021
+[reprobe baseline] [reprobe baseline] step 1000 | v_ratio[min/mean/max] 0.659/0.851/1.249 | raw_to_pos0 max 0.066 | swap_v_cv 0.687 swap_attn0_std 0.0027
+[reprobe baseline] [reprobe baseline] step 2000 | v_ratio[min/mean/max] 0.616/0.799/1.397 | raw_to_pos0 max 0.085 | swap_v_cv 0.726 swap_attn0_std 0.0054
+[reprobe baseline] [reprobe baseline] step 4000 | v_ratio[min/mean/max] 0.672/0.824/1.246 | raw_to_pos0 max 0.146 | swap_v_cv 0.922 swap_attn0_std 0.0151
+[reprobe baseline] [reprobe baseline] step 6000 | v_ratio[min/mean/max] 0.589/0.751/1.287 | raw_to_pos0 max 0.121 | swap_v_cv 0.916 swap_attn0_std 0.0165
+[reprobe baseline] [reprobe baseline] step 10484 | v_ratio[min/mean/max] 0.548/0.687/1.246 | raw_to_pos0 max 0.128 | swap_v_cv 0.977 swap_attn0_std 0.0154
