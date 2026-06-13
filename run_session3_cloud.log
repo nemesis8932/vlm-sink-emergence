@@ -109,3 +109,14 @@ GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
 [reprobe sigmoid] [reprobe sigmoid] step 4000 | v_ratio[min/mean/max] 0.811/1.609/3.467 | raw_to_pos0 max 0.668 | swap_v_cv 0.465 swap_attn0_std 0.0323
 [reprobe sigmoid] [reprobe sigmoid] step 8000 | v_ratio[min/mean/max] 0.690/1.560/3.251 | raw_to_pos0 max 0.663 | swap_v_cv 0.493 swap_attn0_std 0.0329
 [reprobe sigmoid] [reprobe sigmoid] step 10664 | v_ratio[min/mean/max] 0.603/1.481/3.618 | raw_to_pos0 max 0.659 | swap_v_cv 0.527 swap_attn0_std 0.0350
+ create mode 100644 runs/sigmoid/reprobe/reprobe_summary.jsonl
+   0e05983..1d3080a  sink-emergence -> sink-emergence
+[s3 17:06:31] reprobe textinit runs/textinit (0,250,1000,2000,4000,6244)
+[reprobe textinit] Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[reprobe textinit] Successfully loaded HuggingFaceTB/SmolLM2-135M weights from safetensors. Model has 134,515,008 parameters.
+[reprobe textinit] [reprobe textinit] step 0 | v_ratio[min/mean/max] 0.229/0.729/1.435 | raw_to_pos0 max 0.265 | swap_v_cv 1.437 swap_attn0_std 0.1521
+[reprobe textinit] [reprobe textinit] step 250 | v_ratio[min/mean/max] 0.027/0.348/2.041 | raw_to_pos0 max 0.852 | swap_v_cv 0.642 swap_attn0_std 0.1426
+[reprobe textinit] [reprobe textinit] step 1000 | v_ratio[min/mean/max] 0.029/0.377/2.347 | raw_to_pos0 max 0.968 | swap_v_cv 0.513 swap_attn0_std 0.0583
+[reprobe textinit] [reprobe textinit] step 2000 | v_ratio[min/mean/max] 0.032/0.398/2.493 | raw_to_pos0 max 0.988 | swap_v_cv 0.368 swap_attn0_std 0.0380
+[reprobe textinit] [reprobe textinit] step 4000 | v_ratio[min/mean/max] 0.035/0.375/2.625 | raw_to_pos0 max 0.987 | swap_v_cv 0.267 swap_attn0_std 0.0361
+[reprobe textinit] [reprobe textinit] step 6244 | v_ratio[min/mean/max] 0.035/0.376/2.616 | raw_to_pos0 max 0.986 | swap_v_cv 0.277 swap_attn0_std 0.0392

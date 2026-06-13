@@ -16077,3 +16077,412 @@ Finished hashing 8 files.
   ...reprobe/reprobe_step0.npz: 100%|██████████| 1.39MB / 1.39MB            
   ...probe/reprobe_step250.npz: 100%|██████████| 1.40MB / 1.40MB            
 https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/g1gate/reprobe
+[33m⚠️  Warning: 'huggingface-cli upload' is deprecated. Use 'hf upload' instead.[0m
+Start hashing 8 files.
+Finished hashing 8 files.
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+  ...robe/reprobe_step4000.npz:  16%|█▌        |  226kB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  16%|█▌        |  227kB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  16%|█▌        |  222kB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  16%|█▌        |  224kB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  16%|█▌        |  225kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  16%|█▌        |  227kB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  16%|█▌        |  222kB / 1.39MB            [A[A[A[A[A[A[A[A
+
+  ...robe/reprobe_step4000.npz:  16%|█▌        |  226kB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  16%|█▌        |  227kB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  16%|█▌        |  222kB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  16%|█▌        |  224kB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  16%|█▌        |  225kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  16%|█▌        |  227kB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  16%|█▌        |  222kB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  16%|█▌        | 1.57MB / 9.86MB,   ???B/s  
+New Data Upload               :  16%|█▌        | 1.57MB / 9.86MB,   ???B/s  [A
+
+  ...robe/reprobe_step4000.npz:  27%|██▋       |  377kB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  27%|██▋       |  378kB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  27%|██▋       |  370kB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  27%|██▋       |  373kB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  27%|██▋       |  374kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  27%|██▋       |  378kB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  27%|██▋       |  371kB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  27%|██▋       | 2.62MB / 9.86MB,  254kB/s  
+New Data Upload               :  27%|██▋       | 2.62MB / 9.86MB,  254kB/s  [A
+
+  ...robe/reprobe_step4000.npz:  37%|███▋      |  528kB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  37%|███▋      |  530kB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  37%|███▋      |  518kB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  37%|███▋      |  522kB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  37%|███▋      |  524kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  37%|███▋      |  530kB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  37%|███▋      |  519kB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  37%|███▋      | 3.67MB / 9.86MB,  349kB/s  
+New Data Upload               :  37%|███▋      | 3.67MB / 9.86MB,  349kB/s  [A
+
+  ...robe/reprobe_step4000.npz:  48%|████▊     |  679kB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  48%|████▊     |  681kB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  48%|████▊     |  666kB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  48%|████▊     |  671kB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  48%|████▊     |  674kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  48%|████▊     |  681kB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  48%|████▊     |  667kB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  48%|████▊     | 4.72MB / 9.86MB,  442kB/s  
+New Data Upload               :  48%|████▊     | 4.72MB / 9.86MB,  442kB/s  [A
+
+  ...robe/reprobe_step4000.npz:  59%|█████▊    |  830kB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  59%|█████▊    |  833kB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  59%|█████▊    |  814kB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  59%|█████▊    |  820kB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  59%|█████▊    |  823kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  59%|█████▊    |  832kB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  59%|█████▊    |  815kB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  59%|█████▊    | 5.77MB / 9.86MB,  532kB/s  
+New Data Upload               :  59%|█████▊    | 5.77MB / 9.86MB,  532kB/s  [A
+
+  ...robe/reprobe_step4000.npz:  69%|██████▉   |  980kB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  69%|██████▉   |  984kB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  69%|██████▉   |  962kB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  69%|██████▉   |  970kB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  69%|██████▉   |  973kB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  69%|██████▉   |  984kB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  69%|██████▉   |  964kB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  69%|██████▉   | 6.82MB / 9.86MB,  619kB/s  
+New Data Upload               :  69%|██████▉   | 6.82MB / 9.86MB,  619kB/s  [A
+
+  ...robe/reprobe_step4000.npz:  80%|███████▉  | 1.13MB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  80%|███████▉  | 1.14MB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  80%|███████▉  | 1.11MB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  80%|███████▉  | 1.12MB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  80%|███████▉  | 1.12MB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  80%|███████▉  | 1.13MB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  80%|███████▉  | 1.11MB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  80%|███████▉  | 7.86MB / 9.86MB,  703kB/s  
+New Data Upload               :  80%|███████▉  | 7.86MB / 9.86MB,  703kB/s  [A
+
+  ...robe/reprobe_step4000.npz:  90%|█████████ | 1.28MB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  90%|█████████ | 1.29MB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  90%|█████████ | 1.26MB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  90%|█████████ | 1.27MB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  90%|█████████ | 1.27MB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  90%|█████████ | 1.29MB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  90%|█████████ | 1.26MB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  90%|█████████ | 8.91MB / 9.86MB,  785kB/s  
+New Data Upload               :  90%|█████████ | 8.91MB / 9.86MB,  785kB/s  [A
+
+  ...robe/reprobe_step4000.npz:  96%|█████████▌| 1.36MB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz:  96%|█████████▌| 1.36MB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz:  96%|█████████▌| 1.33MB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz:  96%|█████████▌| 1.34MB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz:  96%|█████████▌| 1.35MB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz:  96%|█████████▌| 1.36MB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz:  96%|█████████▌| 1.33MB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (0 / 7)      :  96%|█████████▌| 9.44MB / 9.86MB,  816kB/s  
+New Data Upload               :  96%|█████████▌| 9.44MB / 9.86MB,  816kB/s  [A
+
+  ...robe/reprobe_step4000.npz: 100%|██████████| 1.42MB / 1.42MB            [A[A
+
+
+  ...obe/reprobe_step10664.npz: 100%|██████████| 1.42MB / 1.42MB            [A[A[A
+
+
+
+  ...reprobe/reprobe_step0.npz: 100%|██████████| 1.39MB / 1.39MB            [A[A[A[A
+
+
+
+
+  ...robe/reprobe_step1000.npz: 100%|██████████| 1.40MB / 1.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...robe/reprobe_step2000.npz: 100%|██████████| 1.41MB / 1.41MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...robe/reprobe_step8000.npz: 100%|██████████| 1.42MB / 1.42MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...probe/reprobe_step250.npz: 100%|██████████| 1.39MB / 1.39MB            [A[A[A[A[A[A[A[AProcessing Files (7 / 7)      : 100%|██████████| 9.86MB / 9.86MB,  817kB/s  
+New Data Upload               : 100%|██████████| 9.86MB / 9.86MB,  817kB/s  [AProcessing Files (7 / 7)      : 100%|██████████| 9.86MB / 9.86MB,  817kB/s  
+New Data Upload               : 100%|██████████| 9.86MB / 9.86MB,  817kB/s  
+  ...robe/reprobe_step4000.npz: 100%|██████████| 1.42MB / 1.42MB            
+  ...obe/reprobe_step10664.npz: 100%|██████████| 1.42MB / 1.42MB            
+  ...reprobe/reprobe_step0.npz: 100%|██████████| 1.39MB / 1.39MB            
+  ...robe/reprobe_step1000.npz: 100%|██████████| 1.40MB / 1.40MB            
+  ...robe/reprobe_step2000.npz: 100%|██████████| 1.41MB / 1.41MB            
+  ...robe/reprobe_step8000.npz: 100%|██████████| 1.42MB / 1.42MB            
+  ...probe/reprobe_step250.npz: 100%|██████████| 1.39MB / 1.39MB            
+https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/sigmoid/reprobe
