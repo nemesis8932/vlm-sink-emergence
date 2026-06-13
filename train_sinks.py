@@ -21,10 +21,9 @@ import torch.optim as optim
 from datasets import load_dataset, concatenate_datasets
 from torch.utils.data import DataLoader
 
-torch.manual_seed(0)
-random.seed(0)  # probe batch (random QA choice) must be identical across arms
-if torch.cuda.is_available():
-    torch.cuda.manual_seed_all(0)
+# Seeding happens in main() from --seed. The *probe batch* is always rebuilt under a
+# fixed random.seed(0) in get_data, so it is byte-identical across seeds/runs (metrics
+# are then comparable seed-to-seed), while model init and data order follow --seed.
 
 from data.collators import VQACollator
 from data.datasets import VQADataset
@@ -77,7 +76,7 @@ def get_data(args, vlm_cfg):
         random.seed(worker_seed)
 
     g = torch.Generator()
-    g.manual_seed(0)
+    g.manual_seed(args.seed)  # data order varies with --seed; train/val split fixed (shuffle seed=0)
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True,
                               collate_fn=collator, num_workers=args.workers, pin_memory=True,
                               drop_last=True, worker_init_fn=seed_worker, generator=g,
@@ -85,7 +84,10 @@ def get_data(args, vlm_cfg):
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False,
                             collate_fn=collator, num_workers=2, pin_memory=True, drop_last=True)
 
-    # fixed probe batch: first args.probe_n val samples (identical across arms: seed-fixed)
+    # Fixed probe batch, byte-identical across seeds/runs: rebuild the exact Session-1
+    # random state (nothing consumes the global `random` stream before this point) so the
+    # 32 per-sample QA choices match regardless of --seed.
+    random.seed(0)
     probe = collator([val_dataset[i] for i in range(args.probe_n)])
     return train_loader, val_loader, probe
 
@@ -100,6 +102,15 @@ def build_model(args, vlm_cfg):
         model.vision_encoder = ViT.from_pretrained(vlm_cfg)
     if arm['lm_init'] == 'pretrained':
         model.decoder = LanguageModel.from_pretrained(vlm_cfg)
+    if args.resume:
+        # Resume from a saved (bf16) checkpoint. Note: only model weights are saved, not
+        # optimizer moments — Adam restarts cold, so expect a brief loss transient that
+        # recovers within a few hundred steps. The LR schedule continues from --resume_step.
+        sd = torch.load(args.resume, map_location='cpu')
+        sd = {k: v.float() for k, v in sd.items()}
+        missing, unexpected = model.load_state_dict(sd, strict=False)
+        assert not missing and not unexpected, f"resume mismatch missing={missing} unexpected={unexpected}"
+        print(f"[resume] loaded {args.resume}", flush=True)
     return model
 
 
@@ -127,7 +138,21 @@ def main():
     p.add_argument('--out_dir', type=str, default=None)
     p.add_argument('--compile', action='store_true')
     p.add_argument('--max_hours', type=float, default=100.0)
+    p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--max_tokens_M', type=float, default=float('inf'),
+                   help='stop when tokens_seen >= this * 1e6 (same unit as the report Mtok)')
+    p.add_argument('--resume', type=str, default=None, help='ckpt .pt to resume model weights from')
+    p.add_argument('--resume_step', type=int, default=0, help='step counter to resume at (LR schedule position)')
+    p.add_argument('--resume_tokens', type=int, default=0, help='tokens_seen to resume at')
+    p.add_argument('--ckpt_steps', type=str, default=None, help='comma-sep step numbers to checkpoint at')
     args = p.parse_args()
+
+    torch.manual_seed(args.seed)
+    random.seed(args.seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(args.seed)
+
+    ckpt_set = set(int(x) for x in args.ckpt_steps.split(',')) if args.ckpt_steps else CKPT_STEPS
 
     out_dir = args.out_dir or f'runs/{args.arm}_vit-{args.vit_init}'
     os.makedirs(out_dir, exist_ok=True)
@@ -188,11 +213,11 @@ def main():
 
     img_tokens = (vlm_cfg.vit_img_size // vlm_cfg.vit_patch_size) ** 2 // vlm_cfg.mp_pixel_shuffle_factor ** 2
 
-    step = 0
-    tokens_seen = 0
+    step = args.resume_step
+    tokens_seen = args.resume_tokens
     t_start = time.time()
-    run_probe(0, 0)
-    save_ckpt(model, out_dir, 0)
+    run_probe(step, tokens_seen)          # re-measure at the resume point (or step 0 fresh)
+    save_ckpt(model, out_dir, step)
     model.train()
 
     done = False
@@ -239,11 +264,12 @@ def main():
                 log_f.flush()
                 print(f"[{args.arm}] step {step} VAL {vl:.4f}", flush=True)
                 last_t = time.time()
-            if step in CKPT_STEPS:
+            if step in ckpt_set:
                 save_ckpt(model, out_dir, step)
                 last_t = time.time()
 
-            if step >= args.max_steps or (time.time() - t_start) > args.max_hours * 3600:
+            if (step >= args.max_steps or (time.time() - t_start) > args.max_hours * 3600
+                    or tokens_seen >= args.max_tokens_M * 1e6):
                 done = True
                 break
 

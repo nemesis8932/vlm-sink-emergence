@@ -1,0 +1,1 @@
+{"step": 4000, "v_ratio_perhead_mean": 0.7880778505398455, "v_ratio_perhead_min": 0.5236823931435554, "v_ratio_perhead_max": 2.2631721351016374, "raw_to_pos0_max": 0.1561940461397171, "raw_to_pos0_mean": 0.07179436163493881, "swap_v_pos0_cv": 0.4129679475688108, "swap_attn0_std": 0.012484694941132923}
