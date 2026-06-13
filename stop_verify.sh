@@ -2,6 +2,11 @@
 # Idempotent VERIFIED instance stop. In-instance `vastai stop` is unreliable (it can print
 # success while the instance keeps running -- see memory note from Session 1), so we issue it
 # and then poll actual_status, retrying until confirmed stopped.
+# Guard: while /workspace/vlm-sink-emergence/NO_AUTOSTOP exists, stopping is deferred (used to
+# hold the box up until the export bundle is built + shipped; the export step removes the flag).
+if [ -f /workspace/vlm-sink-emergence/NO_AUTOSTOP ]; then
+  echo "[stop] NO_AUTOSTOP present -> deferring stop"; exit 0
+fi
 source /workspace/venv/bin/activate 2>/dev/null
 status() {
   vastai show instance "$CONTAINER_ID" --api-key "$CONTAINER_API_KEY" --raw 2>/dev/null \

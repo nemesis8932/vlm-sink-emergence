@@ -4,3 +4,4 @@ runs/*/ckpt_*.pt
 runs_*.out
 wandb/
 *.npz
+*.tar.gz
