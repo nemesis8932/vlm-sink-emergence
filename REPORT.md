@@ -107,6 +107,60 @@ first-token attention" result was measured on text-pretrained models at far larg
 scale; in the from-scratch VLM regime the gate's effect on *where attention goes* is
 the opposite, at least within 100M tokens.
 
+**Sigmoid attention (Gu et al., no softmax), from-scratch, 101.7M tokens / 10,664
+steps.** Gu et al. report that unnormalized sigmoid attention *prevents* both sinks
+and massive activations up to 1B params in text LMs. In the from-scratch VLM regime
+the result is the most surprising of the study:
+
+- Relative concentration on pos0 emerges **fastest of any from-scratch arm**:
+  Sink^0.2_1 crosses >0 at step **500** (g1gate 3,400; baseline never), reaching
+  0.83 of heads >0.2 and 0.66 >0.3 by the end; max head attn→pos0 0.87. We verified
+  this is *not* a normalization artifact — the raw (unnormalized) mean sigmoid score
+  to pos0 is 0.25 vs ~0.05 uniform, i.e. pos0 genuinely receives elevated gate-open
+  mass, not just a large share of a shrinking total.
+- But the **norm signatures invert**: value-norm at pos0 is *amplified* to ≈1.5×
+  the rest (anti-drain; baseline drains to 0.71), and there are **no massive
+  activations** (h_ratio ≈ 1.0–1.15, vs baseline 2.2, textinit 42). This matches the
+  half of Gu's claim that survives — sigmoid kills the residual-norm blowup — while
+  *contradicting* the "no sink" half at the level of attention concentration.
+- Best val loss of the from-scratch arms (1.108).
+
+So sigmoid attention does not remove the sink; it produces a **different sink
+object** — attention concentration on pos0 *without* the value/norm pathology that
+the literature treats as part of the same phenomenon.
+
+## Synthesis: the four-way dissociation
+
+The central question of the plan — do attention concentration and value-norm drain
+**decouple** during VLM pretraining? — gets a clear yes. Holding data, optimizer, and
+the 222M architecture fixed, each lever produces a *different combination* of the
+sink signatures, proving they are independently controllable rather than facets of
+one phenomenon:
+
+| arm | concentration (Sink^0.2_1) | value-norm @ pos0 | massive activation (h_ratio) | val |
+|---|---|---|---|---|
+| baseline (softmax, scratch) | **none** (0.00) | drained (0.71) | moderate (2.2) | 1.161 |
+| g1gate (softmax+gate, scratch) | weak (0.004, volatile) | mild drain (0.82) | **suppressed** (1.6) | 1.138 |
+| sigmoid (no softmax, scratch) | **strong** (0.83) | **amplified** (1.48) | **none** (1.1) | 1.108 |
+| textinit (softmax, pretrained text) | **total** (0.85), inherited @ step 0 | **severe drain** (0.38) | **extreme** (42) | 0.832 |
+
+Lead–lag (first probe step a signature crosses threshold): in the from-scratch
+baseline the **norm signatures lead and the concentration sink never arrives**
+(h_ratio>2 @ step 400, v_ratio<0.8 @ 1200, concentration never crosses 0.2 in 174M
+tokens). With text init, **all signatures are present at step 0** — the sink is
+inherited from text pretraining, relocated onto the first *image* token, and
+amplified by alignment, never formed de novo. This is direct evidence for the
+plan's disentanglement of *inherited vs formed-fresh* sinks.
+
+## Compute used this session
+
+RTX 4090 @ $0.7037/hr. Productive training: baseline 96 min + textinit 33 + g1gate 60
++ sigmoid 60 = **249 min ≈ 4.15 GPU-h ≈ $2.92**. Setup/download/benchmark ≈ 37 min
+(~$0.44). Avoidable waste was small: ~3 OOM probes at bs256/512 and one baseline
+relaunch (bug catch) ≈ 12 min (~$0.14). The largest waste was the **idle tail** after
+all arms finished at 02:30 UTC: the 03:40 backstop fired but `vastai stop` did not
+take effect, leaving the instance idle ~2.2 h (~$1.5) until manually stopped.
+
 ### Step-0 sanity observations (already informative)
 
 - **baseline/g1gate (random init):** mean attn→pos0 ≈ 0.053 ≈ uniform-causal
