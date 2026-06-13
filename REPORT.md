@@ -82,7 +82,30 @@ from random init produce a near-total one from text-pretrained init.
 
 ### Intervention arms
 
-*(g1gate / sigmoid filled below when runs complete)*
+**G1 gate (Qiu et al.), from-scratch, 102.9M tokens / 10,786 steps.** The expectation
+from the text-LLM literature — gating prevents sinks — inverts at this scale, in an
+informative way:
+
+- The gated arm is the **only from-scratch arm to develop ε-threshold sink heads**:
+  first head >0.2 at step 3,400; up to 7 heads >0.2 (max attn→pos0 0.36 at step 6k;
+  volatile 0.2–0.36 thereafter; 0.23 at end). The ungated baseline never crossed 0.2
+  in 18k steps.
+- Meanwhile its **norm signatures are consistently milder** than baseline at matched
+  steps: h_ratio ≈ 1.6–1.9 (baseline 2.1–3.2), v_ratio ≈ 0.81–0.85 (baseline
+  0.70–0.79).
+- Val loss is consistently ~0.03–0.1 better than baseline at matched steps
+  (1.138 vs 1.161 at end, and the gap is larger mid-training), echoing Qiu's quality
+  result.
+
+Interpretation: with an output gate available, the model can *afford* attention
+concentration — the gate suppresses whatever the sink position would inject into the
+residual stream, so concentration no longer has to co-occur with value-norm drain or
+massive activations. The gate doesn't prevent the sink; it **decouples the
+concentration signature from the norm signatures** (the same decoupling the
+from-scratch baseline shows in the opposite configuration). The Qiu et al. "4.8%
+first-token attention" result was measured on text-pretrained models at far larger
+scale; in the from-scratch VLM regime the gate's effect on *where attention goes* is
+the opposite, at least within 100M tokens.
 
 ### Step-0 sanity observations (already informative)
 
