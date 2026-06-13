@@ -213,7 +213,7 @@ to date-stamp priority** (Mac task M6).
 | Resource | Use | Notes |
 |---|---|---|
 | **Cloud (vast.ai)** — billed **$0.7037/hr** for the Session-1 4090 | Training workhorse for THIS study (user's choice; nothing local yet) | Instance **40436103** (stop, never destroy; rsync before reuse). A100-80GB for Stage 2 confirmation |
-| **MacBook M4 Max 24GB** | Analysis, figures, paper, pre-reg — all $0 | Pure-tensor work over saved probes; MLX optional. Do NOT pay $0.70/hr to plot |
+| **MacBook M4 Max 48GB** | Analysis, figures, paper, pre-reg — all $0 | Pure-tensor work over saved probes; MLX optional. Do NOT pay $0.70/hr to plot |
 | Desktop RTX 4070 Super 12GB | NOT yet used this study | Available as expendable from-scratch workhorse; reserved for later |
 | **Budget** | **$200 ceiling, early-exit** | Spent ≈$4.5. Pre-register before any cloud Stage-2 spend |
 
