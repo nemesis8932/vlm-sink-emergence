@@ -1723,3 +1723,263 @@ Finished hashing 8 files.
 
   ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (4 / 6)      :  99%|█████████▉| 2.51GB / 2.52GB, 83.3MB/s  
 New Data Upload               :  99%|█████████▉| 1.78GB / 1.80GB, 63.2MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|█████████▉|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt:  97%|█████████▋|  484MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (4 / 6)      :  99%|█████████▉| 2.51GB / 2.52GB, 81.9MB/s  
+New Data Upload               :  99%|█████████▉| 1.79GB / 1.80GB, 62.1MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt:  97%|█████████▋|  487MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (5 / 6)      :  99%|█████████▉| 2.51GB / 2.52GB, 80.5MB/s  
+New Data Upload               :  99%|█████████▉| 1.79GB / 1.80GB, 61.1MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt:  98%|█████████▊|  489MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (5 / 6)      : 100%|█████████▉| 2.51GB / 2.52GB, 79.2MB/s  
+New Data Upload               : 100%|█████████▉| 1.79GB / 1.80GB, 60.1MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt:  98%|█████████▊|  491MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (5 / 6)      : 100%|█████████▉| 2.51GB / 2.52GB, 77.9MB/s  
+New Data Upload               : 100%|█████████▉| 1.79GB / 1.80GB, 59.1MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt:  99%|█████████▊|  494MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (5 / 6)      : 100%|█████████▉| 2.52GB / 2.52GB, 76.6MB/s  
+New Data Upload               : 100%|█████████▉| 1.79GB / 1.80GB, 58.1MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt:  99%|█████████▉|  496MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (5 / 6)      : 100%|█████████▉| 2.52GB / 2.52GB, 75.4MB/s  
+New Data Upload               : 100%|█████████▉| 1.79GB / 1.80GB, 57.2MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt: 100%|█████████▉|  499MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (5 / 6)      : 100%|█████████▉| 2.52GB / 2.52GB, 74.2MB/s  
+New Data Upload               : 100%|█████████▉| 1.80GB / 1.80GB, 56.2MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt: 100%|█████████▉|  500MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (5 / 6)      : 100%|█████████▉| 2.52GB / 2.52GB, 72.9MB/s  
+New Data Upload               : 100%|█████████▉| 1.80GB / 1.80GB, 55.3MB/s  [A
+
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            [A[A
+
+
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            [A[A[A
+
+
+
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A
+
+
+
+
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A
+
+
+
+
+
+  ...ine_ext/ckpt_step32000.pt: 100%|██████████|  501MB /  501MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            [A[A[A[A[A[A[AProcessing Files (6 / 6)      : 100%|██████████| 2.52GB / 2.52GB, 67.7MB/s  
+New Data Upload               : 100%|██████████| 1.80GB / 1.80GB, 51.3MB/s  [AProcessing Files (6 / 6)      : 100%|██████████| 2.52GB / 2.52GB, 67.7MB/s  
+New Data Upload               : 100%|██████████| 1.80GB / 1.80GB, 51.3MB/s  
+  ...ine_ext/ckpt_step18287.pt: 100%|██████████|  501MB /  501MB            
+  ...ine_ext/ckpt_step80000.pt: 100%|██████████|  501MB /  501MB            
+  ...ine_ext/ckpt_step48000.pt: 100%|██████████|  501MB /  501MB            
+  ...ine_ext/ckpt_step64000.pt: 100%|██████████|  501MB /  501MB            
+  ...ine_ext/ckpt_step32000.pt: 100%|██████████|  501MB /  501MB            
+  ...baseline_ext/probes.jsonl: 100%|██████████| 19.3MB / 19.3MB            
+https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/baseline_ext

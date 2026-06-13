@@ -13,3 +13,8 @@ GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
 [reprobe baseline] [reprobe baseline] step 48000 | v_ratio[min/mean/max] 0.410/0.663/2.002 | raw_to_pos0 max 0.163 | swap_v_cv 0.534 swap_attn0_std 0.0054
 [reprobe baseline] [reprobe baseline] step 64000 | v_ratio[min/mean/max] 0.412/0.670/1.933 | raw_to_pos0 max 0.152 | swap_v_cv 0.565 swap_attn0_std 0.0041
 [reprobe baseline] [reprobe baseline] step 80000 | v_ratio[min/mean/max] 0.411/0.679/1.967 | raw_to_pos0 max 0.145 | swap_v_cv 0.569 swap_attn0_std 0.0033
+ create mode 100644 watchdog2.log
+   13a74fb..e482bfc  sink-emergence -> sink-emergence
+[s3 13:08:48] free disk after Run-1 cleanup: 15G
+[s3 13:08:48] G0.2: fresh FineVision loader smoke (streamed, real schema)
+[s3 13:11:04] G0.2 PASS: [baseline] image-swap self-check OK: pos0 v_cv 1.042 attn0_std 0.0040 (probe v1-repeatedtail-32)

@@ -1,0 +1,15 @@
+[data] mode=fresh dataset=HuggingFaceM4/FineVision subsets=11 unique_images=4,644,331
+[data] projected visual-epochs @ 1.00B tokens: 2.39 (eff. 90 tok/sample) / 1.68 (nominal 128)
+[data] WARNING: fresh pool gives 2.39 effective epochs @ 1.00B (> target 2.0); nominal 1.68. Acceptable but not the <=2 ideal -- note in report.
+Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[baseline] 222,081,600 params | 464 train samples | bs 16
+[baseline] device=cuda amp=True
+[baseline] image-swap self-check OK: pos0 v_cv 1.042 attn0_std 0.0040 (probe v1-repeatedtail-32)
+[probe baseline] step 0 tok 0.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.052 mean_a0 0.0495 | v_ratio 1.001 h_ratio 1.570 | 0.1s
+[probe baseline] step 60 tok 0.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.063 mean_a0 0.0497 | v_ratio 1.023 h_ratio 1.278 | 0.1s
+[baseline] step 60 VAL unseen 5.5970 seen 5.6250
+[baseline] step 100 loss 5.312 tok/s 12745.1
+[probe baseline] step 120 tok 0.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0520 | v_ratio 1.021 h_ratio 1.406 | 0.1s
+[baseline] step 120 VAL unseen 4.5504 seen 4.4240
+[probe baseline] step 120 tok 0.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0520 | v_ratio 1.021 h_ratio 1.406 | 0.1s
+[baseline] finished at step 120, 0.2M tokens, 0.5 min
