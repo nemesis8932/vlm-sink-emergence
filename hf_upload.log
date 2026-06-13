@@ -16609,3 +16609,38 @@ Finished hashing 7 files.
   ...robe/reprobe_step1000.npz: 100%|██████████| 1.41MB / 1.41MB            
   ...robe/reprobe_step2000.npz: 100%|██████████| 1.41MB / 1.41MB            
   ...reprobe/reprobe_step0.npz: 100%|██████████| 1.42MB / 1.42MB            
+https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/textinit/reprobe
+[33m⚠️  Warning: 'huggingface-cli upload' is deprecated. Use 'hf upload' instead.[0m
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+  session3-export.tar.gz      :   1%|          |  524kB / 98.9MB            [A[A
+
+  session3-export.tar.gz      :   1%|          |  524kB / 98.9MB            [A[AProcessing Files (0 / 1)      :   1%|          |  524kB / 98.9MB, 51.2kB/s  
+New Data Upload               :   1%|          |  524kB / 98.9MB, 51.2kB/s  [A
+
+  session3-export.tar.gz      :  11%|█         | 11.0MB / 98.9MB            [A[AProcessing Files (0 / 1)      :  11%|█         | 11.0MB / 98.9MB, 1.07MB/s  
+New Data Upload               :  11%|█         | 11.0MB / 98.9MB, 1.07MB/s  [A
+
+  session3-export.tar.gz      :  40%|████      | 39.8MB / 98.9MB            [A[AProcessing Files (0 / 1)      :  40%|████      | 39.8MB / 98.9MB, 3.82MB/s  
+New Data Upload               :  40%|████      | 39.8MB / 98.9MB, 3.82MB/s  [A
+
+  session3-export.tar.gz      :  57%|█████▋    | 56.6MB / 98.9MB            [A[AProcessing Files (0 / 1)      :  57%|█████▋    | 56.6MB / 98.9MB, 5.33MB/s  
+New Data Upload               :  57%|█████▋    | 56.6MB / 98.9MB, 5.33MB/s  [A
+
+  session3-export.tar.gz      :  61%|██████▏   | 60.7MB / 98.9MB            [A[AProcessing Files (0 / 1)      :  61%|██████▏   | 60.7MB / 98.9MB, 5.47MB/s  
+New Data Upload               :  61%|██████▏   | 60.7MB / 98.9MB, 5.47MB/s  [A
+
+  session3-export.tar.gz      :  87%|████████▋ | 85.9MB / 98.9MB            [A[AProcessing Files (0 / 1)      :  87%|████████▋ | 85.9MB / 98.9MB, 7.70MB/s  
+New Data Upload               :  87%|████████▋ | 85.9MB / 98.9MB, 7.70MB/s  [A
+
+  session3-export.tar.gz      : 100%|█████████▉| 98.5MB / 98.9MB            [A[AProcessing Files (0 / 1)      : 100%|█████████▉| 98.5MB / 98.9MB, 8.70MB/s  
+New Data Upload               : 100%|█████████▉| 98.5MB / 98.9MB, 8.70MB/s  [A
+
+  session3-export.tar.gz      : 100%|██████████| 98.9MB / 98.9MB            [A[AProcessing Files (1 / 1)      : 100%|██████████| 98.9MB / 98.9MB, 7.97MB/s  
+New Data Upload               : 100%|██████████| 98.9MB / 98.9MB, 7.97MB/s  [AProcessing Files (1 / 1)      : 100%|██████████| 98.9MB / 98.9MB, 7.97MB/s  
+New Data Upload               : 100%|██████████| 98.9MB / 98.9MB, 7.97MB/s  
+  session3-export.tar.gz      : 100%|██████████| 98.9MB / 98.9MB            
+https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/blob/main/session3-export.tar.gz
+[33m⚠️  Warning: 'huggingface-cli upload' is deprecated. Use 'hf upload' instead.[0m
+https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/blob/main/MANIFEST.txt

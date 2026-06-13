@@ -1,5 +1,1 @@
-[export 12:57:52] waiting for Session-3 wrapper to finish (R2/R3/gate_summary) ...
-[export 17:07:00] wrapper finished. building export bundle.
-[export 17:07:06] built session3-export.tar.gz (95M)
-[export 17:07:11] tarball uploaded to HF nemesismaniac/vlm-sink-emergence-ckpts/session3-export.tar.gz
 STATUS: Run-1->1B DONE; completed=[Run-1, R2:baseline, R2:textinit, R2:g1gate, R2:sigmoid, R3-reprobe]; skipped=[RF fresh-1B (1.49TB pool vs 80GB disk)]; pending=none. Gate-A(narrow): baseline repeated @ 855M tok -> Sink^0.2=0.000 Sink^0.3=0.000 max_a0=0.139 (concentration sink absent); v_ratio=0.69 h_ratio=2.46. export=/workspace/vlm-sink-emergence/session3-export.tar.gz (99 MB, also on HF ).

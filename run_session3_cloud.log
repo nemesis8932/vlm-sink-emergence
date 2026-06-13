@@ -145,3 +145,8 @@ SESSION-2 ACCEPTANCE GATES
   sigmoid   s1    100.0   0.756   0.3106    1.603    1.299
 
 Gate B reading: sigmoid expected large+robust (sink.2~0.8 vs ~0); g1gate is the fragile one (sink.2~0.004) -> if seeds disagree, do NOT trust it (needs seed-3). n=2 bar = tight agreement + large effect.
+ create mode 100644 gate_summary.txt
+   fabe7c4..207a864  sink-emergence -> sink-emergence
+[s3 17:06:57] ALL SESSION-3 WORK COMPLETE -> hard_stop via EXIT trap
+[s3 17:06:57] EXIT -> redundant verified stop
+[stop] NO_AUTOSTOP present -> deferring stop
