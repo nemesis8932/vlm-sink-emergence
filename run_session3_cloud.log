@@ -45,3 +45,16 @@ GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
 [reprobe textinit] [reprobe textinit] step 4000 | v_ratio[min/mean/max] 0.047/0.640/2.372 | raw_to_pos0 max 0.688 | swap_v_cv 0.336 swap_attn0_std 0.0298
 [reprobe textinit] [reprobe textinit] step 6000 | v_ratio[min/mean/max] 0.062/0.636/2.554 | raw_to_pos0 max 0.634 | swap_v_cv 0.315 swap_attn0_std 0.0241
 [reprobe textinit] [reprobe textinit] step 10484 | v_ratio[min/mean/max] 0.063/0.564/3.009 | raw_to_pos0 max 0.527 | swap_v_cv 0.297 swap_attn0_std 0.0372
+ create mode 100644 runs/textinit_seed1/train_log.jsonl
+   5e900da..13c89c8  sink-emergence -> sink-emergence
+[s3 15:05:17] R2: g1gate seed-1 repeated -> 100M
+[s3 16:04:31] R2 g1gate done: [g1gate] finished at step 10484, 100.0M tokens, 58.9 min
+[s3 16:04:31] reprobe g1gate runs/g1gate_seed1 (0,250,1000,2000,4000,6000,10484)
+[reprobe g1gate] Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[reprobe g1gate] [reprobe g1gate] step 0 | v_ratio[min/mean/max] 0.950/1.001/1.059 | raw_to_pos0 max 0.056 | swap_v_cv 1.078 swap_attn0_std 0.0034
+[reprobe g1gate] [reprobe g1gate] step 250 | v_ratio[min/mean/max] 0.895/0.982/1.094 | raw_to_pos0 max 0.062 | swap_v_cv 0.555 swap_attn0_std 0.0021
+[reprobe g1gate] [reprobe g1gate] step 1000 | v_ratio[min/mean/max] 0.630/0.871/1.240 | raw_to_pos0 max 0.113 | swap_v_cv 0.552 swap_attn0_std 0.0031
+[reprobe g1gate] [reprobe g1gate] step 2000 | v_ratio[min/mean/max] 0.581/0.855/1.713 | raw_to_pos0 max 0.147 | swap_v_cv 0.468 swap_attn0_std 0.0066
+[reprobe g1gate] [reprobe g1gate] step 4000 | v_ratio[min/mean/max] 0.567/0.860/2.229 | raw_to_pos0 max 0.179 | swap_v_cv 0.434 swap_attn0_std 0.0150
+[reprobe g1gate] [reprobe g1gate] step 6000 | v_ratio[min/mean/max] 0.517/0.865/2.437 | raw_to_pos0 max 0.195 | swap_v_cv 0.578 swap_attn0_std 0.0189
+[reprobe g1gate] [reprobe g1gate] step 10484 | v_ratio[min/mean/max] 0.526/0.841/2.276 | raw_to_pos0 max 0.209 | swap_v_cv 0.642 swap_attn0_std 0.0210
