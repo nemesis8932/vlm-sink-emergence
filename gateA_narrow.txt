@@ -1,0 +1,6 @@
+GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
+  final 854.6M tok  step 89600
+  Sink^0.2=0.0000 Sink^0.3=0.0000 Sink^0.4=0.0000
+  max mean-attn->pos0=0.1389  mean=0.0527
+  first head crosses 0.2: NEVER through 1.0B
+  v_ratio=0.687 h_ratio=2.462

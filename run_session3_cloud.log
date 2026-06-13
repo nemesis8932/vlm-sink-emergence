@@ -1,0 +1,15 @@
+[s3 12:42:23] waiting for live Run-1 (baseline_ext) to finish to 1.0B ...
+[s3 13:08:24] Run-1 finished. [probe baseline] step 89600 tok 854.6M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.139 mean_a0 0.0527 | v_ratio 0.687 h_ratio 2.462 | 0.2s
+GATE A (narrow): baseline seed-0, repeated data, full curve to 1.0B
+  final 854.6M tok  step 89600
+  Sink^0.2=0.0000 Sink^0.3=0.0000 Sink^0.4=0.0000
+  max mean-attn->pos0=0.1389  mean=0.0527
+  first head crosses 0.2: NEVER through 1.0B
+  v_ratio=0.687 h_ratio=2.462
+[s3 13:08:24] reprobe baseline runs/baseline_ext (18287,32000,48000,64000,80000)
+[reprobe baseline] Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[reprobe baseline] [reprobe baseline] step 18287 | v_ratio[min/mean/max] 0.423/0.710/2.088 | raw_to_pos0 max 0.165 | swap_v_cv 0.478 swap_attn0_std 0.0114
+[reprobe baseline] [reprobe baseline] step 32000 | v_ratio[min/mean/max] 0.393/0.697/1.898 | raw_to_pos0 max 0.175 | swap_v_cv 0.559 swap_attn0_std 0.0072
+[reprobe baseline] [reprobe baseline] step 48000 | v_ratio[min/mean/max] 0.410/0.663/2.002 | raw_to_pos0 max 0.163 | swap_v_cv 0.534 swap_attn0_std 0.0054
+[reprobe baseline] [reprobe baseline] step 64000 | v_ratio[min/mean/max] 0.412/0.670/1.933 | raw_to_pos0 max 0.152 | swap_v_cv 0.565 swap_attn0_std 0.0041
+[reprobe baseline] [reprobe baseline] step 80000 | v_ratio[min/mean/max] 0.411/0.679/1.967 | raw_to_pos0 max 0.145 | swap_v_cv 0.569 swap_attn0_std 0.0033
