@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Core guidance for any agent in this repo. Be terse; sacrifice grammar for concision.
+Be extremely concise; sacrifice grammar for concision.
 
 ## What this is
 
