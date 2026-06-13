@@ -97,19 +97,26 @@ def probe_sinks(model, images, input_ids, attention_mask, validate=True):
         argmax_key = mean_attn_per_key.argmax(dim=-1)               # (H,)
 
         v_norm = v.norm(dim=-1)                                     # (B, H, T)
-        v_norm_pos0 = v_norm[:, :, 0].mean().item()
         kvalid = full_mask[:, 1:].bool().unsqueeze(1).expand(B, H, T - 1)
+        # per-head value-norm at pos0 vs valid rest (NEVER pooled across heads -- direct L2,
+        # not the alpha*||v|| proxy). Pooled scalars kept for back-compat.
+        v_norm_pos0_ph = v_norm[:, :, 0].mean(dim=0)                # (H,)
+        rest = v_norm[:, :, 1:].masked_fill(~kvalid, float('nan'))
+        v_norm_rest_ph = torch.nanmean(rest, dim=(0, 2))           # (H,)
+        v_norm_pos0 = v_norm[:, :, 0].mean().item()
         v_norm_rest = v_norm[:, :, 1:][kvalid].mean().item()
 
         attn_to_0_norm = (attn_norm[..., 0] * qv).sum(dim=(0, 2)) / denom
 
         per_layer.append({
             'attn_to_pos0_norm': attn_to_0_norm.tolist(),
-            'attn_to_pos0': attn_to_0.tolist(),
+            'attn_to_pos0': attn_to_0.tolist(),       # raw mass (PRIMARY for the sigmoid arm)
             'attn_to_first_text': attn_to_ft.tolist(),
             'img_mass': img_mass.mean().item(),
             'txt_mass': txt_mass.mean().item(),
             'argmax_key': argmax_key.tolist(),
+            'v_norm_pos0_perhead': v_norm_pos0_ph.tolist(),
+            'v_norm_rest_perhead': v_norm_rest_ph.tolist(),
             'v_norm_pos0': v_norm_pos0,
             'v_norm_rest': v_norm_rest,
             'h_norm_pos0': h_norm_pos0,
@@ -139,14 +146,24 @@ def probe_sinks(model, images, input_ids, attention_mask, validate=True):
     # summary
     L = len(per_layer)
     H = len(per_layer[0]['attn_to_pos0'])
-    flat = [a for layer in per_layer for a in layer['attn_to_pos0_norm']]
+    flat = [a for layer in per_layer for a in layer['attn_to_pos0_norm']]   # row-normalized (Sink^eps)
+    raw_flat = [a for layer in per_layer for a in layer['attn_to_pos0']]    # raw (sigmoid-arm PRIMARY)
+    # per-head v_ratio over all (L,H) -- the un-pooled decoupling metric (min/mean/max)
+    vr = [p0 / max(r, 1e-8)
+          for l in per_layer
+          for p0, r in zip(l['v_norm_pos0_perhead'], l['v_norm_rest_perhead'])]
     sink_frac = {f"sink_eps{e}": sum(a > e for a in flat) / (L * H) for e in (0.2, 0.3, 0.4)}
     summary = {
         **sink_frac,
         'mean_attn_pos0': sum(flat) / len(flat),
         'max_attn_pos0': max(flat),
+        'raw_mean_attn_pos0': sum(raw_flat) / len(raw_flat),    # un-normalized sigmoid/softmax mass
+        'raw_max_attn_pos0': max(raw_flat),
         'mean_img_mass': sum(l['img_mass'] for l in per_layer) / L,
         'v_ratio_pos0': sum(l['v_norm_pos0'] / max(l['v_norm_rest'], 1e-8) for l in per_layer) / L,
+        'v_ratio_perhead_min': min(vr),
+        'v_ratio_perhead_mean': sum(vr) / len(vr),
+        'v_ratio_perhead_max': max(vr),
         'h_ratio_pos0': sum(l['h_norm_pos0'] / max(l['h_norm_rest'], 1e-8) for l in per_layer) / L,
     }
     model.train()
@@ -157,3 +174,25 @@ def build_probe_batch(dataset, n=32):
     """Fixed probe batch: first n samples of the given (val) torch dataset via its collator output."""
     items = [dataset[i] for i in range(n)]
     return items
+
+
+@torch.no_grad()
+def image_swap_self_check(model, images, input_ids, attention_mask, n=8, min_cv=0.02):
+    """Harness self-check, run once at probe init. Feed FIXED text against N>=8 distinct images;
+    pos0 is a content-bearing image token, so its value-vector and attention-to-pos0 SHOULD vary
+    across images. Near-zero variance means a harness bug (e.g. images not reaching the decoder)
+    or an artifact -- fail loudly. Returns (v_pos0_cv, attn0_std)."""
+    import numpy as np
+    from reprobe import reprobe as _reprobe_walk   # reuse the validated un-pooled eager walk
+    n = min(n, images.size(0))
+    assert n >= 2, "need >=2 images for the swap check"
+    swap_ids = input_ids[0:1].repeat(n, 1)
+    swap_mask = attention_mask[0:1].repeat(n, 1)
+    r = _reprobe_walk(model, images[:n], swap_ids, swap_mask)
+    sv = r['v_pos0_img']                                   # (L, n, H, hd)
+    v_cv = float(np.nanmean(sv.std(axis=1) / (np.abs(sv).mean(axis=1) + 1e-8)))
+    attn0_std = float(r['attn0_img'].std(axis=1).mean())
+    assert v_cv > min_cv, (
+        f"image-swap self-check FAILED: pos0 value-vector ~invariant across {n} images "
+        f"(cv={v_cv:.4f} <= {min_cv}). pos0 is an image token and must vary -- harness bug/artifact.")
+    return v_cv, attn0_std
