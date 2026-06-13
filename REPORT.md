@@ -37,7 +37,52 @@ and collect first emergence curves for 4 arms.
 
 ## Results
 
-*(filled at end of session — see analysis/ for figures)*
+*(figures in `analysis/`; full per-(layer,head) data in `runs/*/probes.jsonl`)*
+
+### Headline: the VLM position-0 sink is inherited and amplified, not formed de novo
+
+**From-scratch baseline (174.4M tokens, 18,287 steps):** the attention-concentration
+sink **never fires** — Sink^0.2_1 = 0 throughout; the strongest single head reaches
+only ~0.18 mean attention→pos0 (L1H1, plateauing from ~step 5k). Yet the *other* sink
+signatures emerge early and persist: residual-norm ratio at pos0 crosses 2× by step
+400 (~4M tokens) and stabilizes ≈2.2; value-norm ratio falls below 0.8 by step 1200
+and settles ≈0.71–0.75. By step 10k, **80% of (layer,head) pairs have their argmax
+attention key at position 0** (none in the text segment) — a broad, *flat* positional
+preference without per-head mass concentration. Plan gate A (Sink^0.3 < 5% at this
+budget) technically fires for concentration — but the norm/value machinery is
+demonstrably in place, so "no sink" would be the wrong reading; the VLM-regime sink
+at this scale is *soft*.
+
+**Text-init (pretrained SmolLM2 decoder, 59.6M tokens):** the text LM's sink
+relocates to the first **image** token *instantly* and alignment training amplifies
+it explosively:
+
+| step | Sink^0.2_1 | mean attn→pos0 | v_ratio | h_ratio |
+|---|---|---|---|---|
+| 0 | 0.193 | 0.13 | 0.73 | 3.5 |
+| 100 | 0.552 | 0.25 | 0.48 | 10.5 |
+| 500 | 0.830 | 0.39 | 0.34 | 20.7 |
+| 1000 | 0.837 | 0.53 | 0.38 | 30.6 |
+| 6244 (end) | 0.852 | **0.63** | 0.38 | 42.5 |
+
+Mean attention to pos0 saturates at ~0.63 — *higher* than the ~0.47 Qiu et al. report
+for text LLMs — on a token that is a SigLIP patch embedding, not BOS. The same
+training data, architecture, and optimizer that produce **zero** concentration sink
+from random init produce a near-total one from text-pretrained init.
+
+### Decoupling (the plan's distinctive hypothesis) — supported in both directions
+
+- From-scratch: massive-activation (h_ratio>2 @ step 400) and value-drain
+  (v_ratio<0.8 @ step 1200) emerge **without** attention concentration ever crossing
+  ε=0.2 (174M tokens).
+- Notably v_ratio and max_a0 move in *opposite* directions in mid-training
+  (steps 2k→4k: v_ratio 0.71→0.79 while max_a0 0.12→0.16).
+- Text-init step 0: norm signatures (h_ratio 3.5, v_ratio 0.73) transfer to pos0
+  ahead of concentration (Sink^0.2 = 0.19, Sink^0.3 = 0 at step 0; 0.83/0.75 by step 500).
+
+### Intervention arms
+
+*(g1gate / sigmoid filled below when runs complete)*
 
 ### Step-0 sanity observations (already informative)
 
