@@ -100,10 +100,12 @@ def _get_data_streaming_fresh(args, vlm_cfg):
     train_dataset = IterableVQADataset(train_stream, tokenizer, image_processor)
 
     collator = VQACollator(tokenizer, vlm_cfg.lm_max_length)
-    # num_workers=0: IterableDataset worker sharding is a cloud dry-run seam
+    # worker sharding closed (datasets.IterableVQADataset.__iter__ strided .shard).
+    # streaming IterableDataset: shuffle=False (stream pre-shuffled in load_mix_streaming).
+    mw = dict(persistent_workers=True, prefetch_factor=4) if args.workers > 0 else {}
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=False,
-                              collate_fn=collator, num_workers=0, pin_memory=True,
-                              drop_last=True)
+                              collate_fn=collator, num_workers=args.workers, pin_memory=True,
+                              drop_last=True, **mw)
     val_kw = dict(batch_size=args.batch_size, shuffle=False, collate_fn=collator,
                   num_workers=2, pin_memory=True, drop_last=True)
     val_unseen_loader = DataLoader(val_unseen, **val_kw)

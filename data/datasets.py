@@ -70,7 +70,14 @@ class IterableVQADataset(IterableDataset):
         self.image_processor = image_processor
 
     def __iter__(self):
-        for item in self.hf_iterable:
+        # per-worker shard split: strided (contiguous=False) -> no dup across workers,
+        # union = full stream, preserves seed-0 shuffle order. closes the dry-run seam.
+        it = self.hf_iterable
+        worker_info = torch.utils.data.get_worker_info()
+        if worker_info is not None and worker_info.num_workers > 1:
+            it = it.shard(num_shards=worker_info.num_workers,
+                          index=worker_info.id, contiguous=False)
+        for item in it:
             image_data = item['images']
             image = image_data[0] if isinstance(image_data, list) and image_data else image_data
             if isinstance(image, Image.Image):
