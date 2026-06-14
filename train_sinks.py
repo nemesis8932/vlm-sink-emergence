@@ -255,7 +255,8 @@ def main():
         json.dump({'args': vars(args), 'vlm_cfg': vlm_cfg.__dict__}, f, indent=2, default=str)
 
     n_params = sum(p_.numel() for p_ in model.parameters())
-    print(f"[{args.arm}] {n_params:,} params | {len(train_loader.dataset)} train samples | bs {args.batch_size}", flush=True)
+    ds_size = len(train_loader.dataset) if hasattr(train_loader.dataset, '__len__') else 'stream'
+    print(f"[{args.arm}] {n_params:,} params | {ds_size} train samples | bs {args.batch_size}", flush=True)
 
     if args.device != 'auto':
         device = torch.device(args.device)
