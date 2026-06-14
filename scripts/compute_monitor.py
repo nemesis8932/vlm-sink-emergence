@@ -144,14 +144,14 @@ def main():
             f.write(json.dumps(rec) + '\n')
 
         # terse human status line
-        gpu_u = rec.get('gpu_util_pct', '?')
-        vram = rec.get('vram_used_mb', '?')
-        vtot = rec.get('vram_total_mb', '?')
+        gpu_u = int(rec['gpu_util_pct']) if 'gpu_util_pct' in rec else '?'
+        vram = int(rec['vram_used_mb']) if 'vram_used_mb' in rec else '?'
+        vtot = int(rec['vram_total_mb']) if 'vram_total_mb' in rec else '?'
         tok_s = rec.get('tok_s', '?')
         loss = rec.get('loss', '?')
         step = rec.get('step', '?')
         disk_a = rec.get('disk_avail_mb', '?')
-        dph = rec.get('dph_total', '?')
+        dph = round(rec['dph_total'], 4) if 'dph_total' in rec else '?'
         status_line = (
             f"{rec['ts']}  gpu={gpu_u}%  vram={vram}/{vtot}MB  "
             f"step={step}  loss={loss}  tok/s={tok_s}  "

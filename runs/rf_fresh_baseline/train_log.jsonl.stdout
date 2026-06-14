@@ -2,26 +2,201 @@
 [data] projected visual-epochs @ 1.00B tokens: 2.39 (eff. 90 tok/sample) / 1.68 (nominal 128)
 [data] WARNING: fresh pool gives 2.39 effective epochs @ 1.00B (> target 2.0); nominal 1.68. Acceptable but not the <=2 ideal -- note in report.
 Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
-Traceback (most recent call last):
-  File "/workspace/vlm-sink-emergence/train_sinks.py", line 401, in <module>
-    main()
-  File "/workspace/vlm-sink-emergence/train_sinks.py", line 258, in main
-    print(f"[{args.arm}] {n_params:,} params | {len(train_loader.dataset)} train samples | bs {args.batch_size}", flush=True)
-                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: object of type 'IterableVQADataset' has no len()
-[data] mode=fresh dataset=HuggingFaceM4/FineVision subsets=11 unique_images=4,644,331
-[data] projected visual-epochs @ 1.00B tokens: 2.39 (eff. 90 tok/sample) / 1.68 (nominal 128)
-[data] WARNING: fresh pool gives 2.39 effective epochs @ 1.00B (> target 2.0); nominal 1.68. Acceptable but not the <=2 ideal -- note in report.
-Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[resume] loaded /workspace/vlm-sink-emergence/runs/rf_fresh_baseline/ckpt_step4000.pt
 [baseline] 222,081,600 params | stream train samples | bs 128
 [baseline] device=cuda amp=True
-[baseline] image-swap self-check OK: pos0 v_cv 1.051 attn0_std 0.0033 (probe v1-repeatedtail-32)
-[probe baseline] step 0 tok 0.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.056 mean_a0 0.0534 | v_ratio 1.002 h_ratio 1.426 | 0.2s
-[baseline] step 100 loss 8.2213 tok/s 3303.9
-[probe baseline] step 100 tok 1.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.057 mean_a0 0.0531 | v_ratio 1.002 h_ratio 1.431 | 0.3s
-[baseline] step 200 loss 5.8631 tok/s 3018.1
-[probe baseline] step 200 tok 2.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.060 mean_a0 0.0530 | v_ratio 0.984 h_ratio 1.464 | 0.2s
-[baseline] step 300 loss 3.8103 tok/s 3357.7
-[probe baseline] step 300 tok 4.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.062 mean_a0 0.0531 | v_ratio 0.969 h_ratio 1.472 | 0.2s
-[baseline] step 400 loss 2.8036 tok/s 4009.2
-[probe baseline] step 400 tok 5.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.063 mean_a0 0.0531 | v_ratio 0.954 h_ratio 1.456 | 0.2s
+[baseline] image-swap self-check OK: pos0 v_cv 0.302 attn0_std 0.0085 (probe v1-repeatedtail-32)
+[probe baseline] step 4000 tok 57.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.131 mean_a0 0.0619 | v_ratio 0.787 h_ratio 2.395 | 0.2s
+[baseline] step 4100 loss 1.3547 tok/s 36729.7
+[probe baseline] step 4100 tok 58.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.142 mean_a0 0.0624 | v_ratio 0.838 h_ratio 2.354 | 0.2s
+[baseline] step 4200 loss 1.3925 tok/s 38763.0
+[probe baseline] step 4200 tok 60.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.124 mean_a0 0.0568 | v_ratio 0.796 h_ratio 2.405 | 0.2s
+[baseline] step 4300 loss 1.2098 tok/s 39055.2
+[probe baseline] step 4300 tok 61.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.124 mean_a0 0.0610 | v_ratio 0.808 h_ratio 2.501 | 0.2s
+[baseline] step 4400 loss 1.445 tok/s 26962.7
+[probe baseline] step 4400 tok 63.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.130 mean_a0 0.0601 | v_ratio 0.824 h_ratio 2.422 | 0.2s
+[baseline] step 4500 loss 1.4921 tok/s 38885.7
+[probe baseline] step 4500 tok 64.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.140 mean_a0 0.0604 | v_ratio 0.803 h_ratio 2.403 | 0.2s
+[baseline] step 4500 VAL unseen 1.4697 seen 1.4689
+[baseline] step 4600 loss 1.272 tok/s 36911.5
+[probe baseline] step 4600 tok 66.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.125 mean_a0 0.0589 | v_ratio 0.824 h_ratio 2.393 | 0.2s
+[baseline] step 4700 loss 1.5899 tok/s 27265.3
+[probe baseline] step 4700 tok 67.6M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.121 mean_a0 0.0578 | v_ratio 0.793 h_ratio 2.371 | 0.2s
+[baseline] step 4800 loss 1.5929 tok/s 29416.0
+[probe baseline] step 4800 tok 69.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.136 mean_a0 0.0601 | v_ratio 0.799 h_ratio 2.381 | 0.2s
+[baseline] step 4900 loss 1.3942 tok/s 36707.5
+[probe baseline] step 4900 tok 70.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0587 | v_ratio 0.802 h_ratio 2.392 | 0.2s
+[baseline] step 5000 loss 1.4887 tok/s 34218.3
+[probe baseline] step 5000 tok 71.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.127 mean_a0 0.0588 | v_ratio 0.792 h_ratio 2.295 | 0.2s
+[baseline] step 5000 VAL unseen 1.4468 seen 1.5010
+[baseline] step 5100 loss 1.3153 tok/s 39331.9
+[probe baseline] step 5100 tok 73.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.141 mean_a0 0.0563 | v_ratio 0.780 h_ratio 2.422 | 0.2s
+[baseline] step 5200 loss 1.5122 tok/s 36266.4
+[probe baseline] step 5200 tok 74.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.131 mean_a0 0.0566 | v_ratio 0.778 h_ratio 2.297 | 0.2s
+[baseline] step 5300 loss 1.3313 tok/s 35332.1
+[probe baseline] step 5300 tok 76.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.120 mean_a0 0.0539 | v_ratio 0.765 h_ratio 2.348 | 0.2s
+[baseline] step 5400 loss 1.6633 tok/s 20171.5
+[probe baseline] step 5400 tok 77.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.126 mean_a0 0.0594 | v_ratio 0.776 h_ratio 2.348 | 0.2s
+[baseline] step 5500 loss 1.3201 tok/s 37716.3
+[probe baseline] step 5500 tok 79.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.147 mean_a0 0.0560 | v_ratio 0.782 h_ratio 2.344 | 0.2s
+[baseline] step 5500 VAL unseen 1.4052 seen 1.4114
+[baseline] step 5600 loss 1.3273 tok/s 27456.1
+[probe baseline] step 5600 tok 80.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.129 mean_a0 0.0609 | v_ratio 0.777 h_ratio 2.350 | 0.2s
+[baseline] step 5700 loss 1.5623 tok/s 34010.9
+[probe baseline] step 5700 tok 81.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.151 mean_a0 0.0535 | v_ratio 0.756 h_ratio 2.370 | 0.2s
+[baseline] step 5800 loss 1.4701 tok/s 34701.6
+[probe baseline] step 5800 tok 83.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.131 mean_a0 0.0553 | v_ratio 0.778 h_ratio 2.380 | 0.2s
+[baseline] step 5900 loss 1.1947 tok/s 36452.9
+[probe baseline] step 5900 tok 84.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.127 mean_a0 0.0553 | v_ratio 0.751 h_ratio 2.384 | 0.2s
+[baseline] step 6000 loss 1.4497 tok/s 34417.8
+[probe baseline] step 6000 tok 86.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.133 mean_a0 0.0519 | v_ratio 0.753 h_ratio 2.384 | 0.2s
+[baseline] step 6000 VAL unseen 1.4244 seen 1.3128
+[baseline] step 6100 loss 1.2361 tok/s 31674.3
+[probe baseline] step 6100 tok 87.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.130 mean_a0 0.0549 | v_ratio 0.774 h_ratio 2.324 | 0.2s
+[baseline] step 6200 loss 1.7873 tok/s 36203.3
+[probe baseline] step 6200 tok 89.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.114 mean_a0 0.0527 | v_ratio 0.750 h_ratio 2.368 | 0.2s
+[baseline] step 6300 loss 1.4113 tok/s 32671.0
+[probe baseline] step 6300 tok 90.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.116 mean_a0 0.0529 | v_ratio 0.733 h_ratio 2.355 | 0.2s
+[baseline] step 6400 loss 1.5011 tok/s 36033.9
+[probe baseline] step 6400 tok 91.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.123 mean_a0 0.0552 | v_ratio 0.750 h_ratio 2.394 | 0.2s
+[baseline] step 6500 loss 1.376 tok/s 33391.4
+[probe baseline] step 6500 tok 93.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.108 mean_a0 0.0526 | v_ratio 0.749 h_ratio 2.349 | 0.2s
+[baseline] step 6500 VAL unseen 1.4591 seen 1.4008
+[baseline] step 6600 loss 1.2498 tok/s 29685.7
+[probe baseline] step 6600 tok 94.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.111 mean_a0 0.0528 | v_ratio 0.737 h_ratio 2.354 | 0.2s
+[baseline] step 6700 loss 1.7051 tok/s 24905.4
+[probe baseline] step 6700 tok 96.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0559 | v_ratio 0.754 h_ratio 2.376 | 0.2s
+[baseline] step 6800 loss 1.4738 tok/s 21325.3
+[probe baseline] step 6800 tok 97.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.114 mean_a0 0.0549 | v_ratio 0.742 h_ratio 2.295 | 0.2s
+[baseline] step 6900 loss 1.2527 tok/s 32311.5
+[probe baseline] step 6900 tok 99.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.116 mean_a0 0.0539 | v_ratio 0.744 h_ratio 2.323 | 0.2s
+[baseline] step 7000 loss 1.2606 tok/s 36935.4
+[probe baseline] step 7000 tok 100.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.119 mean_a0 0.0566 | v_ratio 0.741 h_ratio 2.376 | 0.2s
+[baseline] step 7000 VAL unseen 1.2943 seen 1.4009
+[baseline] step 7100 loss 1.1916 tok/s 30325.2
+[probe baseline] step 7100 tok 101.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.126 mean_a0 0.0533 | v_ratio 0.732 h_ratio 2.417 | 0.2s
+[baseline] step 7200 loss 1.054 tok/s 34163.8
+[probe baseline] step 7200 tok 103.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.110 mean_a0 0.0543 | v_ratio 0.731 h_ratio 2.321 | 0.2s
+[baseline] step 7300 loss 1.3114 tok/s 36624.1
+[probe baseline] step 7300 tok 104.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.099 mean_a0 0.0532 | v_ratio 0.731 h_ratio 2.322 | 0.2s
+[baseline] step 7400 loss 1.2358 tok/s 26757.0
+[probe baseline] step 7400 tok 106.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.110 mean_a0 0.0546 | v_ratio 0.710 h_ratio 2.348 | 0.2s
+[baseline] step 7500 loss 1.3601 tok/s 23421.8
+[probe baseline] step 7500 tok 107.6M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.107 mean_a0 0.0504 | v_ratio 0.709 h_ratio 2.358 | 0.2s
+[baseline] step 7500 VAL unseen 1.3038 seen 1.3340
+[baseline] step 7600 loss 1.3712 tok/s 35175.7
+[probe baseline] step 7600 tok 109.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.103 mean_a0 0.0544 | v_ratio 0.713 h_ratio 2.356 | 0.2s
+[baseline] step 7700 loss 1.3794 tok/s 37596.8
+[probe baseline] step 7700 tok 110.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0559 | v_ratio 0.738 h_ratio 2.338 | 0.2s
+[baseline] step 7800 loss 1.095 tok/s 26631.5
+[probe baseline] step 7800 tok 111.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.125 mean_a0 0.0555 | v_ratio 0.722 h_ratio 2.378 | 0.2s
+[baseline] step 7900 loss 1.0883 tok/s 36949.3
+[probe baseline] step 7900 tok 113.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.109 mean_a0 0.0516 | v_ratio 0.707 h_ratio 2.340 | 0.2s
+[baseline] step 8000 loss 1.1316 tok/s 37621.4
+[probe baseline] step 8000 tok 114.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.127 mean_a0 0.0549 | v_ratio 0.723 h_ratio 2.338 | 0.2s
+[baseline] step 8000 VAL unseen 1.2955 seen 1.2157
+[baseline] step 8100 loss 1.4459 tok/s 37949.3
+[probe baseline] step 8100 tok 116.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.131 mean_a0 0.0583 | v_ratio 0.731 h_ratio 2.319 | 0.2s
+[baseline] step 8200 loss 1.557 tok/s 5160.8
+[probe baseline] step 8200 tok 117.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.137 mean_a0 0.0544 | v_ratio 0.726 h_ratio 2.280 | 0.2s
+[baseline] step 8300 loss 1.0845 tok/s 3125.7
+[probe baseline] step 8300 tok 119.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.124 mean_a0 0.0555 | v_ratio 0.731 h_ratio 2.291 | 0.2s
+[baseline] step 8400 loss 0.9347 tok/s 41473.9
+[probe baseline] step 8400 tok 120.6M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.125 mean_a0 0.0551 | v_ratio 0.736 h_ratio 2.296 | 0.2s
+[baseline] step 8500 loss 1.2141 tok/s 37222.3
+[probe baseline] step 8500 tok 122.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.113 mean_a0 0.0518 | v_ratio 0.695 h_ratio 2.347 | 0.2s
+[baseline] step 8500 VAL unseen 1.1714 seen 1.1116
+[baseline] step 8600 loss 1.1731 tok/s 39474.3
+[probe baseline] step 8600 tok 123.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.118 mean_a0 0.0535 | v_ratio 0.707 h_ratio 2.372 | 0.2s
+[baseline] step 8700 loss 1.1987 tok/s 29305.3
+[probe baseline] step 8700 tok 124.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.103 mean_a0 0.0503 | v_ratio 0.689 h_ratio 2.356 | 0.2s
+[baseline] step 8800 loss 1.0924 tok/s 35344.9
+[probe baseline] step 8800 tok 126.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.111 mean_a0 0.0509 | v_ratio 0.700 h_ratio 2.413 | 0.2s
+[baseline] step 8900 loss 1.0157 tok/s 39043.3
+[probe baseline] step 8900 tok 127.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.113 mean_a0 0.0545 | v_ratio 0.720 h_ratio 2.448 | 0.2s
+[baseline] step 9000 loss 1.2282 tok/s 29275.9
+[probe baseline] step 9000 tok 129.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.114 mean_a0 0.0529 | v_ratio 0.698 h_ratio 2.379 | 0.2s
+[baseline] step 9000 VAL unseen 1.2286 seen 1.1947
+[baseline] step 9100 loss 1.1776 tok/s 31682.9
+[probe baseline] step 9100 tok 130.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.107 mean_a0 0.0534 | v_ratio 0.695 h_ratio 2.399 | 0.2s
+[baseline] step 9200 loss 1.2139 tok/s 39076.0
+[probe baseline] step 9200 tok 132.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.131 mean_a0 0.0577 | v_ratio 0.707 h_ratio 2.391 | 0.2s
+[baseline] step 9300 loss 1.3599 tok/s 38852.5
+[probe baseline] step 9300 tok 133.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.106 mean_a0 0.0555 | v_ratio 0.699 h_ratio 2.452 | 0.2s
+[baseline] step 9400 loss 1.0057 tok/s 36069.0
+[probe baseline] step 9400 tok 134.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.119 mean_a0 0.0576 | v_ratio 0.716 h_ratio 2.476 | 0.2s
+[baseline] step 9500 loss 1.4062 tok/s 38129.4
+[probe baseline] step 9500 tok 136.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.120 mean_a0 0.0541 | v_ratio 0.691 h_ratio 2.425 | 0.2s
+[baseline] step 9500 VAL unseen 1.3729 seen 1.1436
+[baseline] step 9600 loss 1.1633 tok/s 37698.2
+[probe baseline] step 9600 tok 137.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.106 mean_a0 0.0543 | v_ratio 0.693 h_ratio 2.514 | 0.2s
+[baseline] step 9700 loss 1.2777 tok/s 35214.4
+[probe baseline] step 9700 tok 139.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.113 mean_a0 0.0546 | v_ratio 0.698 h_ratio 2.415 | 0.2s
+[baseline] step 9800 loss 1.1331 tok/s 38813.3
+[probe baseline] step 9800 tok 140.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0560 | v_ratio 0.721 h_ratio 2.438 | 0.2s
+[baseline] step 9900 loss 1.1938 tok/s 27807.1
+[probe baseline] step 9900 tok 142.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.107 mean_a0 0.0517 | v_ratio 0.688 h_ratio 2.494 | 0.2s
+[baseline] step 10000 loss 1.0253 tok/s 38249.4
+[probe baseline] step 10000 tok 143.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.124 mean_a0 0.0582 | v_ratio 0.719 h_ratio 2.544 | 0.2s
+[baseline] step 10000 VAL unseen 1.2645 seen 1.1902
+[baseline] step 10100 loss 1.2066 tok/s 39180.5
+[probe baseline] step 10100 tok 144.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.122 mean_a0 0.0561 | v_ratio 0.727 h_ratio 2.414 | 0.2s
+[baseline] step 10200 loss 1.3953 tok/s 38238.2
+[probe baseline] step 10200 tok 146.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.124 mean_a0 0.0548 | v_ratio 0.723 h_ratio 2.433 | 0.2s
+[baseline] step 10300 loss 1.1949 tok/s 37841.6
+[probe baseline] step 10300 tok 147.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0563 | v_ratio 0.707 h_ratio 2.565 | 0.2s
+[baseline] step 10400 loss 1.193 tok/s 30907.9
+[probe baseline] step 10400 tok 149.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.123 mean_a0 0.0560 | v_ratio 0.697 h_ratio 2.495 | 0.2s
+[baseline] step 10500 loss 1.0429 tok/s 39215.6
+[probe baseline] step 10500 tok 150.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.116 mean_a0 0.0541 | v_ratio 0.694 h_ratio 2.530 | 0.2s
+[baseline] step 10500 VAL unseen 1.2266 seen 1.1657
+[baseline] step 10600 loss 1.1235 tok/s 28522.5
+[probe baseline] step 10600 tok 152.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.116 mean_a0 0.0528 | v_ratio 0.673 h_ratio 2.500 | 0.2s
+[baseline] step 10700 loss 1.2194 tok/s 40501.7
+[probe baseline] step 10700 tok 153.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.108 mean_a0 0.0546 | v_ratio 0.696 h_ratio 2.457 | 0.2s
+[baseline] step 10800 loss 1.0851 tok/s 34048.2
+[probe baseline] step 10800 tok 154.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.110 mean_a0 0.0519 | v_ratio 0.683 h_ratio 2.464 | 0.2s
+[baseline] step 10900 loss 1.2437 tok/s 29320.3
+[probe baseline] step 10900 tok 156.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.124 mean_a0 0.0545 | v_ratio 0.697 h_ratio 2.568 | 0.2s
+[baseline] step 11000 loss 1.1017 tok/s 22055.6
+[probe baseline] step 11000 tok 157.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.124 mean_a0 0.0544 | v_ratio 0.681 h_ratio 2.513 | 0.2s
+[baseline] step 11000 VAL unseen 1.1985 seen 1.2264
+[baseline] step 11100 loss 1.0601 tok/s 35465.7
+[probe baseline] step 11100 tok 159.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.116 mean_a0 0.0549 | v_ratio 0.682 h_ratio 2.527 | 0.2s
+[baseline] step 11200 loss 1.2464 tok/s 29808.6
+[probe baseline] step 11200 tok 160.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.123 mean_a0 0.0538 | v_ratio 0.681 h_ratio 2.544 | 0.2s
+[baseline] step 11300 loss 1.2172 tok/s 38123.1
+[probe baseline] step 11300 tok 162.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.119 mean_a0 0.0535 | v_ratio 0.680 h_ratio 2.497 | 0.2s
+[baseline] step 11400 loss 1.4026 tok/s 36179.5
+[probe baseline] step 11400 tok 163.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.132 mean_a0 0.0564 | v_ratio 0.701 h_ratio 2.483 | 0.2s
+[baseline] step 11500 loss 0.9605 tok/s 37839.3
+[probe baseline] step 11500 tok 165.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0542 | v_ratio 0.679 h_ratio 2.546 | 0.2s
+[baseline] step 11500 VAL unseen 1.1862 seen 1.2547
+[baseline] step 11600 loss 0.7941 tok/s 36131.4
+[probe baseline] step 11600 tok 166.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.119 mean_a0 0.0554 | v_ratio 0.685 h_ratio 2.538 | 0.2s
+[baseline] step 11700 loss 0.9274 tok/s 31210.5
+[probe baseline] step 11700 tok 167.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.111 mean_a0 0.0529 | v_ratio 0.655 h_ratio 2.517 | 0.2s
+[baseline] step 11800 loss 1.342 tok/s 32162.9
+[probe baseline] step 11800 tok 169.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.116 mean_a0 0.0499 | v_ratio 0.683 h_ratio 2.476 | 0.2s
+[baseline] step 11900 loss 1.3228 tok/s 39097.8
+[probe baseline] step 11900 tok 170.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.123 mean_a0 0.0522 | v_ratio 0.681 h_ratio 2.464 | 0.2s
+[baseline] step 12000 loss 1.1021 tok/s 39732.3
+[probe baseline] step 12000 tok 172.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.123 mean_a0 0.0533 | v_ratio 0.691 h_ratio 2.493 | 0.2s
+[baseline] step 12000 VAL unseen 1.2562 seen 1.1825
+[baseline] step 12100 loss 1.1742 tok/s 37192.1
+[probe baseline] step 12100 tok 173.6M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.118 mean_a0 0.0543 | v_ratio 0.684 h_ratio 2.522 | 0.2s
+[baseline] step 12200 loss 1.1635 tok/s 33420.0
+[probe baseline] step 12200 tok 175.1M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.113 mean_a0 0.0524 | v_ratio 0.660 h_ratio 2.561 | 0.2s
+[baseline] step 12300 loss 1.2544 tok/s 35310.6
+[probe baseline] step 12300 tok 176.5M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.113 mean_a0 0.0499 | v_ratio 0.668 h_ratio 2.419 | 0.2s
+[baseline] step 12400 loss 1.1261 tok/s 37210.3
+[probe baseline] step 12400 tok 178.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.118 mean_a0 0.0548 | v_ratio 0.668 h_ratio 2.500 | 0.2s
+[baseline] step 12500 loss 1.3597 tok/s 4227.9
+[probe baseline] step 12500 tok 179.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.120 mean_a0 0.0563 | v_ratio 0.676 h_ratio 2.575 | 0.2s
+[baseline] step 12500 VAL unseen 1.1850 seen 1.2581
+[baseline] step 12600 loss 1.2375 tok/s 4787.6
+[probe baseline] step 12600 tok 180.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.114 mean_a0 0.0540 | v_ratio 0.673 h_ratio 2.503 | 0.2s
+[baseline] step 12700 loss 1.0166 tok/s 36902.0
+[probe baseline] step 12700 tok 182.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.118 mean_a0 0.0536 | v_ratio 0.679 h_ratio 2.518 | 0.2s
+[baseline] step 12800 loss 1.0571 tok/s 40094.4
+[probe baseline] step 12800 tok 183.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0518 | v_ratio 0.678 h_ratio 2.523 | 0.2s

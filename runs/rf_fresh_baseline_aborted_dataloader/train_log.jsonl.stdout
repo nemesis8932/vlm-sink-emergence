@@ -1,0 +1,27 @@
+[data] mode=fresh dataset=HuggingFaceM4/FineVision subsets=11 unique_images=4,644,331
+[data] projected visual-epochs @ 1.00B tokens: 2.39 (eff. 90 tok/sample) / 1.68 (nominal 128)
+[data] WARNING: fresh pool gives 2.39 effective epochs @ 1.00B (> target 2.0); nominal 1.68. Acceptable but not the <=2 ideal -- note in report.
+Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+Traceback (most recent call last):
+  File "/workspace/vlm-sink-emergence/train_sinks.py", line 401, in <module>
+    main()
+  File "/workspace/vlm-sink-emergence/train_sinks.py", line 258, in main
+    print(f"[{args.arm}] {n_params:,} params | {len(train_loader.dataset)} train samples | bs {args.batch_size}", flush=True)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: object of type 'IterableVQADataset' has no len()
+[data] mode=fresh dataset=HuggingFaceM4/FineVision subsets=11 unique_images=4,644,331
+[data] projected visual-epochs @ 1.00B tokens: 2.39 (eff. 90 tok/sample) / 1.68 (nominal 128)
+[data] WARNING: fresh pool gives 2.39 effective epochs @ 1.00B (> target 2.0); nominal 1.68. Acceptable but not the <=2 ideal -- note in report.
+Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Model has 85,797,120 parameters.
+[baseline] 222,081,600 params | stream train samples | bs 128
+[baseline] device=cuda amp=True
+[baseline] image-swap self-check OK: pos0 v_cv 1.051 attn0_std 0.0033 (probe v1-repeatedtail-32)
+[probe baseline] step 0 tok 0.0M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.056 mean_a0 0.0534 | v_ratio 1.002 h_ratio 1.426 | 0.2s
+[baseline] step 100 loss 8.2213 tok/s 3303.9
+[probe baseline] step 100 tok 1.4M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.057 mean_a0 0.0531 | v_ratio 1.002 h_ratio 1.431 | 0.3s
+[baseline] step 200 loss 5.8631 tok/s 3018.1
+[probe baseline] step 200 tok 2.9M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.060 mean_a0 0.0530 | v_ratio 0.984 h_ratio 1.464 | 0.2s
+[baseline] step 300 loss 3.8103 tok/s 3357.7
+[probe baseline] step 300 tok 4.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.062 mean_a0 0.0531 | v_ratio 0.969 h_ratio 1.472 | 0.2s
+[baseline] step 400 loss 2.8036 tok/s 4009.2
+[probe baseline] step 400 tok 5.8M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.063 mean_a0 0.0531 | v_ratio 0.954 h_ratio 1.456 | 0.2s
