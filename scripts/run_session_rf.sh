@@ -66,7 +66,7 @@ python3 train_sinks.py \
     --val_size 1024 \
     --probe_every 100 \
     --val_every 500 \
-    --workers 12 \
+    --workers 10 \
     --out_dir "$OUT_DIR" \
     --ckpt_steps 0,250,1000,2000,4000,8000,16000,32000,64000,100000 \
     2>&1 | tee -a "$TRAIN_LOG.stdout"
