@@ -15,7 +15,7 @@ export VAL_KILL=0
 export CAP_HOURS=12   # raised 8->12: streaming-fresh @ ~0.5s/step margin to finish 1B tok
 export SESSION_SCRIPT=run_session_rf.sh
 export COMPUTE_LOG=/workspace/vlm-sink-emergence/compute_log.jsonl
-export DATA_SHUFFLE_BUFFER=500   # raw PIL ~9MB/item measured; 10 workers*500*9MB~=45G << ~181G cgroup. 12*1500 OOM-killed twice.
+export DATA_SHUFFLE_BUFFER=500   # raw PIL ~9MB/item. 10 workers crept to 180G (cgroup ~181G) over ~8k steps -> 8 workers (~132G base, ~49G headroom for streaming-worker mem creep). 12*1500 OOM-killed.
 
 source /workspace/venv/bin/activate
 export HF_HOME=/workspace/.hf_home
@@ -61,7 +61,7 @@ python3 train_sinks.py \
     --val_size 1024 \
     --probe_every 100 \
     --val_every 500 \
-    --workers 10 \
+    --workers 8 \
     --out_dir "$OUT_DIR" \
     --ckpt_steps 0,250,1000,2000,4000,8000,16000,32000,64000,100000 \
     2>&1 | tee -a "$TRAIN_LOG.stdout"
