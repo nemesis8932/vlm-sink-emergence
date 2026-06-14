@@ -141,20 +141,28 @@ def _fake_dataset(n=64, size=32):
     return Dataset.from_list(rows)
 
 
-def load_mix_streaming(spec, seed=0):
+def load_mix_streaming(spec, seed=0, buffer_size=None):
     """Return a shuffled HF IterableDataset over the spec's subsets (no download).
 
     Caller MUST drain val rows BEFORE iterating for training so both see disjoint
-    deterministic slices of the same seed-0 shuffle. Worker sharding (num_workers > 1)
-    is a cloud dry-run seam — use DataLoader(num_workers=0) locally.
+    deterministic slices of the same seed-0 shuffle. Multi-worker DataLoaders shard
+    the 41 data-source shards across workers (HF auto, disjoint).
+
+    buffer_size: per-pipeline shuffle buffer holding RAW (PIL-decoded) rows. With
+    num_workers>0 each worker holds its OWN buffer, so total mem ~= workers*buffer*img.
+    Keep small with many workers or the container cgroup OOM-kills a worker. Override
+    via DATA_SHUFFLE_BUFFER env; default 10_000 (single-worker).
     """
+    import os
     from datasets import interleave_datasets, load_dataset
+    if buffer_size is None:
+        buffer_size = int(os.environ.get('DATA_SHUFFLE_BUFFER', 10_000))
     streams = [
         load_dataset(spec['dataset'], name, split='train', streaming=True).select_columns(['images', 'texts'])
         for name in spec['subsets']
     ]
     combined = interleave_datasets(streams, seed=seed)
-    return combined.shuffle(buffer_size=10_000, seed=seed)
+    return combined.shuffle(buffer_size=buffer_size, seed=seed)
 
 
 def load_mix(spec, limit_per_subset=None, seed=0, fake=False):

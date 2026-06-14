@@ -102,7 +102,7 @@ def _get_data_streaming_fresh(args, vlm_cfg):
     collator = VQACollator(tokenizer, vlm_cfg.lm_max_length)
     # worker sharding closed (datasets.IterableVQADataset.__iter__ strided .shard).
     # streaming IterableDataset: shuffle=False (stream pre-shuffled in load_mix_streaming).
-    mw = dict(persistent_workers=True, prefetch_factor=4) if args.workers > 0 else {}
+    mw = dict(persistent_workers=True, prefetch_factor=2) if args.workers > 0 else {}
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=False,
                               collate_fn=collator, num_workers=args.workers, pin_memory=True,
                               drop_last=True, **mw)
