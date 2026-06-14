@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Core guidance for any agent in this repo. Be terse; sacrifice grammar for concision.
+Be extremely concise and sacrifice grammar for the sake of concision.
 
 ## What this is
 
@@ -11,13 +11,30 @@ pretraining, and do attention-concentration vs value-norm / massive-activation s
 
 ## Read first
 
+- `technical-reference-manual.md` - core research document
 - `references/plan_when-sinks-emerge-in-vlms.md` — the plan, scoop check, deadlines.
 - `REPORT.md` — findings so far. Read before proposing experiments; don't re-derive.
 - `docs/experiments.md` — arms, knobs, how to run.
 - `docs/conventions.md` — metric definitions, probe contract, key files.
 - `docs/cloud-agent.md` — north star + rules for the vast.ai cloud agent.
+- `docs/handoff-contract.md` — one format for all role-to-role messages.
 
 (The stock nanoVLM `README.md` / `nanoVLM.ipynb` are upstream docs.)
+
+## Agent roles (fleet)
+
+Skills in `.claude/skills/` — invoke one to adopt that role in a fresh thread (you spawn each agent yourself, across Mac / desktop / vast.ai). Delegation = `docs/handoff-contract.md`: try `SendMessage`, else a lean `.md` to carry across devices.
+
+```
+Director (1, Opus) ── orchestrates, holds context, go/no-go
+├─ Engineering Manager (2, Sonnet) ── compacts eng → Director; commands the fleet
+│   ├─ Cloud Agent (3) ── billed GPU; self-stops on waste (docs/cloud-agent.md)
+│   └─ local Agent (4) ── builds/tests infra; zero-cost verifications
+├─ Auditor (2, Opus) ── audits data, kills bias, publication viz
+└─ Researcher (2, Desktop) ── prior-art scout, no code access
+```
+
+Director never ingests raw logs — EM/Auditor compact first. Rank-2s report straight to Director.
 
 ## Workflow (mandatory)
 
