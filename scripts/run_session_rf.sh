@@ -12,7 +12,7 @@ cd /workspace/vlm-sink-emergence
 # Failsafe profile — watchdog_rf.sh reads these
 export NAN_KILL=1
 export VAL_KILL=0
-export CAP_HOURS=8
+export CAP_HOURS=12   # raised 8->12: streaming-fresh @ ~0.5s/step margin to finish 1B tok
 export SESSION_SCRIPT=run_session_rf.sh
 export COMPUTE_LOG=/workspace/vlm-sink-emergence/compute_log.jsonl
 
@@ -60,7 +60,7 @@ python3 train_sinks.py \
     --val_size 1024 \
     --probe_every 100 \
     --val_every 500 \
-    --workers 0 \
+    --workers 16 \
     --out_dir "$OUT_DIR" \
     --ckpt_steps 0,250,1000,2000,4000,8000,16000,32000,64000,100000 \
     2>&1 | tee -a "$TRAIN_LOG.stdout"
