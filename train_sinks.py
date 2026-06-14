@@ -64,6 +64,7 @@ def _shared_probe(collator, repeated_val_dataset, probe_n):
     Always the repeated subsets' val tail under random.seed(0) -> byte-identical to Session-1
     and identical for the fresh arm, so every arm/ckpt is measured on the same stimulus.
     Nothing consumes the global `random` stream before this, so the 32 QA choices are fixed."""
+    probe_n = min(probe_n, len(repeated_val_dataset))
     random.seed(0)
     return collator([repeated_val_dataset[i] for i in range(probe_n)])
 
