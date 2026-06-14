@@ -81,11 +81,11 @@ ckpts = glob.glob('$OUT_DIR/ckpt_step*.pt')
 for ckpt in ckpts:
     api.upload_file(
         path_or_fileobj=ckpt,
-        path_in_repo=os.path.basename(ckpt),
+        path_in_repo=f"runs/rf_fresh_baseline/{os.path.basename(ckpt)}",
         repo_id='nemesismaniac/vlm-sink-emergence-ckpts',
         repo_type='dataset',
     )
-    print(f'[hf] uploaded {os.path.basename(ckpt)}')
+    print(f'[hf] uploaded runs/rf_fresh_baseline/{os.path.basename(ckpt)}')
 " &
 HF_PID=$!
 echo "[rf] HF upload PID=$HF_PID"
