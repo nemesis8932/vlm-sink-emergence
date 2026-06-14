@@ -1,6 +1,8 @@
+import random as _random
+
 import torch
 from PIL import Image
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, IterableDataset
 
 import models.config as cfg
 
@@ -37,7 +39,6 @@ class VQADataset(Dataset):  # Visual Question Answering Dataset
 
         # Process text (also a list). Cauldron packs ~several QA pairs per image;
         # sample one per visit so repeated epochs see different text targets.
-        import random as _random
         text_data = item['texts']
         if isinstance(text_data, list) and len(text_data) > 0:
             text = _random.choice(text_data)
@@ -55,6 +56,40 @@ class VQADataset(Dataset):  # Visual Question Answering Dataset
             "text_data": formatted_text,
             "answer": answer
         }
+
+
+class IterableVQADataset(IterableDataset):
+    """Wraps an HF IterableDataset, applying the same image+text transform as VQADataset.
+
+    Cloud dry-run seam: DataLoader(num_workers=0) required locally; multi-worker sharding
+    (IterableDataset.shard per worker_info) must be validated on the GPU instance.
+    """
+    def __init__(self, hf_iterable, tokenizer, image_processor):
+        self.hf_iterable = hf_iterable
+        self.tokenizer = tokenizer
+        self.image_processor = image_processor
+
+    def __iter__(self):
+        for item in self.hf_iterable:
+            image_data = item['images']
+            image = image_data[0] if isinstance(image_data, list) and image_data else image_data
+            if isinstance(image, Image.Image):
+                if image.mode != 'RGB':
+                    image = image.convert('RGB')
+                processed_image = self.image_processor(image)
+            else:
+                processed_image = torch.zeros(
+                    3, cfg.VLMConfig.vit_img_size, cfg.VLMConfig.vit_img_size)
+
+            text_data = item['texts']
+            text = _random.choice(text_data) if isinstance(text_data, list) and text_data else text_data
+            question = text['user']
+            answer = text['assistant'] + self.tokenizer.eos_token
+            yield {
+                'image': processed_image,
+                'text_data': f'Question: {question} Answer:',
+                'answer': answer,
+            }
 
 
 class MMStarDataset(Dataset):  # https://huggingface.co/datasets/Lin-Chen/MMStar

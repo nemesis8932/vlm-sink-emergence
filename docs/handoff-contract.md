@@ -2,7 +2,7 @@
 
 One format for every role-to-role message — brief *down*, report *up*. Roles + ranks: see `CLAUDE.md` org chart.
 
-**Deliver:** try `SendMessage` to the target agent. On failure, write `handoff-<to>-<topic>.md` (mktemp-style; read before write) for the user to carry across devices.
+**Deliver:** try `SendMessage` to the target agent. On failure, write `handoff-<to>-<topic>-<4-char hex>.md` (e.g. `handoff-em-rf-a3f1.md`; `openssl rand -hex 2` for the suffix; read before write) for the user to carry across devices. Save in `handoffs/` folder.
 
 **Block:**
 ```

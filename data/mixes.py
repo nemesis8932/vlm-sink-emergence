@@ -141,6 +141,22 @@ def _fake_dataset(n=64, size=32):
     return Dataset.from_list(rows)
 
 
+def load_mix_streaming(spec, seed=0):
+    """Return a shuffled HF IterableDataset over the spec's subsets (no download).
+
+    Caller MUST drain val rows BEFORE iterating for training so both see disjoint
+    deterministic slices of the same seed-0 shuffle. Worker sharding (num_workers > 1)
+    is a cloud dry-run seam — use DataLoader(num_workers=0) locally.
+    """
+    from datasets import interleave_datasets, load_dataset
+    streams = [
+        load_dataset(spec['dataset'], name, split='train', streaming=True).select_columns(['images', 'texts'])
+        for name in spec['subsets']
+    ]
+    combined = interleave_datasets(streams, seed=seed)
+    return combined.shuffle(buffer_size=10_000, seed=seed)
+
+
 def load_mix(spec, limit_per_subset=None, seed=0, fake=False):
     """Concatenate the spec's subsets into one shuffled Dataset (rows == unique images).
 

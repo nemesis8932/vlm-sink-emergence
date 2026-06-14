@@ -14,6 +14,7 @@ import json
 import math
 import os
 import random
+import sys
 import time
 
 import numpy
@@ -26,7 +27,7 @@ from torch.utils.data import DataLoader
 # are then comparable seed-to-seed), while model init and data order follow --seed.
 
 from data.collators import VQACollator
-from data.datasets import VQADataset
+from data.datasets import IterableVQADataset, VQADataset
 from data.processors import get_image_processor, get_tokenizer
 from models.vision_language_model import VisionLanguageModel
 from models.vision_transformer import ViT
@@ -67,10 +68,63 @@ def _shared_probe(collator, repeated_val_dataset, probe_n):
     return collator([repeated_val_dataset[i] for i in range(probe_n)])
 
 
+def _get_data_streaming_fresh(args, vlm_cfg):
+    """Fresh arm: HF IterableDataset path. Val drained BEFORE training stream is consumed.
+
+    Cloud dry-run seam: num_workers=0 here; test multi-worker sharding on the GPU instance
+    (IterableVQADataset.__iter__ needs per-worker shard split for workers > 0).
+    """
+    from datasets import Dataset as HFDataset
+    from itertools import islice
+
+    image_processor = get_image_processor(vlm_cfg.vit_img_size)
+    tokenizer = get_tokenizer(vlm_cfg.lm_tokenizer)
+    spec = mixes.FRESH
+
+    target_tokens = args.max_tokens_M * 1e6 if math.isfinite(args.max_tokens_M) else 1e9
+    mixes.report_data_stats(spec, args.data_mode, target_tokens=target_tokens,
+                            tok_per_sample=args.tok_per_sample)
+
+    stream = mixes.load_mix_streaming(spec, seed=0)
+
+    # drain val_size rows deterministically BEFORE training ever sees the stream
+    val_rows = list(islice(iter(stream), args.val_size))
+    val_ds = HFDataset.from_list(val_rows)
+    val_unseen = VQADataset(val_ds, tokenizer, image_processor)   # map-style, random access OK
+    # "seen" val meaningless at <2 visual epochs -> reuse unseen
+    val_seen = val_unseen
+
+    # training stream = everything after the drained val prefix
+    train_stream = stream.skip(args.val_size)
+    train_dataset = IterableVQADataset(train_stream, tokenizer, image_processor)
+
+    collator = VQACollator(tokenizer, vlm_cfg.lm_max_length)
+    # num_workers=0: IterableDataset worker sharding is a cloud dry-run seam
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=False,
+                              collate_fn=collator, num_workers=0, pin_memory=True,
+                              drop_last=True)
+    val_kw = dict(batch_size=args.batch_size, shuffle=False, collate_fn=collator,
+                  num_workers=2, pin_memory=True, drop_last=True)
+    val_unseen_loader = DataLoader(val_unseen, **val_kw)
+    val_seen_loader = DataLoader(val_seen, **val_kw)
+
+    # shared probe: always repeated val tail (fresh arm never IS repeated)
+    rep = mixes.load_mix(mixes.REPEATED, limit_per_subset=args.limit_per_subset, seed=0,
+                         fake=args.fake_data)
+    probe_val = VQADataset(rep.select(range(len(rep) - min(1024, len(rep) // 4), len(rep))),
+                           tokenizer, image_processor)
+    probe = _shared_probe(collator, probe_val, args.probe_n)
+    return train_loader, val_unseen_loader, val_seen_loader, probe
+
+
 def get_data(args, vlm_cfg):
     image_processor = get_image_processor(vlm_cfg.vit_img_size)
     tokenizer = get_tokenizer(vlm_cfg.lm_tokenizer)
     spec = mixes.spec_for(args.data_mode)
+
+    # Fresh full run → streaming path (no download of 4.6M rows)
+    if args.data_mode == 'fresh' and not args.fake_data and args.limit_per_subset is None:
+        return _get_data_streaming_fresh(args, vlm_cfg)
 
     # unique-image count + projected visual-epochs; fresh mode asserts the pool is big enough
     target_tokens = args.max_tokens_M * 1e6 if math.isfinite(args.max_tokens_M) else 1e9
@@ -324,6 +378,12 @@ def main():
             if step in ckpt_set:
                 save_ckpt(model, out_dir, step)
                 last_t = time.time()
+
+            if os.environ.get('NAN_KILL', '1') == '1':
+                lv = loss.item()
+                if lv != lv or lv == float('inf') or lv == float('-inf'):
+                    print(f"[{args.arm}] NaN/Inf loss at step {step} -> abort (NAN_KILL=1)", flush=True)
+                    sys.exit(1)
 
             if (step >= args.max_steps or (time.time() - t_start) > args.max_hours * 3600
                     or tokens_seen >= args.max_tokens_M * 1e6):
