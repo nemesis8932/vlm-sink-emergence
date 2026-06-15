@@ -200,3 +200,5 @@ Successfully loaded google/siglip-base-patch16-224 weights from safetensors. Mod
 [probe baseline] step 12700 tok 182.3M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.118 mean_a0 0.0536 | v_ratio 0.679 h_ratio 2.518 | 0.2s
 [baseline] step 12800 loss 1.0571 tok/s 40094.4
 [probe baseline] step 12800 tok 183.7M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.117 mean_a0 0.0518 | v_ratio 0.678 h_ratio 2.523 | 0.2s
+[baseline] step 12900 loss 0.9621 tok/s 37682.9
+[probe baseline] step 12900 tok 185.2M | sink.2/.3/.4 0.000/0.000/0.000 | max_a0 0.114 mean_a0 0.0515 | v_ratio 0.675 h_ratio 2.552 | 0.2s

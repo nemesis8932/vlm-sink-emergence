@@ -466,3 +466,5 @@
 [monitor] 2026-06-14T22:56:08Z  gpu=0%  vram=25270/49140MB  step=12575  loss=1.1298  tok/s=3804.5  disk_avail=22965MB  $/h=0.7037
 [monitor] 2026-06-14T22:56:54Z  gpu=100%  vram=25270/49140MB  step=12650  loss=1.1456  tok/s=40760.1  disk_avail=22965MB  $/h=0.7037
 [monitor] 2026-06-14T22:57:40Z  gpu=0%  vram=25270/49140MB  step=12750  loss=1.1228  tok/s=39563.5  disk_avail=22965MB  $/h=0.7037
+[monitor] 2026-06-14T22:58:25Z  gpu=67%  vram=25270/49140MB  step=12875  loss=1.2939  tok/s=39510.1  disk_avail=22964MB  $/h=0.7037
+[monitor] 2026-06-14T22:59:11Z  gpu=0%  vram=25270/49140MB  step=12950  loss=1.0604  tok/s=34740.5  disk_avail=22963MB  $/h=0.7037
