@@ -1,1 +1,1 @@
-2026-06-29T09:49:53Z  gpu=0%  vram=25600/49140MB  step=10475  loss=0.4119  tok/s=51008.2  disk_avail=17937MB  $/h=0.7037
+2026-06-29T09:52:10Z  gpu=0%  vram=4/49140MB  step=10475  loss=0.4119  tok/s=51008.2  disk_avail=21418MB  $/h=0.7037
