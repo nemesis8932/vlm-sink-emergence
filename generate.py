@@ -33,22 +33,32 @@ def pick_device():
     return torch.device('cpu')
 
 
+def load_from_ckpt(ckpt_path, run_config_path=None):
+    """Raw bf16 state-dict from train_sinks.save_ckpt(); VLMConfig rebuilt from the run's
+    run_config.json (its "vlm_cfg" key already encodes lm_attn_gate/lm_attn_impl, so the
+    architecture matches the checkpoint without needing --arm/--vit_init)."""
+    run_config_path = run_config_path or os.path.join(os.path.dirname(ckpt_path), 'run_config.json')
+    with open(run_config_path) as f:
+        run_config = json.load(f)
+    cfg = VLMConfig(**run_config['vlm_cfg'])
+    model = VisionLanguageModel(cfg, load_backbone=False)
+    sd = torch.load(ckpt_path, map_location='cpu')
+    sd = {k: v.float() for k, v in sd.items()}
+    missing, unexpected = model.load_state_dict(sd, strict=False)
+    assert not missing and not unexpected, f"{ckpt_path}: missing={missing} unexpected={unexpected}"
+    print(f"[load] {ckpt_path} (cfg from {run_config_path})", flush=True)
+    return model
+
+
+def load_from_pretrained(repo_or_dir):
+    print(f"[load] from_pretrained {repo_or_dir}", flush=True)
+    return VisionLanguageModel.from_pretrained(repo_or_dir)
+
+
 def load_model(args):
     if args.ckpt:
-        run_config_path = args.run_config or os.path.join(os.path.dirname(args.ckpt), 'run_config.json')
-        with open(run_config_path) as f:
-            run_config = json.load(f)
-        cfg = VLMConfig(**run_config['vlm_cfg'])
-        model = VisionLanguageModel(cfg, load_backbone=False)
-        sd = torch.load(args.ckpt, map_location='cpu')
-        sd = {k: v.float() for k, v in sd.items()}
-        missing, unexpected = model.load_state_dict(sd, strict=False)
-        assert not missing and not unexpected, f"{args.ckpt}: missing={missing} unexpected={unexpected}"
-        print(f"[load] {args.ckpt} (cfg from {run_config_path})", flush=True)
-        return model
-
-    print(f"[load] from_pretrained {args.pretrained}", flush=True)
-    return VisionLanguageModel.from_pretrained(args.pretrained)
+        return load_from_ckpt(args.ckpt, args.run_config)
+    return load_from_pretrained(args.pretrained)
 
 
 def parse_args():

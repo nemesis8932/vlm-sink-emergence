@@ -1,4 +1,5 @@
 __pycache__/
+.venv/
 *.pt
 runs/*/ckpt_*.pt
 runs_*.out
