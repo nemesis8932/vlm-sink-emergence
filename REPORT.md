@@ -72,13 +72,25 @@ from random init produce a near-total one from text-pretrained init.
 
 ### Decoupling (the plan's distinctive hypothesis) — supported in both directions
 
-- From-scratch: massive-activation (h_ratio>2 @ step 400) and value-drain
-  (v_ratio<0.8 @ step 1200) emerge **without** attention concentration ever crossing
-  ε=0.2 (174M tokens).
-- Notably v_ratio and max_a0 move in *opposite* directions in mid-training
-  (steps 2k→4k: v_ratio 0.71→0.79 while max_a0 0.12→0.16).
+The headline dissociation is **massive-activation (h_ratio) rises while
+attention-concentration (Sink) stays at zero**. Value-norm drain is *supporting*
+context, not a co-lead: its drop is largely warmup and partially recovers, so it is not
+framed as an emergence signal (see RF @1B below; consistent with `GATE_A_REPORT.md`).
+
+- From-scratch: massive-activation emerges and grows (h_ratio>2 @ step 400) **without**
+  attention concentration ever crossing ε=0.2 (174M tokens). Value-norm dips below 0.8
+  (@ step 1200) but is non-monotone — it moves *opposite* to max_a0 in mid-training
+  (steps 2k→4k: v_ratio 0.71→0.79 while max_a0 0.12→0.16), i.e. not a clean monotone drain.
 - Text-init step 0: norm signatures (h_ratio 3.5, v_ratio 0.73) transfer to pos0
   ahead of concentration (Sink^0.2 = 0.19, Sink^0.3 = 0 at step 0; 0.83/0.75 by step 500).
+
+**RF fresh baseline @ 1B (Gate A, 2026-06-15) — confirmed free of the repeated-data
+confound.** On a fresh FineVision stream to 1B tokens, **Sink^0.3_1 = 0.000 across the
+entire run** while **h_ratio rises 1.43→3.22 (+130%, init→1B, continuing post-warmup)**;
+v_ratio ends at 0.69 but is non-monotone (~75% of its net drop is the 0–57M warmup, then
+recovers). Fresh val_loss 1.46→0.638, no overfit. Massive-activation grows without any
+concentration sink forming — the decoupling, on fresh data. Full rulings + figure:
+`runs/rf_fresh_baseline/GATE_A_REPORT.md`, `runs/rf_fresh_baseline/decoupling_figure.svg`.
 
 ### Intervention arms
 
@@ -120,7 +132,7 @@ the result is the most surprising of the study:
   mass, not just a large share of a shrinking total.
 - But the **norm signatures invert**: value-norm at pos0 is *amplified* to ≈1.5×
   the rest (anti-drain; baseline drains to 0.71), and there are **no massive
-  activations** (h_ratio ≈ 1.0–1.15, vs baseline 2.2, textinit 42). This matches the
+  activations** (h_ratio ≈ 1.0–1.15, vs baseline 2.2, textinit median ~12× / range 5.5–42.5). This matches the
   half of Gu's claim that survives — sigmoid kills the residual-norm blowup — while
   *contradicting* the "no sink" half at the level of attention concentration.
 - Best val loss of the from-scratch arms (1.108).
@@ -131,8 +143,8 @@ the literature treats as part of the same phenomenon.
 
 ## Synthesis: the four-way dissociation
 
-The central question of the plan — do attention concentration and value-norm drain
-**decouple** during VLM pretraining? — gets a clear yes. Holding data, optimizer, and
+The central question of the plan — do attention concentration and the norm signatures
+(led by massive-activation) **decouple** during VLM pretraining? — gets a clear yes. Holding data, optimizer, and
 the 222M architecture fixed, each lever produces a *different combination* of the
 sink signatures, proving they are independently controllable rather than facets of
 one phenomenon:
@@ -142,7 +154,7 @@ one phenomenon:
 | baseline (softmax, scratch) | **none** (0.00) | drained (0.71) | moderate (2.2) | 1.161 |
 | g1gate (softmax+gate, scratch) | weak (0.004, volatile) | mild drain (0.82) | **suppressed** (1.6) | 1.138 |
 | sigmoid (no softmax, scratch) | **strong** (0.83) | **amplified** (1.48) | **none** (1.1) | 1.108 |
-| textinit (softmax, pretrained text) | **total** (0.85), inherited @ step 0 | **severe drain** (0.38) | **extreme** (42) | 0.832 |
+| textinit (softmax, pretrained text) | **total** (median 0.58, range 0.56–0.85) | **severe drain** (0.38–0.63) | **extreme** (median ~12×, range 5.5–42.5) | 0.832 |
 
 Lead–lag (first probe step a signature crosses threshold): in the from-scratch
 baseline the **norm signatures lead and the concentration sink never arrives**
@@ -173,12 +185,32 @@ take effect, leaving the instance idle ~2.2 h (~$1.5) until manually stopped.
   position 0 before the attention-concentration signature does**. Within a handful of
   optimization steps attn→pos0 begins rising. This is a step-0 decoupling data point.
 
-## Caveats
+## Caveats / Limitations
 
-- Single seed per arm; 222M scale; ≤0.5B tokens per arm (Gu-scale is 5B) — this
-  session is the *pipeline-validation + early-window* stage, not the full map.
-- Data repeats images across epochs (~13 visual epochs at baseline length); text
-  targets resampled per visit.
-- ViT is pretrained (not random) in all arms this session; "full from-scratch"
-  (random ViT) is left for the next stage.
+- **Per-position anchoring.** All three signatures are measured at the first image token
+  (pos0). Per-position attention mass is confirmed across all arms and seeds (seed-0: HF
+  npz reprobe; seeds 1/2 + RF: local streaming reprobe, commit 158cd5f). **pos0 is the
+  max-mass token for baseline, g1gate, sigmoid (all seeds), and textinit seed-0/seed-1**;
+  the reported seed-0 magnitudes (incl. textinit h_ratio 42.5) are correctly anchored.
+  Two residual flags folded into v1 limitations:
+  *(a) textinit seed-2* — mean attention mass is marginally higher at pos1 than pos0
+  (31.7% vs 30.5% of top-20 mass); the max-head view still favors pos0 (50.3% vs 46.7%),
+  so the sink head itself stays at pos0 while the average shifts. Part of the textinit
+  h_ratio spread (5.5–42.5) reflects seed-variable anchor location: pos0-anchored h_ratio
+  for non-seed-0 textinit runs is a lower bound on the true massive-activation magnitude.
+  *(b) RF* — argmax-vote (76% of heads at pos1) is diffuse noise: pos1 = 10.0% of mass
+  vs pos0 = 8.3%, both baseline-class (compare sigmoid pos0 = 30%+); no off-pos0
+  concentration, Gate-A absent verdict robust.
+  Per-position **norm** profiles (v/h-ratio by token) remain deferred to camera-ready
+  (requires reprobe-dump patch + GPU rerun).
+  Figures: `analysis/per_position_mass_seed0.svg`, `analysis/argmax_position_by_arm.svg`.
+- **Pretrained ViT** = partial-from-scratch + inherited-norm confound; defense: h_ratio starts
+  ≈1.0–1.4 and *rises* (formed, not inherited). Random-ViT variant is future work.
+- **Token scale** ≤1B/arm vs Gu-scale ~5B (emergence is early; larger-scale is future work).
+- **textinit magnitude** is seed-sensitive (h_ratio range 5.5–42.5, seed-0 outlier on every
+  signature) — reported as range/median; the corner is a *kind*, not a calibrated magnitude.
+- **Provenance:** seed-0 raw not re-derivable first-hand (trusted from checksummed
+  `archive/session3/`); seed-2 run only for g1gate + textinit.
+- Domain shift (the_cauldron→FineVision; ADR-0001) accepted to remove the repeated-data
+  confound; domain-matched fresh-repeated control is the known follow-up.
 - MMStar accuracy not measured (GPU budget went to emergence curves).
