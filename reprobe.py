@@ -178,7 +178,8 @@ def main():
     os.makedirs(out, exist_ok=True)
     vlm_cfg = config.VLMConfig()
     probe = build_probe(vlm_cfg, args.subsets, args.probe_n)
-    device = torch.device('cuda')
+    device = torch.device('cuda' if torch.cuda.is_available()
+                           else 'mps' if torch.backends.mps.is_available() else 'cpu')
 
     # image-swap batch: sample-0 text repeated against swap_n distinct images
     N = min(args.swap_n, probe['image'].size(0))
