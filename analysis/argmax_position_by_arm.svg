@@ -1,0 +1,49 @@
+<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial,sans-serif">
+<rect width="720" height="300" fill="var(--background,#fff)"/>
+<text x="110" y="20" font-size="13.5" font-weight="700" fill="var(--foreground,#111)">Where does attention actually point? argmax-key position by arm (all heads×layers, @~100M)</text>
+<text x="110" y="36" font-size="10.5" fill="var(--muted-foreground,#888)">pos0-anchored metrics are valid only if the special token IS pos0 (blue). textinit’s mass migrates off pos0 and varies by seed.</text>
+<text x="102" y="67.0" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">baseline</text>
+<rect x="110.0" y="46" width="323.8" height="34" fill="#185FA5"/>
+<text x="271.9" y="67.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">69%</text>
+<rect x="433.8" y="46" width="81.8" height="34" fill="#D85A30"/>
+<text x="474.7" y="67.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">17%</text>
+<rect x="515.6" y="46" width="19.1" height="34" fill="#BA7517"/>
+<rect x="534.7" y="46" width="29.6" height="34" fill="#888780"/>
+<rect x="564.3" y="46" width="15.7" height="34" fill="#B4B2A9"/>
+<text x="102" y="115.0" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">g1gate</text>
+<rect x="110.0" y="94" width="369.9" height="34" fill="#185FA5"/>
+<text x="295.0" y="115.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">79%</text>
+<rect x="479.9" y="94" width="83.6" height="34" fill="#D85A30"/>
+<text x="521.7" y="115.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">18%</text>
+<rect x="563.5" y="94" width="4.4" height="34" fill="#BA7517"/>
+<rect x="567.8" y="94" width="9.6" height="34" fill="#888780"/>
+<rect x="577.4" y="94" width="2.6" height="34" fill="#B4B2A9"/>
+<text x="102" y="163.0" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">sigmoid</text>
+<rect x="110.0" y="142" width="407.3" height="34" fill="#185FA5"/>
+<text x="313.7" y="163.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">87%</text>
+<rect x="517.3" y="142" width="34.8" height="34" fill="#D85A30"/>
+<rect x="552.1" y="142" width="27.9" height="34" fill="#BA7517"/>
+<text x="102" y="211.0" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">textinit</text>
+<rect x="110.0" y="190" width="164.5" height="34" fill="#185FA5"/>
+<text x="192.2" y="211.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">35%</text>
+<rect x="274.5" y="190" width="161.9" height="34" fill="#D85A30"/>
+<text x="355.4" y="211.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">34%</text>
+<rect x="436.4" y="190" width="7.0" height="34" fill="#BA7517"/>
+<rect x="443.4" y="190" width="68.8" height="34" fill="#888780"/>
+<text x="477.7" y="211.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">15%</text>
+<rect x="512.1" y="190" width="67.9" height="34" fill="#B4B2A9"/>
+<text x="546.1" y="211.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">14%</text>
+<text x="102" y="259.0" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">RF (fresh)</text>
+<rect x="110.0" y="238" width="94.0" height="34" fill="#185FA5"/>
+<text x="157.0" y="259.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">20%</text>
+<rect x="204.0" y="238" width="358.6" height="34" fill="#D85A30"/>
+<text x="383.3" y="259.0" text-anchor="middle" font-size="10" fill="white" font-weight="600">76%</text>
+<rect x="562.6" y="238" width="15.7" height="34" fill="#BA7517"/>
+<rect x="578.3" y="238" width="1.7" height="34" fill="#B4B2A9"/>
+<text x="110" y="286" font-size="10" fill="var(--muted-foreground,#777)">position:</text>
+<rect x="168" y="277" width="11" height="11" fill="#185FA5"/><text x="183" y="286" font-size="10" fill="var(--muted-foreground,#777)">pos 0</text>
+<rect x="240" y="277" width="11" height="11" fill="#D85A30"/><text x="255" y="286" font-size="10" fill="var(--muted-foreground,#777)">pos 1</text>
+<rect x="312" y="277" width="11" height="11" fill="#BA7517"/><text x="327" y="286" font-size="10" fill="var(--muted-foreground,#777)">pos 2</text>
+<rect x="384" y="277" width="11" height="11" fill="#888780"/><text x="399" y="286" font-size="10" fill="var(--muted-foreground,#777)">pos 3-9</text>
+<rect x="456" y="277" width="11" height="11" fill="#B4B2A9"/><text x="471" y="286" font-size="10" fill="var(--muted-foreground,#777)">pos 10+</text>
+</svg>

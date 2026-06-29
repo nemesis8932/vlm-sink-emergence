@@ -30,9 +30,9 @@ from models.vision_language_model import VisionLanguageModel
 from models.vision_transformer import ViT
 from models.language_model import LanguageModel
 from data.collators import VQACollator
-from data.datasets import VQADataset
+from data.datasets import VQADataset, IterableVQADataset
 from data.processors import get_image_processor, get_tokenizer
-from datasets import load_dataset, concatenate_datasets
+from datasets import load_dataset, interleave_datasets
 
 ARMS = {
     'baseline': dict(gate=False, attn='softmax', lm_init='random'),
@@ -43,15 +43,20 @@ ARMS = {
 
 
 def build_probe(vlm_cfg, subsets, probe_n):
+    """Streaming variant: interleaves subsets, takes first probe_n samples — no shard download.
+    NOTE: probe batch differs from the cloud seed-0 run (which used full non-streaming shuffle);
+    within this local re-run all arms/seeds use the same streaming batch, preserving comparability."""
+    from itertools import islice
     image_processor = get_image_processor(vlm_cfg.vit_img_size)
     tokenizer = get_tokenizer(vlm_cfg.lm_tokenizer)
-    parts = [load_dataset('HuggingFaceM4/the_cauldron', name)['train'] for name in subsets.split(',')]
-    ds = concatenate_datasets(parts).shuffle(seed=0)
-    val_dataset = VQADataset(ds.select(range(len(ds) - 1024, len(ds))), tokenizer, image_processor)
+    parts = [load_dataset('HuggingFaceM4/the_cauldron', name, streaming=True)['train']
+             for name in subsets.split(',')]
+    ds_stream = interleave_datasets(parts, seed=0)
+    iterable_ds = IterableVQADataset(ds_stream, tokenizer, image_processor)
     collator = VQACollator(tokenizer, vlm_cfg.lm_max_length)
-    random.seed(0)  # identical probe batch to training (see train_sinks.get_data)
-    probe = collator([val_dataset[i] for i in range(probe_n)])
-    return probe
+    random.seed(0)
+    probe_items = list(islice(iterable_ds, probe_n))
+    return collator(probe_items)
 
 
 def build_model(arm_name, vlm_cfg, vit_init):
