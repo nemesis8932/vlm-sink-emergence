@@ -103,6 +103,8 @@ def reprobe(model, images, input_ids, attention_mask):
 
     vn_pos0 = np.zeros((L, H));   vn_rest = np.zeros((L, H))          # 3a per-head v-norm
     hn_pos0 = np.zeros(L);        hn_rest = np.zeros(L)               # per-layer residual norm
+    vn_profile = np.zeros((L, H, T))                                  # FULL per-position v-norm (mean over batch)
+    hn_profile = np.zeros((L, T))                                     # FULL per-position residual norm (mean over batch)
     raw_profile = np.zeros((L, H, T))                                 # 3c per-head raw mass profile
     raw_to_pos0 = np.zeros((L, H)); norm_to_pos0 = np.zeros((L, H))
     # 3b: per-image pos0 value vector and attention-to-pos0
@@ -115,6 +117,7 @@ def reprobe(model, images, input_ids, attention_mask):
         res_norm = x.norm(dim=-1)
         hn_pos0[li] = res_norm[:, 0].mean().item()
         hn_rest[li] = res_norm[:, 1:][full_mask[:, 1:].bool()].mean().item()
+        hn_profile[li] = res_norm.mean(dim=0).cpu().numpy()              # (T,) per-position residual norm
 
         xn = block.norm1(x)
         q = attn_mod.q_proj(xn).view(B, T, H, hd).transpose(1, 2)
@@ -142,6 +145,7 @@ def reprobe(model, images, input_ids, attention_mask):
 
         # 3a: per-head value-norm at pos0 vs valid rest
         v_norm = v.norm(dim=-1)                                          # (B,H,T)
+        vn_profile[li] = v_norm.mean(dim=0).cpu().numpy()                # (H,T) per-position v-norm
         vn_pos0[li] = v_norm[:, :, 0].mean(dim=0).cpu().numpy()          # (H,)
         kvalid = full_mask[:, 1:].bool().unsqueeze(1).expand(B, H, T - 1)
         rest = v_norm[:, :, 1:].masked_fill(~kvalid, float('nan'))
@@ -164,6 +168,7 @@ def reprobe(model, images, input_ids, attention_mask):
 
     model.train()
     return dict(n_img=n_img, T=T, vn_pos0=vn_pos0, vn_rest=vn_rest, hn_pos0=hn_pos0, hn_rest=hn_rest,
+                vn_profile=vn_profile, hn_profile=hn_profile,
                 raw_profile=raw_profile, raw_to_pos0=raw_to_pos0, norm_to_pos0=norm_to_pos0,
                 v_pos0_img=v_pos0_img, attn0_img=attn0_img)
 
