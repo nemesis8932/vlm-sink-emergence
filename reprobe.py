@@ -72,8 +72,9 @@ def build_model(arm_name, vlm_cfg, vit_init):
 
 
 @torch.no_grad()
-def reprobe(model, images, input_ids, attention_mask):
-    """Re-walk the decoder (eager fp32) dumping un-pooled arrays. Mirrors sink_probe math."""
+def reprobe(model, images, input_ids, attention_mask, save_matrix=False):
+    """Re-walk the decoder (eager fp32) dumping un-pooled arrays. Mirrors sink_probe math.
+    save_matrix=True also returns attn_full (L,H,T,T) batch-mean attention for the sink-stripe figure."""
     model.eval()
     device = next(model.parameters()).device
     images, input_ids, attention_mask = images.to(device), input_ids.to(device), attention_mask.to(device)
@@ -106,6 +107,7 @@ def reprobe(model, images, input_ids, attention_mask):
     vn_profile = np.zeros((L, H, T))                                  # FULL per-position v-norm (mean over batch)
     hn_profile = np.zeros((L, T))                                     # FULL per-position residual norm (mean over batch)
     raw_profile = np.zeros((L, H, T))                                 # 3c per-head raw mass profile
+    attn_full = np.zeros((L, H, T, T)) if save_matrix else None       # full T*T batch-mean attn (sink-stripe)
     raw_to_pos0 = np.zeros((L, H)); norm_to_pos0 = np.zeros((L, H))
     # 3b: per-image pos0 value vector and attention-to-pos0
     v_pos0_img = np.zeros((L, B, H, hd))
@@ -140,6 +142,8 @@ def reprobe(model, images, input_ids, attention_mask):
         # 3c: mean over valid queries -> (H, T) raw mass profile, and pos0 columns
         prof = (attn * qv.unsqueeze(-1)).sum(dim=(0, 2)) / n_qvalid       # (H,T) raw
         raw_profile[li] = prof.cpu().numpy()
+        if save_matrix:
+            attn_full[li] = attn.mean(dim=0).cpu().numpy()                # (H,T,T) batch-mean
         raw_to_pos0[li] = (attn[..., 0] * qv).sum(dim=(0, 2)).div(n_qvalid).cpu().numpy()
         norm_to_pos0[li] = (attn_norm[..., 0] * qv).sum(dim=(0, 2)).div(n_qvalid).cpu().numpy()
 
@@ -167,10 +171,13 @@ def reprobe(model, images, input_ids, attention_mask):
         x = x + block.mlp(block.norm2(x))
 
     model.train()
-    return dict(n_img=n_img, T=T, vn_pos0=vn_pos0, vn_rest=vn_rest, hn_pos0=hn_pos0, hn_rest=hn_rest,
-                vn_profile=vn_profile, hn_profile=hn_profile,
-                raw_profile=raw_profile, raw_to_pos0=raw_to_pos0, norm_to_pos0=norm_to_pos0,
-                v_pos0_img=v_pos0_img, attn0_img=attn0_img)
+    out = dict(n_img=n_img, T=T, vn_pos0=vn_pos0, vn_rest=vn_rest, hn_pos0=hn_pos0, hn_rest=hn_rest,
+               vn_profile=vn_profile, hn_profile=hn_profile,
+               raw_profile=raw_profile, raw_to_pos0=raw_to_pos0, norm_to_pos0=norm_to_pos0,
+               v_pos0_img=v_pos0_img, attn0_img=attn0_img)
+    if save_matrix:
+        out['attn_full'] = attn_full
+    return out
 
 
 def main():
@@ -182,6 +189,7 @@ def main():
     ap.add_argument('--probe_n', type=int, default=32)
     ap.add_argument('--swap_n', type=int, default=12, help='# images for the image-swap test')
     ap.add_argument('--subsets', default='vqav2,cocoqa,aokvqa,vsr')
+    ap.add_argument('--save_matrix', action='store_true', help='also dump full T*T batch-mean attn (sink-stripe)')
     args = ap.parse_args()
 
     out = os.path.join(args.run_dir, 'reprobe')
@@ -209,7 +217,7 @@ def main():
         miss, unexp = model.load_state_dict(sd, strict=False)
         assert not miss and not unexp, f"{path}: missing={miss} unexpected={unexp}"
 
-        main_r = reprobe(model, probe['image'], probe['input_ids'], probe['attention_mask'])
+        main_r = reprobe(model, probe['image'], probe['input_ids'], probe['attention_mask'], save_matrix=args.save_matrix)
         swap_r = reprobe(model, swap_img, swap_ids, swap_mask)
 
         np.savez_compressed(os.path.join(out, f'reprobe_step{s}.npz'),
