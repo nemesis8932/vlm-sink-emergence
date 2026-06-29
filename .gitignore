@@ -6,3 +6,4 @@ runs_*.out
 wandb/
 *.npz
 *.tar.gz
+runs/keepers/
