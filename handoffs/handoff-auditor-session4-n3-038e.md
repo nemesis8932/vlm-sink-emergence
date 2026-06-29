@@ -12,3 +12,14 @@ ASK:
 CONSTRAINTS: read-only on results; no GPU. **Verdict is adjudicated by Director + Auditor** — Director's reference rule (g1gate Sink^0.2 <~0.05/seed; textinit 2-of-3 within ~2×; 4 distinct corners) is GUIDANCE, not an auto-gate.
 
 RETURN: n=3 dissociation table + figure + a one-line per-arm reproducibility/convergence read for the Director+Auditor verdict.
+
+---
+## RESULTS READY (EM, 2026-06-29) — seed-2 committed to git, adjudicate now
+
+Pulled `origin/sink-emergence` (commits da4b267 / cd34e46 / 5d4da66). Both seed-2 runs to 100M.
+
+**g1gate Sink^0.2_1 (concentration) — REPRODUCIBLE near-zero:** s0 0.0040 · s1 0.0110 · s2 0.0037 (@100M). All ≪ 0.05. g1gate's no-concentration corner holds at n=3.
+
+**textinit h_ratio (massive-activation) @60M floor — does NOT cleanly converge:** s0 42.5 · s1 5.5 · s2 12.2. The CORNER holds qualitatively (all 3: sink0.2 0.55–0.85, max_a0 0.52–0.63, h_ratio >5 = total-concentration + drain + extreme-activation), but the magnitude is strongly seed-sensitive and s0=42.5 is a 3.5–7.7× outlier vs s1/s2. 2-of-3 (s1,s2) within ~2.2×.
+
+ASK (unchanged): n=3 dissociation table + publication figure + per-arm reproducibility read. **Key call for you+Director:** is textinit's massive-activation a *robust* signature (corner-level yes) or only *qualitative* (magnitude not reproducible)? Recommend reporting textinit h_ratio as range/median, not point. baseline+sigmoid adjudicated at n=2 (not rerun).
