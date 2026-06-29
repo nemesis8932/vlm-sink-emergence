@@ -193,22 +193,30 @@ take effect, leaving the instance idle ~2.2 h (~$1.5) until manually stopped.
   max-mass token for baseline, g1gate, sigmoid (all seeds), and textinit seed-0/seed-1**;
   the reported seed-0 magnitudes (incl. textinit h_ratio 42.5) are correctly anchored.
   Two residual flags folded into v1 limitations:
-  *(a) textinit seed-2* — mean attention mass is marginally higher at pos1 than pos0
-  (31.7% vs 30.5% of top-20 mass); the max-head view still favors pos0 (50.3% vs 46.7%),
-  so the sink head itself stays at pos0 while the average shifts. Part of the textinit
-  h_ratio spread (5.5–42.5) reflects seed-variable anchor location: pos0-anchored h_ratio
-  for non-seed-0 textinit runs is a lower bound on the true massive-activation magnitude.
+  *(a) textinit seed-2 — the three signatures sit on DIFFERENT tokens (spatial decoupling,
+  not an anchoring artifact).* The per-position **norm** dump (commit `d7b5fc4`,
+  `analysis/per_position_norms.json`) shows: attention max-mass at pos1, but the
+  massive-activation (‖h‖) peak at pos13 and the value-drain trough also at pos13 — none
+  co-located. Anchoring h_ratio under the *attention* sink (pos1) gives 9.46, **lower**
+  than the pos0 value (14.7), so pos0-anchoring is **not** an under-measurement; the earlier
+  "lower-bound / anchor-mislocation" hedge is **withdrawn**. The h_ratio spread across seeds
+  (44.8 / 8.2 / 14.7 for s0/s1/s2) is therefore genuine seed variance, not a measurement
+  position artifact. (Note: the ‖h‖ peak is *not* fixed at pos0 either — s1 peaks at pos1,
+  s2 at pos13 — so massive-activation does not track the attention sink; it is the cleaner,
+  stronger reading that the signatures decouple in *position* as well as magnitude.)
   *(b) RF* — argmax-vote (76% of heads at pos1) is diffuse noise: pos1 = 10.0% of mass
   vs pos0 = 8.3%, both baseline-class (compare sigmoid pos0 = 30%+); no off-pos0
   concentration, Gate-A absent verdict robust.
-  Per-position **norm** profiles (v/h-ratio by token) remain deferred to camera-ready
-  (requires reprobe-dump patch + GPU rerun).
-  Figures: `analysis/per_position_mass_seed0.svg`, `analysis/argmax_position_by_arm.svg`.
+  Figures: `analysis/per_position_mass_seed0.svg`, `analysis/argmax_position_by_arm.svg`;
+  per-position norm data `analysis/per_position_norms.json`.
 - **Pretrained ViT** = partial-from-scratch + inherited-norm confound; defense: h_ratio starts
   ≈1.0–1.4 and *rises* (formed, not inherited). Random-ViT variant is future work.
 - **Token scale** ≤1B/arm vs Gu-scale ~5B (emergence is early; larger-scale is future work).
-- **textinit magnitude** is seed-sensitive (h_ratio range 5.5–42.5, seed-0 outlier on every
-  signature) — reported as range/median; the corner is a *kind*, not a calibrated magnitude.
+- **textinit magnitude** is seed-sensitive — same seed ordering (s0 ≫ s2 > s1) on two probe
+  batches: live-probe (tail-1024) h_ratio range 5.5–42.5 (table above); reprobe
+  per-position-norm batch (streaming-32) 44.8 / 8.2 / 14.7. seed-0 is the outlier on every
+  signature; reported as range/median, the corner is a *kind*, not a calibrated magnitude.
+  Confirmed genuine seed variance, not an anchoring artifact (see per-position bullet above).
 - **Provenance:** seed-0 raw not re-derivable first-hand (trusted from checksummed
   `archive/session3/`); seed-2 run only for g1gate + textinit.
 - Domain shift (the_cauldron→FineVision; ADR-0001) accepted to remove the repeated-data
