@@ -28064,3 +28064,14 @@ Finished hashing 10 files.
   ...it_seed2/ckpt_step2000.pt: 100%|██████████|  501MB /  501MB            
   ...nit_seed2/ckpt_step250.pt: 100%|██████████|  501MB /  501MB            
 https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/tree/main/runs/textinit_seed2
+[33m⚠️  Warning: 'huggingface-cli upload' is deprecated. Use 'hf upload' instead.[0m
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+  ...is/per_position_norms.npz: 100%|██████████| 7.09kB / 7.09kB            [A[A
+
+  ...is/per_position_norms.npz: 100%|██████████| 7.09kB / 7.09kB            [A[AProcessing Files (1 / 1)      : 100%|██████████| 7.09kB / 7.09kB,   ???B/s  
+New Data Upload               : 100%|██████████| 7.09kB / 7.09kB,   ???B/s  [AProcessing Files (1 / 1)      : 100%|██████████| 7.09kB / 7.09kB,   ???B/s  
+New Data Upload               : 100%|██████████| 7.09kB / 7.09kB,   ???B/s  
+  ...is/per_position_norms.npz: 100%|██████████| 7.09kB / 7.09kB            
+https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts/blob/main/analysis/per_position_norms.npz
