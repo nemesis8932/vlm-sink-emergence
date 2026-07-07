@@ -62,7 +62,10 @@ def main():
     sig_styles = [('h_ratio_pos0', 2.0, True, '^', 'massive-act  ‖h‖>2', '#B5487A'),
                   ('v_ratio_pos0', 0.8, False, 's', 'value-drain  ‖v‖<0.8', '#0F7F8B'),
                   ('max_attn_pos0', EPS_CONC, True, '*', 'concentration  attn→pos0>0.3', '#111111')]
-    LANE = [0.21, 0.0, -0.21]
+    # wider lane spacing than the first pass — two markers landing at ~the same x
+    # (textinit's two "@init" crossings; sigmoid's late massive-act crossing sitting
+    # right next to its "never crosses" value-drain marker at track end) were touching
+    LANE = [0.36, 0.0, -0.36]
     yticks, ylabels = [], []
     for yi, arm in enumerate(ARMS):
         S = fc.load_summ(arm)
@@ -74,18 +77,26 @@ def main():
         axT.text(total_M * 1.12, y + 0.30,
                  f'{total_M/1000:.1f}B' if total_M >= 1000 else f'{total_M:.0f}M',
                  fontsize=6.4, color='gray', ha='left', va='center')
+        # collect this arm's 3 marker x-positions first so "@init" labels for
+        # co-located markers (e.g. textinit's two crossings both at FLOOR_M) can be
+        # stacked instead of printed on top of each other
+        init_dy = []
         for (key, thr, gt, mk, lab, col), dy in zip(sig_styles, LANE):
             t = first_cross_tokens(S, key, thr, gt)
-            ms = 210 if mk == '*' else 95
+            ms = 170 if mk == '*' else 80
             if t is not None:
                 axT.scatter([t], [y + dy], marker=mk, s=ms, color=col, zorder=5,
                             edgecolors='white', linewidths=0.6)
                 if t <= FLOOR_M:      # crossed at 0 tokens = inherited at init
-                    axT.text(t * 1.35, y + dy, '@init (inherited)', fontsize=6.6,
-                             color=col, ha='left', va='center', style='italic')
+                    init_dy.append((dy, col))
             else:                     # censored: still uncrossed when the run ended
                 axT.scatter([total_M], [y + dy], marker=mk, s=ms, facecolors='white',
                             color=col, zorder=5, linewidths=1.3)
+        if init_dy:   # one shared label at the vertical center of the co-located markers
+            mean_dy = sum(d for d, _ in init_dy) / len(init_dy)
+            label_col = init_dy[0][1] if len(init_dy) == 1 else '#444444'
+            axT.text(FLOOR_M * 1.35, y + mean_dy, '@init (inherited)', fontsize=6.6,
+                      color=label_col, ha='left', va='center', style='italic')
     axT.set_yticks(yticks); axT.set_yticklabels(ylabels, fontsize=8.5)
     for tick, arm in zip(axT.get_yticklabels(), ARMS):
         tick.set_color(fc.ARM_COLORS[arm]); tick.set_fontweight('bold')
