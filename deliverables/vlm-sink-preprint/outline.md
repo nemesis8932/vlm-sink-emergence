@@ -125,11 +125,14 @@ Figs 1/3/5 + full per-seed tables (from session4_n3_audit.md) + per-position mas
 - Artifacts: `sections/01–09` (source of truth) → `python3 build.py` → `paper-v2.html`,
   `paper-v2.pdf`, `draft-v2.md` (stitched). Figures self-contained in `figures/`.
 - Title: "Four Levers, Four Corners: …". Author name spelling UNCONFIRMED — verify before
-  submission. References [6,8–12,16–20] flagged [to verify] in red in the PDF.
+  submission.
+- References: ALL 20 bibliographically verified by Researcher (handoff-...-d927, report
+  2026-07-07). 9 corrected (IDs/authors/titles), 0 fabricated. Flags cleared.
 - Researcher report in `sources/researcher-related-work.md`.
 
 ## BLOCKERS / user actions
 
 - [ ] Read v2 in own voice; edit sections; rerun `python3 build.py`.
-- [ ] Verify red-flagged references against primary sources.
+- [x] Bibliographic verification — DONE (Researcher, 2026-07-07; corrections applied).
+- [ ] Confirm author-name spelling in `build.py` before submission.
 - [ ] Final arXiv cs.CV/cs.LG Jun 10–29 scoop browse + first-time-submitter endorsement.
