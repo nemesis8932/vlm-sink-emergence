@@ -40,12 +40,18 @@ mpl.rcParams.update({
 
 
 def smooth(y, k=9):
-    """edge-padded moving average — preserves endpoints (no convolve boundary bias)."""
+    """edge-padded moving average, endpoints blended back to RAW values so the path
+    connects to the init/final markers even when the signal moves fast near an end
+    (textinit reorganizes quickly right after init — pure edge-padding leaves a gap)."""
     y = np.asarray(y, float)
     if len(y) < k: return y
     pad = k // 2
     yp = np.pad(y, pad, mode='edge')
-    return np.convolve(yp, np.ones(k) / k, mode='valid')
+    ys = np.convolve(yp, np.ones(k) / k, mode='valid')
+    w = np.linspace(0.0, 1.0, pad + 1)          # 0 = raw at the very endpoint
+    ys[:pad + 1] = (1 - w) * y[:pad + 1] + w * ys[:pad + 1]
+    ys[-(pad + 1):] = (1 - w[::-1]) * y[-(pad + 1):] + w[::-1] * ys[-(pad + 1):]
+    return ys
 
 
 def draw(ax, xs, ys_raw, color, label):
