@@ -14,8 +14,8 @@ textinit is hot from initialization; sigmoid lights up a band of mid-network lay
 <figcaption><b>Figure A2: No universal head-level coupling.</b> Per-(layer, head)
 concentration vs. value-norm ratio at the final checkpoint, by arm (n = 270/arm). The
 correlation sign flips by arm (+0.67 baseline … −0.76 textinit; Table 4); the pooled cloud
-is weak (−0.20) only because opposite-signed arms cancel. This should not be read as an
-uncorrelated cloud — most individual arms show strong |r|.</figcaption>
+is weak (−0.20) only because opposite-signed arms cancel. Do not read it as an uncorrelated
+cloud; most individual arms show strong |r|.</figcaption>
 </figure>
 
 <figure id="figA3">
