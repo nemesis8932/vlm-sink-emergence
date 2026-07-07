@@ -298,16 +298,18 @@ relationship between the two axes.
 
 <figure id="fig2">
 <img src="figures/fig4_birth_leadlag.svg" alt="Sink birth and lead-lag ordering">
-<figcaption><b>Figure 2: Sink birth &amp; ordering.</b> <em>Top:</em> tokens at which each
-signature first crosses a per-head threshold (massive-act h&gt;2, value-drain v&lt;0.8,
-concentration attn→pos0&gt;0.3; log scale). In the softmax-from-scratch arms (baseline,
-g1gate, RF) the norm signatures cross within the first ~4–50M tokens while concentration
-never crosses (baseline, RF) or barely does (g1gate). <em>sigmoid</em> is the mirror
-image: concentration crosses at ~6M tokens and the norm signatures never do.
-<em>textinit</em> starts with value-drain already present at 0 tokens (inherited) and
-crosses concentration before 1M. <em>Bottom:</em> birth-maps, the step at which each
-(layer, head) first crosses the concentration threshold. 0% of baseline and RF heads ever
-cross; 1% of g1gate heads, vs. 89% (sigmoid) and 87% (textinit).</figcaption>
+<figcaption><b>Figure 2: Sink birth &amp; ordering.</b> <em>Top:</em> time-to-event view.
+Each shaded track spans the tokens an arm was actually observed for (60M–1B); a filled
+marker is the first probe at which a signature crossed its per-head threshold (massive-act
+h&gt;2, value-drain v&lt;0.8, concentration attn→pos0&gt;0.3); a hollow marker at a
+track's end means that signature never crossed within the observed run. In the
+softmax-from-scratch arms (baseline, g1gate, RF) the norm signatures cross within
+~4–50M tokens while concentration never crosses (baseline through 174M, RF through 1B) or
+barely does (g1gate). <em>sigmoid</em> is the mirror image: concentration at ~6M tokens,
+both norm signatures never. <em>textinit</em> inherits massive-act and value-drain at 0
+tokens and crosses concentration before 1M. <em>Bottom:</em> birth-maps, the step at which
+each (layer, head) first crosses the concentration threshold. 0% of baseline and RF heads
+ever cross; 1% of g1gate heads, vs. 89% (sigmoid) and 87% (textinit).</figcaption>
 </figure>
 
 Dense probing lets us timestamp each signature's arrival (Figure 2), and the ordering is

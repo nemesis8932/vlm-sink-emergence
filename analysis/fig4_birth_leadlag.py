@@ -50,51 +50,59 @@ def main():
     fig = plt.figure(figsize=(11, 7.6))
     gs = fig.add_gridspec(2, 4, height_ratios=[1.05, 1.0], hspace=0.42, wspace=0.28)
 
-    # ---- TOP: lead-lag timeline ----
+    # ---- TOP: lead-lag as time-to-event tracks ----
+    # Each arm gets a light "observation track" spanning the tokens we actually probed
+    # (arms differ: ~100M-1B). Filled marker on the track = first crossing. Hollow marker
+    # at the track END = never crossed within the observed run (censored) — no fake
+    # "never" position on the axis. Three fixed lanes per arm, top->bottom:
+    # massive-act / value-drain / concentration.
     axT = fig.add_subplot(gs[0, :])
     # signature colors deliberately OFF the arm palette (magenta/teal/black) so a
     # marker's hue can't be misread as an arm identity
     sig_styles = [('h_ratio_pos0', 2.0, True, '^', 'massive-act  ‖h‖>2', '#B5487A'),
                   ('v_ratio_pos0', 0.8, False, 's', 'value-drain  ‖v‖<0.8', '#0F7F8B'),
                   ('max_attn_pos0', EPS_CONC, True, '*', 'concentration  attn→pos0>0.3', '#111111')]
+    LANE = [0.21, 0.0, -0.21]
     yticks, ylabels = [], []
     for yi, arm in enumerate(ARMS):
         S = fc.load_summ(arm)
+        total_M = S[-1]['tokens_seen'] / 1e6
         y = len(ARMS) - 1 - yi
         yticks.append(y); ylabels.append(fc.ARM_LABELS[arm].split(' (')[0])
-        crosses = []
-        never_cols = []   # signatures that never cross -> placed in the "never" band, dodged
-        for key, thr, gt, mk, lab, col in sig_styles:
+        axT.barh(y, total_M - FLOOR_M, left=FLOOR_M, height=0.66,
+                 color=fc.ARM_COLORS[arm], alpha=0.07, zorder=0)
+        axT.text(total_M * 1.12, y + 0.30,
+                 f'{total_M/1000:.1f}B' if total_M >= 1000 else f'{total_M:.0f}M',
+                 fontsize=6.4, color='gray', ha='left', va='center')
+        for (key, thr, gt, mk, lab, col), dy in zip(sig_styles, LANE):
             t = first_cross_tokens(S, key, thr, gt)
+            ms = 210 if mk == '*' else 95
             if t is not None:
-                crosses.append(t)
-                ms = 240 if mk == '*' else 110
-                axT.scatter([t], [y], marker=mk, s=ms, color=col, zorder=5,
+                axT.scatter([t], [y + dy], marker=mk, s=ms, color=col, zorder=5,
                             edgecolors='white', linewidths=0.6)
-            else:
-                never_cols.append((mk, col))
-        if crosses:
-            axT.plot([min(crosses), max(crosses)], [y, y], color='gray', lw=0.8, alpha=0.4, zorder=1)
-        for di, (mk, col) in enumerate(never_cols):   # dodge multiple "never" markers horizontally
-            xx = 1450 * (1.45 ** di)
-            ms = 240 if mk == '*' else 110
-            axT.scatter([xx], [y], marker=mk, s=ms, color=col, zorder=5,
-                        edgecolors='white', linewidths=0.6, alpha=0.85)
+                if t <= FLOOR_M:      # crossed at 0 tokens = inherited at init
+                    axT.text(t * 1.35, y + dy, '@init (inherited)', fontsize=6.6,
+                             color=col, ha='left', va='center', style='italic')
+            else:                     # censored: still uncrossed when the run ended
+                axT.scatter([total_M], [y + dy], marker=mk, s=ms, facecolors='white',
+                            color=col, zorder=5, linewidths=1.3)
     axT.set_yticks(yticks); axT.set_yticklabels(ylabels, fontsize=8.5)
     for tick, arm in zip(axT.get_yticklabels(), ARMS):
         tick.set_color(fc.ARM_COLORS[arm]); tick.set_fontweight('bold')
-    axT.set_xscale('log'); axT.set_xlim(FLOOR_M * 0.8, 5000); axT.set_ylim(-0.8, len(ARMS) - 0.2)
-    axT.set_xlabel('tokens at first threshold-crossing (millions, log)', fontsize=9)
-    axT.axvspan(1200, 5000, color='gray', alpha=0.08)
-    axT.text(2600, len(ARMS) - 0.35, 'NEVER\ncrosses', fontsize=7.8, color='gray', ha='center',
-             va='top', weight='bold')
-    axT.set_title('Lead–lag: which sink signature crosses first', fontsize=10, weight='bold')
-    axT.text(FLOOR_M, -0.62, '↑ "@init" (0 tok, inherited from text LM)', fontsize=6.8,
-             color='dimgray', ha='left')
+    axT.set_xscale('log'); axT.set_xlim(FLOOR_M * 0.8, 4000)
+    axT.set_ylim(-0.6, len(ARMS) + 0.75)   # headroom so the legend sits above the tracks
+    axT.set_xlabel('tokens (millions, log) — shaded track = observed run per arm', fontsize=9)
+    axT.set_title('Lead–lag: when each sink signature first crosses threshold',
+                  fontsize=10, weight='bold')
     fc.style_ax(axT)
     handles = [Line2D([0], [0], marker=mk, color=col, lw=0, markersize=10 if mk == '*' else 8,
                       markeredgecolor='white', label=lab) for _, _, _, mk, lab, col in sig_styles]
-    axT.legend(handles=handles, fontsize=7.6, loc='upper left', frameon=True, framealpha=0.9)
+    handles += [Line2D([0], [0], marker='o', color='#555555', lw=0, markersize=8,
+                       label='filled = first crossing'),
+                Line2D([0], [0], marker='o', color='#555555', markerfacecolor='white',
+                       lw=0, markersize=8, label='hollow at track end = never crosses')]
+    axT.legend(handles=handles, fontsize=7.3, loc='upper left', frameon=True,
+               framealpha=0.95, ncol=2, columnspacing=1.2)
 
     # ---- BOTTOM: birth-maps for arms that form concentration ----
     form_arms = ['g1gate', 'sigmoid', 'textinit']
