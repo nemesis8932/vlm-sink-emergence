@@ -101,7 +101,7 @@ def main():
     for tick, arm in zip(axT.get_yticklabels(), ARMS):
         tick.set_color(fc.ARM_COLORS[arm]); tick.set_fontweight('bold')
     axT.set_xscale('log'); axT.set_xlim(FLOOR_M * 0.8, 4000)
-    axT.set_ylim(-0.6, len(ARMS) + 0.75)   # headroom so the legend sits above the tracks
+    axT.set_ylim(-0.6, len(ARMS) + 1.1)   # headroom so the legend clears baseline's top-lane marker
     axT.set_xlabel('tokens (millions, log) — shaded track = observed run per arm', fontsize=9)
     axT.set_title('Lead–lag: when each sink signature first crosses threshold',
                   fontsize=10, weight='bold')
