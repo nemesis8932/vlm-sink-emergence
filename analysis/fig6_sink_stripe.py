@@ -53,7 +53,7 @@ def main():
     d = np.load(NPZ)
     arms = [('baseline', 'baseline_s0'), ('g1gate', 'g1gate_s0'),
             ('sigmoid', 'sigmoid_s0'), ('textinit', 'textinit_s0')]
-    fig, axes = plt.subplots(2, 5, figsize=(12.5, 5.4))
+    fig, axes = plt.subplots(2, 5, figsize=(12.5, 5.9))
     for j, (arm, pref) in enumerate(arms):
         sts = steps_for(pref)
         early, final = sts[0], sts[-1]
@@ -67,7 +67,8 @@ def main():
     # 5th column: textinit @ init (inherited) on top, note + colorbar below
     panel(axes[0, 4], pick_strong(d['textinit_s0_step0']), 'textinit · step 0\nINHERITED @init',
           fc.ARM_COLORS['textinit'])
-    axes[0, 4].spines[:].set_color('tab:orange'); axes[0, 4].spines[:].set_linewidth(2)
+    axes[0, 4].spines[:].set_color(fc.ARM_COLORS['textinit'])
+    axes[0, 4].spines[:].set_linewidth(2)
     axes[1, 4].axis('off')
     axes[1, 4].text(0.0, 0.95,
                     'query × key attention\n(top sink head per arm)\n\n'
@@ -87,7 +88,7 @@ def main():
     fig.suptitle('The sink stripe: every query attends to the first image token — '
                  'absent in baseline, total in textinit, and already present at init (inherited)',
                  fontsize=10.5, weight='bold', y=0.99)
-    fig.tight_layout(rect=[0, 0, 1, 0.96])
+    fig.tight_layout(rect=[0, 0, 1, 0.95], h_pad=2.2)
     out = 'analysis/fig6_sink_stripe.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
     print('wrote', out)

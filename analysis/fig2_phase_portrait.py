@@ -19,24 +19,8 @@ import fig_common as fc
 
 ARMS = fc.MAIN_ARMS + ['rf']
 
-# Refined palette: same hue family per arm as the suite (tab:*) but deeper /
-# colorblind-friendlier, so cross-figure arm identity is preserved.
-COLORS = {
-    'baseline': '#3272AE',   # blue
-    'g1gate':   '#2E9459',   # green
-    'sigmoid':  '#C23B2C',   # brick red
-    'textinit': '#E8871E',   # amber
-    'rf':       '#7E63AC',   # violet
-}
-
-mpl.rcParams.update({
-    'font.family': 'sans-serif',
-    'font.sans-serif': ['DejaVu Sans'],  # has arrow glyphs; matches rest of fig suite
-    'axes.linewidth': 0.8,
-    'axes.edgecolor': '#444444',
-    'xtick.color': '#444444', 'ytick.color': '#444444',
-    'text.color': '#222222', 'axes.labelcolor': '#222222',
-})
+# palette + rcParams come from fig_common (shared, CVD-validated)
+COLORS = fc.ARM_COLORS
 
 
 def smooth(y, k=9):

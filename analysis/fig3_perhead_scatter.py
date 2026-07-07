@@ -39,10 +39,11 @@ def main():
     ax.legend(fontsize=7.2, loc='upper left', framealpha=0.9, markerscale=1.6)
     fc.style_ax(ax)
     # call out the two high-concentration populations going OPPOSITE ways
-    ax.annotate('sigmoid: high concentration,\nvalue AMPLIFIED (>1)', (0.55, 2.2), fontsize=7.5,
-                color='tab:red', ha='left', va='center')
-    ax.annotate('textinit: high concentration,\nvalue DRAINED (→0)', (0.55, 0.18), fontsize=7.5,
-                color='tab:orange', ha='left', va='center')
+    box = dict(boxstyle='round,pad=0.3', fc='white', ec='none', alpha=0.8)
+    ax.annotate('sigmoid: high concentration,\nvalue AMPLIFIED (>1)', (0.62, 2.45), fontsize=7.5,
+                color=fc.ARM_COLORS['sigmoid'], ha='left', va='center', weight='bold', bbox=box)
+    ax.annotate('textinit: high concentration,\nvalue DRAINED (→0)', (0.52, 0.62), fontsize=7.5,
+                color=fc.ARM_COLORS['textinit'], ha='left', va='center', weight='bold', bbox=box)
 
     # per-arm r table panel
     axt.axis('off')

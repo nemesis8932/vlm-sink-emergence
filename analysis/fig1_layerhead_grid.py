@@ -9,6 +9,7 @@ textinit is hot at init (inherited) and saturates. g1gate develops a few late he
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
+import matplotlib.patheffects as pe
 import fig_common as fc
 
 ARMS = fc.MAIN_ARMS + ['rf']
@@ -25,8 +26,6 @@ def main():
     fig, axes = plt.subplots(3, ncol, figsize=(2.05 * ncol, 7.2))
     rows = ['init', 'early', 'final']
     for j, arm in enumerate(ARMS):
-        S = fc.load_perhead(arm, 'first'); first = S['step']
-        Sl = fc.load_perhead(arm, 'last'); last = S['step']
         last_step = fc.load_summ(arm)[-1]['step']
         early_step = int(last_step * 0.25)
         steps = {'init': 'first', 'early': early_step, 'final': 'last'}
@@ -42,7 +41,8 @@ def main():
             if j == 0:
                 ax.set_ylabel(f'{rk}\n(30 layers)', fontsize=8)
             ax.text(0.97, 0.04, f'step {st}', transform=ax.transAxes, fontsize=6.2,
-                    ha='right', va='bottom', color='white')
+                    ha='right', va='bottom', color='white',
+                    path_effects=[pe.withStroke(linewidth=1.6, foreground='black')])
     for j in range(ncol):
         axes[2, j].set_xlabel('9 heads', fontsize=7.5)
     cbar = fig.colorbar(im, ax=axes, fraction=0.018, pad=0.012)

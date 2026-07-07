@@ -52,9 +52,11 @@ def main():
 
     # ---- TOP: lead-lag timeline ----
     axT = fig.add_subplot(gs[0, :])
-    sig_styles = [('h_ratio_pos0', 2.0, True, '^', 'massive-act  ‖h‖>2', 'tab:red'),
-                  ('v_ratio_pos0', 0.8, False, 's', 'value-drain  ‖v‖<0.8', 'tab:blue'),
-                  ('max_attn_pos0', EPS_CONC, True, '*', 'concentration  attn→pos0>0.3', 'black')]
+    # signature colors deliberately OFF the arm palette (magenta/teal/black) so a
+    # marker's hue can't be misread as an arm identity
+    sig_styles = [('h_ratio_pos0', 2.0, True, '^', 'massive-act  ‖h‖>2', '#B5487A'),
+                  ('v_ratio_pos0', 0.8, False, 's', 'value-drain  ‖v‖<0.8', '#0F7F8B'),
+                  ('max_attn_pos0', EPS_CONC, True, '*', 'concentration  attn→pos0>0.3', '#111111')]
     yticks, ylabels = [], []
     for yi, arm in enumerate(ARMS):
         S = fc.load_summ(arm)
@@ -79,6 +81,8 @@ def main():
             axT.scatter([xx], [y], marker=mk, s=ms, color=col, zorder=5,
                         edgecolors='white', linewidths=0.6, alpha=0.85)
     axT.set_yticks(yticks); axT.set_yticklabels(ylabels, fontsize=8.5)
+    for tick, arm in zip(axT.get_yticklabels(), ARMS):
+        tick.set_color(fc.ARM_COLORS[arm]); tick.set_fontweight('bold')
     axT.set_xscale('log'); axT.set_xlim(FLOOR_M * 0.8, 5000); axT.set_ylim(-0.8, len(ARMS) - 0.2)
     axT.set_xlabel('tokens at first threshold-crossing (millions, log)', fontsize=9)
     axT.axvspan(1200, 5000, color='gray', alpha=0.08)
@@ -101,8 +105,9 @@ def main():
         G = birth_grid(a); grids[a] = G
         allvals.append(G[~np.isnan(G)])
     vmax = np.nanpercentile(np.concatenate(allvals), 98) if allvals else 1
+    baxes = []
     for k, a in enumerate(form_arms):
-        ax = fig.add_subplot(gs[1, k])
+        ax = fig.add_subplot(gs[1, k]); baxes.append(ax)
         G = grids[a]
         im = ax.imshow(G, aspect='auto', cmap='viridis_r', norm=Normalize(0, vmax),
                        interpolation='nearest')
@@ -113,8 +118,9 @@ def main():
         ax.set_xlabel('9 heads', fontsize=7.5)
         if k == 0:
             ax.set_ylabel('30 layers', fontsize=8)
-        cb = fig.colorbar(im, ax=ax, fraction=0.05, pad=0.04)
-        cb.set_label('birth step', fontsize=6.5); cb.ax.tick_params(labelsize=6)
+    # ONE shared colorbar for the three birth-maps (same Normalize) instead of three copies
+    cb = fig.colorbar(im, ax=baxes, fraction=0.025, pad=0.02)
+    cb.set_label('birth step', fontsize=7); cb.ax.tick_params(labelsize=6.5)
     axn = fig.add_subplot(gs[1, 3]); axn.axis('off')
     axn.text(0.02, 0.92, 'birth-map\n(step a head first\ncrosses attn→pos0 > 0.3)',
              fontsize=8.5, weight='bold', va='top')

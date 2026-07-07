@@ -55,7 +55,8 @@ def main():
                  fontsize=10.5, weight='bold')
     ax.legend(fontsize=8, loc='lower left', framealpha=0.92)
     ax.axvspan(0.5, 2.0, color='gray', alpha=0.07)
-    ax.text(1.0, ax.get_ylim()[0], 'text-LM sink\n+collapse ~step 1k', fontsize=6.8,
+    y0, y1 = ax.get_ylim()
+    ax.text(1.0, y0 + 0.035 * (y1 - y0), 'text-LM sink\n+collapse ~step 1k', fontsize=6.8,
             color='gray', ha='center', va='bottom')
     fc.style_ax(ax)
     fig.tight_layout()

@@ -7,16 +7,29 @@ resume@4000 seam (pre_resume4000 segment + main) so its path starts at the origi
 """
 import json, glob, os, re
 import numpy as np
+import matplotlib as mpl
 
 # repo root = parent of this file's analysis/ dir; all run paths anchored here
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 
-# Palette — matches analyze_sinks.py; RF = purple (fresh-data baseline twin)
+# Palette — same hue family per arm as analyze_sinks.py (blue/green/red/orange/purple)
+# but deeper, CVD-validated (dataviz six-checks: all PASS on white, worst adjacent-pair
+# ΔE 19.1 protan, all ≥3:1 contrast). RF = violet (fresh-data baseline twin).
 ARM_COLORS = {
-    'baseline': 'tab:blue', 'textinit': 'tab:orange',
-    'g1gate': 'tab:green', 'sigmoid': 'tab:red', 'rf': 'tab:purple',
+    'baseline': '#3272AE', 'textinit': '#D2790D',
+    'g1gate': '#2E9459', 'sigmoid': '#C23B2C', 'rf': '#7E63AC',
 }
+
+# shared figure style for the whole suite
+mpl.rcParams.update({
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['DejaVu Sans'],
+    'axes.linewidth': 0.8,
+    'axes.edgecolor': '#444444',
+    'xtick.color': '#444444', 'ytick.color': '#444444',
+    'text.color': '#222222', 'axes.labelcolor': '#222222',
+})
 ARM_LABELS = {
     'baseline': 'baseline (softmax, scratch)',
     'textinit': 'textinit (pretrained text LM)',
@@ -34,16 +47,22 @@ MAIN_ARMS = ['baseline', 'g1gate', 'sigmoid', 'textinit']
 ALL_ARMS = MAIN_ARMS + ['rf']
 
 
-def load_summ(arm):
-    """step-sorted list of dicts {step, tokens_seen, **summary}. RF stitched over seam."""
+def _probe_files(arm):
+    """probe file list; RF stitched across the resume@4000 seam (pre segment first,
+    main file overrides at the duplicated seam steps)."""
     rd = RUN_DIR[arm]
     files = [f'{rd}/probes.jsonl']
     if arm == 'rf':
         pre = f'{rd}/probes.jsonl.pre_resume4000'
         if os.path.exists(pre):
             files = [pre, f'{rd}/probes.jsonl']
+    return files
+
+
+def load_summ(arm):
+    """step-sorted list of dicts {step, tokens_seen, **summary}. RF stitched over seam."""
     rows = {}
-    for fp in files:
+    for fp in _probe_files(arm):
         with open(fp) as f:
             for line in f:
                 p = json.loads(line)
@@ -54,13 +73,15 @@ def load_summ(arm):
 
 def load_perhead(arm, which='last'):
     """Per-(layer,head) arrays at a probe step. which='last'|'first'|int(step).
-    Returns dict of (30,9) arrays: attn_to_pos0, v_ratio, h_ratio(by layer, broadcast), argmax_key."""
-    rd = RUN_DIR[arm]
-    P = []
-    with open(f'{rd}/probes.jsonl') as f:
-        for line in f:
-            P.append(json.loads(line))
-    P.sort(key=lambda p: p['step'])
+    Returns dict of (30,9) arrays: attn_to_pos0, v_ratio, h_ratio(by layer, broadcast), argmax_key.
+    RF stitched over the resume seam so which='first' is true init (step 0), not step 4000."""
+    rows = {}
+    for fp in _probe_files(arm):
+        with open(fp) as f:
+            for line in f:
+                p = json.loads(line)
+                rows[p['step']] = p
+    P = [rows[k] for k in sorted(rows)]
     if which == 'last':
         p = P[-1]
     elif which == 'first':
