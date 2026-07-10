@@ -12,11 +12,12 @@ unnormalized sigmoid attention, and decoder initialization from a pretrained tex
 They come apart. Across three seeds, the four levers land in four distinct corners of
 (concentration &times; value-norm &times; massive-activation) space; no two arms share a
 signature triple, and the value-norm ratio alone is drained (0.38&ndash;0.72), unchanged
-(&asymp;1), or amplified (1.48&ndash;1.60) depending on the lever. On a confound-free run
-over one billion non-repeated tokens, massive activation grows +130% while attention
-concentration stays at exactly zero. Per-head correlation between concentration and
-value-norm flips sign across arms (+0.67 to &minus;0.76; pooled &minus;0.20), which no
-single shared mechanism predicts. Prior text-only work separates massive activations from
+(&asymp;1), or amplified (1.48&ndash;1.60) depending on the lever. On a
+repetition-confound-free run over one billion fresh tokens (single seed), massive
+activation grows +130% while attention concentration stays at exactly zero. Per-head
+correlation between concentration and value-norm flips sign across arms (+0.67 to
+&minus;0.76; pooled &minus;0.20): no fixed-sign coupling links the two axes. Prior
+text-only work separates massive activations from
 attention sinks; we show, for the first time in from-scratch multimodal pretraining, that
 all three signatures, value-norm drain included, respond independently to ordinary
 training-time choices.</p>

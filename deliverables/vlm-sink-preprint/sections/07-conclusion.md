@@ -4,9 +4,9 @@ We tracked the three signatures commonly bundled as "the attention sink" — con
 value-norm drain, and massive activation — as separate quantities across from-scratch
 multimodal pretraining, and they came apart everywhere we looked. Four training levers
 produced four distinct signature corners, with the value-norm axis alone moving in three
-different directions. On a confound-free billion-token fresh-data run, massive activation
-grew +130% while concentration never left zero. Per-head correlation between concentration
-and value-norm flipped sign across arms. The signatures even arrived in different orders:
+different directions. On a repetition-confound-free, single-seed billion-token fresh-data
+run, massive activation grew +130% while concentration never left zero. Per-head
+correlation between concentration and value-norm flipped sign across arms. The signatures even arrived in different orders:
 norms first and concentration never in the softmax-scratch arms, the mirror image under
 sigmoid attention, and everything at once, inherited at step 0, under text initialization.
 
@@ -27,4 +27,6 @@ tokens to match text-LM budgets.
 
 **Reproducibility.** All signatures are computed by a self-validating probe (§2) on a
 fixed probe batch, from dense (every-100-step) logs; per-seed tables are in the Appendix.
-Code, probe, run configurations, and checkpoints will be released with the paper.
+Code, the probe, run configurations, and per-run logs are available at
+`github.com/nemesis8932/vlm-sink-emergence` (branch `sink-emergence`); training checkpoints
+are hosted at `huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts`.

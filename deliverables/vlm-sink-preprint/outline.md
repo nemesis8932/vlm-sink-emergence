@@ -129,6 +129,12 @@ Figs 1/3/5 + full per-seed tables (from session4_n3_audit.md) + per-position mas
 - References: ALL 20 bibliographically verified by Researcher (handoff-...-d927, report
   2026-07-07). 9 corrected (IDs/authors/titles), 0 fabricated. Flags cleared.
 - Researcher report in `sources/researcher-related-work.md`.
+- Review fixes applied (2026-07-10): "repetition-confound-free" wording + (n=1) inline at
+  RF headline; "no fixed-sign coupling" replaces "single shared mechanism"; Fig 3 sigmoid
+  panel DROPPED (dump missed true top head L7H3 — caveat now prose-only); Table 1 header
+  reworded (textinit read at 60M); GQA verified from `models/config.py` (9Q/3KV per layer
+  → 270 attn obs but 90 independent value obs) and stated in §2 + §3.3 + Fig A2 caption;
+  Pearson-star independence caveat added to §3.3.
 
 ## BLOCKERS / user actions
 

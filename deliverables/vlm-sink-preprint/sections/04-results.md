@@ -17,9 +17,10 @@ single direction. Every combination of directions occurs instead.</figcaption>
 ## 3.1 Four training levers land in four distinct signature corners
 
 Table 1 reports the three signatures for all four arms and all seeds (baseline/sigmoid
-n = 2; g1gate/textinit n = 3), matched at ~100M tokens. *textinit* is read at 60M, where
-all three of its signatures have plateaued; its h-ratio changes by less than 10% from 60M
-to 100M in the seeds that continued. Seed-0 values are trusted from a checksummed archive
+n = 2; g1gate/textinit n = 3), each read at its final matched checkpoint: ~100M tokens for
+baseline, g1gate, and sigmoid, and 60M for *textinit*, where all three of its signatures
+have plateaued; its h-ratio changes by less than 10% from 60M to 100M in the seeds that
+continued. Seed-0 values are trusted from a checksummed archive
 rather than re-derived first-hand (§5).
 
 **Table 1 — signature triple by arm, all seeds.** Sink^0.2 is the fraction of the model's
@@ -97,27 +98,32 @@ violet trajectory climbs while never moving rightward. The v-ratio ends below it
 initialization value, but ~75% of that drop happens in the first 57M tokens and partially
 recovers afterward, so we report it as supporting context rather than ongoing emergence.
 **Massive activation grows for a full billion tokens of multimodal training while
-attention concentration never leaves zero.**
+attention concentration never leaves zero** (a single seed; §5).
 
 ## 3.3 No universal head-level coupling between concentration and value-norm
 
-If concentration and value-drain expressed one mechanism, their per-head correlation
-should carry a consistent sign across training regimes. It does not. Pearson r between
+If concentration and value-drain were tightly coupled, their per-head correlation should
+at minimum carry a consistent sign across training regimes. It does not. Pearson r between
 per-head attention→pos0 and value-norm ratio at each arm's final checkpoint (n = 270
-heads/arm; scatter in Appendix Fig. A2):
+(layer, query-head) pairs/arm; scatter in Appendix Fig. A2):
 
 **Table 4 — per-head r(attn→pos0, v-ratio), final checkpoint.** ***p < 0.001; ns = not
-significant.
+significant. See the independence note below.
 
 | baseline | g1gate | sigmoid | textinit | RF | pooled (n = 1350) |
 |---|---|---|---|---|---|
 | +0.67*** | +0.53*** | −0.03 ns | −0.76*** | +0.43*** | −0.20*** |
 
-Individual arms show strong correlations; the sign, though, depends on the arm. Heads that
-attend more to pos0 have *larger* value norms in the baseline regime and *smaller* ones
-under text initialization, and the pooled correlation is weak only because opposite-signed
-arms cancel. A shared mechanism would fix the sign. Each lever instead sets its own local
-relationship between the two axes.
+Two honesty notes on the n. The decoder uses grouped-query attention (9 query heads share
+3 KV heads per layer; §2), so the 270 pairs per arm contain only 90 independent value-norm
+observations — each KV group's value vector is shared by 3 query heads, while the
+attention side is genuinely per-query-head. And the significance stars treat pairs as
+independent, which heads within a layer and within a KV group are not; read the stars as
+descriptive, not inferential. Neither caveat touches the finding itself, which is about
+sign: heads that attend more to pos0 have *larger* value norms in the baseline regime and
+*smaller* ones under text initialization, and the pooled correlation is weak only because
+opposite-signed arms cancel. A fixed-sign coupling would show the same sign everywhere.
+Each lever instead sets its own local relationship between the two axes.
 
 ## 3.4 Ordering: norm signatures lead, concentration is late, mirror-imaged, or never
 
@@ -155,10 +161,11 @@ per arm (row-normalized), early (top row) vs. final (bottom row); the cyan line 
 key = pos0 and the dotted line the image|text boundary. The pos0 stripe is <em>absent</em>
 in baseline throughout, <em>total</em> in textinit (attn→pos0 = 0.62 at its final
 checkpoint), and, rightmost panel, <em>already present at step 0</em> in textinit,
-inherited from the text LM. The sigmoid panel shows a head selected by raw (unnormalized)
-gate score rather than the arm's true top sink head and understates sigmoid's
-concentration (annotation in panel); we draw no claim about sigmoid from this figure. Its
-concentration is established in Tables 1–2 and Figure 2.</figcaption>
+inherited from the text LM. sigmoid is omitted: its checkpoint dump selected heads by raw
+(unnormalized) gate score and missed the arm's true top sink head (L7H3, 0.87
+normalized), so a panel built from the dumped heads would visually understate its
+concentration; sigmoid's concentration is established in Tables 1–2 and
+Figure 2.</figcaption>
 </figure>
 
 Figure 3 shows the same story at the single-head level: the query × key attention map of
@@ -166,9 +173,10 @@ each arm's top sink head. The vertical stripe at key = pos0 (every query attendi
 first image token) is absent in *baseline* at both the early and final checkpoint, and
 total in *textinit*. Most telling is the rightmost panel: **the stripe is already there at
 step 0 in textinit**, imported with the text-LM weights before the model has seen a single
-image. We deliberately draw no conclusion about *sigmoid* from this figure. The checkpoint
-dump selected its head by an unnormalized gate score and missed the arm's true top sink
-head, so sigmoid's concentration rests on Tables 1–2 and Figure 2 instead.
+image. *sigmoid* is deliberately absent from this figure: its checkpoint dump selected
+heads by an unnormalized gate score and missed the arm's true top sink head (L7H3, 0.87
+normalized attention→pos0), so any map we could draw would understate the arm; sigmoid's
+concentration rests on Tables 1–2 and Figure 2 instead.
 Attention-entropy collapse, the text-LM literature's usual concentration correlate,
 separates the same way: only *sigmoid* and *textinit* collapse, while *baseline*,
 *g1gate*, and *RF* stay flat (Appendix Fig. A3). Entropy collapse tracks the concentration

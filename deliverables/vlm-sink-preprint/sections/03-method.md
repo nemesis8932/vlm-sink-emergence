@@ -2,7 +2,10 @@
 
 **Model and token layout.** All runs use a 222M-parameter nanoVLM [18]: a SigLIP-B/16
 vision encoder [16] (pretrained, trainable) feeding a decoder with the SmolLM2-135M
-architecture [17] through a learned modality projector. Except in the *textinit* arm, the
+architecture [17] through a learned modality projector. The decoder has 30 layers of
+grouped-query attention with 9 query heads sharing 3 KV heads per layer — 270 (layer,
+query-head) pairs but only 90 (layer, KV-group) value projections, a distinction that
+matters when we count per-head observations (§3.3). Except in the *textinit* arm, the
 decoder trains **from random initialization**; the point is to watch the signatures form.
 Sequences are 49 image tokens (a causal prefix) followed by 79 left-padded text tokens, 128
 in all. **Position 0 is the first image token; there is no BOS.** Whatever happens at
@@ -42,7 +45,10 @@ metric conventions of Gu et al. [1] at fixed sequence length:
   ε = 0.3 default of [1] with robustness checks at ε ∈ {0.2, 0.4}. Cross-arm tables report
   the stricter ε = 0.2, which makes an absence claim harder to pass.
 - **Value-norm ratio** (v-ratio) — ‖v‖ at position 0 over the mean ‖v‖ of the remaining
-  positions. Below 1 is value-drain [6]; above 1 is amplification.
+  positions. Below 1 is value-drain [6]; above 1 is amplification. Under grouped-query
+  attention the value vector is a KV-group property: per-(layer, query-head) v-ratios
+  repeat each group's value across its 3 query heads (90 independent value observations,
+  not 270).
 - **Massive activation** (h-ratio) — residual-stream norm at position 0 over the rest.
 
 All three are **pos0-anchored by construction**. We state this as a measurement choice and

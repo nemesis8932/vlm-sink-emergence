@@ -53,12 +53,13 @@ non-repeated 1-billion-token stream (*RF*), removing the overfitting confound.
    corners of (concentration × value-norm × massive-activation) space. No two arms share a
    signature triple, and the value-norm ratio alone moves in three qualitatively different
    directions (drained / unchanged / amplified) depending on the lever (Fig. 1, Table 2).
-2. **Confound-free decoupling at 1B tokens.** On fresh data, massive activation rises +130%
-   (h-ratio 1.43 → 3.22) over a full billion tokens while attention concentration stays at
-   exactly zero for the entire run; 0% of heads ever cross the sink threshold (§3.2).
-3. **No universal head-level coupling.** Per-head correlation between concentration and
-   value-norm flips sign across arms (+0.67 baseline → −0.76 textinit; pooled −0.20),
-   which a single shared mechanism cannot produce (§3.3).
+2. **Repetition-confound-free decoupling at 1B tokens (n = 1).** On fresh, non-repeated
+   data, massive activation rises +130% (h-ratio 1.43 → 3.22) over a full billion tokens
+   while attention concentration stays at exactly zero for the entire single-seed run; 0%
+   of heads ever cross the sink threshold (§3.2, §5).
+3. **No fixed-sign head-level coupling.** Per-head correlation between concentration and
+   value-norm flips sign across arms (+0.67 baseline → −0.76 textinit; pooled −0.20) —
+   there is no fixed-sign coupling between the two axes (§3.3).
 
 Text-only work already separates massive activations from concentration, via normalization
 [3] and value-path [4] interventions, so decoupling per se is not new and we do not claim

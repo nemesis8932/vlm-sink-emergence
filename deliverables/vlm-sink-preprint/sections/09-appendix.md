@@ -11,8 +11,9 @@ textinit is hot from initialization; sigmoid lights up a band of mid-network lay
 
 <figure id="figA2">
 <img src="figures/fig3_perhead_scatter.svg" alt="Per-head concentration vs value-norm scatter">
-<figcaption><b>Figure A2: No universal head-level coupling.</b> Per-(layer, head)
-concentration vs. value-norm ratio at the final checkpoint, by arm (n = 270/arm). The
+<figcaption><b>Figure A2: No universal head-level coupling.</b> Per-(layer, query-head)
+concentration vs. value-norm ratio at the final checkpoint, by arm (n = 270/arm; under
+grouped-query attention these contain 90 independent value-norm observations — §3.3). The
 correlation sign flips by arm (+0.67 baseline … −0.76 textinit; Table 4); the pooled cloud
 is weak (−0.20) only because opposite-signed arms cancel. Do not read it as an uncorrelated
 cloud; most individual arms show strong |r|.</figcaption>

@@ -51,9 +51,13 @@ def steps_for(pref):
 
 def main():
     d = np.load(NPZ)
-    arms = [('baseline', 'baseline_s0'), ('g1gate', 'g1gate_s0'),
-            ('sigmoid', 'sigmoid_s0'), ('textinit', 'textinit_s0')]
-    fig, axes = plt.subplots(2, 5, figsize=(12.5, 5.9))
+    # sigmoid column DROPPED (review 2026-07-10): its checkpoint dump selected heads by
+    # raw (unnormalized) gate score and missed the arm's true top sink head (L7H3, 0.87
+    # normalized) — a panel from the dumped heads visually understates sigmoid's
+    # concentration. Caveat lives in the paper prose; sigmoid's concentration is carried
+    # by the summary tables + lead-lag figure.
+    arms = [('baseline', 'baseline_s0'), ('g1gate', 'g1gate_s0'), ('textinit', 'textinit_s0')]
+    fig, axes = plt.subplots(2, 4, figsize=(10.4, 5.9))
     for j, (arm, pref) in enumerate(arms):
         sts = steps_for(pref)
         early, final = sts[0], sts[-1]
@@ -61,33 +65,31 @@ def main():
                    fc.ARM_COLORS[arm])
         panel(axes[1, j], pick_strong(d[f'{pref}_step{final}']), f'{arm}  ·  step {final} (final)',
               fc.ARM_COLORS[arm])
-        if arm == 'sigmoid':   # honest flag: dumped heads were raw-selected, miss the true 0.87 head
-            axes[1, j].text(0.04, 0.5, 'dumped head\nraw-selected\n(true sink L7H3\n=0.87, not dumped)',
-                            transform=axes[1, j].transAxes, fontsize=5.6, color='cyan', va='center')
-    # 5th column: textinit @ init (inherited) on top, note + colorbar below
-    panel(axes[0, 4], pick_strong(d['textinit_s0_step0']), 'textinit · step 0\nINHERITED @init',
+    # 4th column: textinit @ init (inherited) on top, note + colorbar below
+    panel(axes[0, 3], pick_strong(d['textinit_s0_step0']), 'textinit · step 0\nINHERITED @init',
           fc.ARM_COLORS['textinit'])
-    axes[0, 4].spines[:].set_color(fc.ARM_COLORS['textinit'])
-    axes[0, 4].spines[:].set_linewidth(2)
-    axes[1, 4].axis('off')
-    axes[1, 4].text(0.0, 0.95,
+    axes[0, 3].spines[:].set_color(fc.ARM_COLORS['textinit'])
+    axes[0, 3].spines[:].set_linewidth(2)
+    axes[1, 3].axis('off')
+    axes[1, 3].text(0.0, 0.95,
                     'query × key attention\n(top sink head per arm)\n\n'
                     '• bright stripe at key=pos0\n  (cyan line) = sink\n'
-                    '• baseline: no stripe\n• sigmoid/textinit: strong\n'
+                    '• baseline: no stripe\n• textinit: total\n'
                     '• textinit @init already\n  has it (inherited from\n  the text LM)\n\n'
+                    'sigmoid omitted: dump\nmissed its true top sink\nhead (L7H3) — see text\n\n'
                     'dotted line = image|text\nboundary (key/query 49)',
-                    fontsize=7.4, va='top')
-    cax = fig.add_axes([0.845, 0.08, 0.11, 0.025])
+                    fontsize=7.2, va='top')
+    cax = fig.add_axes([0.80, 0.03, 0.14, 0.022])
     cb = fig.colorbar(im, cax=cax, orientation='horizontal')
     cb.set_label('attn (row-norm, γ=0.5)', fontsize=6.5); cb.ax.tick_params(labelsize=6)
 
     for i in range(2):
         axes[i, 0].set_ylabel('query position', fontsize=7.5)
-    for j in range(5):
+    for j in range(4):
         axes[1, j].set_xlabel('key position', fontsize=7.5)
     fig.suptitle('The sink stripe: every query attends to the first image token — '
                  'absent in baseline, total in textinit, and already present at init (inherited)',
-                 fontsize=10.5, weight='bold', y=0.99)
+                 fontsize=10, weight='bold', y=0.99)
     fig.tight_layout(rect=[0, 0, 1, 0.95], h_pad=2.2)
     out = 'analysis/fig6_sink_stripe.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
