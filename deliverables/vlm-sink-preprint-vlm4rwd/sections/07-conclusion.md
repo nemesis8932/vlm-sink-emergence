@@ -22,11 +22,14 @@ untouched.
 
 **Next steps.** A random-initialized vision encoder to isolate the decoder's contribution
 to massive activation; a per-position norm scan across all seeds to close the remaining
-anchoring caveat on the text-initialized arm; and extending the fresh-data run past 1B
-tokens to match text-LM budgets.
+anchoring caveat on the text-initialized arm; extending the fresh-data run past 1B tokens
+to match text-LM budgets; and — the step this workshop's framing points at — testing
+whether an arm's signature corner predicts hallucination or grounding behavior on the
+benchmarks the sink-intervention literature already uses (POPE, CHAIR, AMBER [21–23]).
+This paper does not test that link; it establishes when and in what combinations the
+signatures form, which is the measurement that has to exist first.
 
 **Reproducibility.** All signatures are computed by a self-validating probe (§2) on a
 fixed probe batch, from dense (every-100-step) logs; per-seed tables are in the Appendix.
-Code, the probe, run configurations, and per-run logs are available at
-`github.com/nemesis8932/vlm-sink-emergence` (branch `sink-emergence`); training checkpoints
-are hosted at `huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts`.
+Code, the probe, run configurations, per-run logs, and training checkpoints will be
+released on acceptance; links are withheld for double-blind review.

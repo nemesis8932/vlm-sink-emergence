@@ -142,3 +142,8 @@ Figs 1/3/5 + full per-seed tables (from session4_n3_audit.md) + per-position mas
 - [x] Bibliographic verification — DONE (Researcher, 2026-07-07; corrections applied).
 - [ ] Confirm author-name spelling in `build.py` before submission.
 - [ ] Final arXiv cs.CV/cs.LG Jun 10–29 scoop browse + first-time-submitter endorsement.
+- [ ] **Add VLM sink→hallucination citations before arXiv submission** (decided 2026-07-14,
+      "fork now, v1 later"): VAR 2503.03321, SAGE 2603.27898, IP&M
+      S0306457325003723 (verify authors), SinkProbe 2604.10697 — neutral (non-grounding-framed)
+      version of the fork's related-work ¶; see `../vlm-sink-preprint-vlm4rwd/outline.md`
+      "Researcher verdict" for the cite-and-distinguish axes.

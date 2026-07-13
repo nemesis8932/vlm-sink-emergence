@@ -20,5 +20,9 @@ correlation between concentration and value-norm flips sign across arms (+0.67 t
 text-only work separates massive activations from
 attention sinks; we show, for the first time in from-scratch multimodal pretraining, that
 all three signatures, value-norm drain included, respond independently to ordinary
-training-time choices.</p>
+training-time choices. For grounded generation this is a precondition question: attention
+mass captured by a positional artifact is, by construction, attention not spent on image
+evidence, and sink-like attention has repeatedly been linked to hallucination in deployed
+VLMs. Whether signature dissociation predicts grounding behavior is not tested here; we
+establish when and how each signature forms, the step that comes first.</p>
 </div>

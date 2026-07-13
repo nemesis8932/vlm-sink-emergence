@@ -11,35 +11,47 @@ in v1 — do not reopen Method/Results for new claims here.
 
 ---
 
-## What's copied verbatim (no changes)
+## File status (updated 2026-07-14, post-verdict execution)
 
 | file | status |
 |---|---|
 | `sections/03-method.md` | copied verbatim |
-| `sections/04-results.md` | copied verbatim |
-| `sections/05-related-work.md` | copied verbatim |
-| `sections/06-limitations.md` | copied verbatim — **the "no claim about downstream capability" line is load-bearing for this fork; see bridge-scaffold.md, do not soften it** |
-| `sections/08-references.md` | copied verbatim (+ 1 new entry pending Researcher gate, see below) |
+| `sections/04-results.md` | **lightly compressed** (user-authorized trim scope; every number, claim boundary, and locked wording byte-identical — cuts are connective tissue only) |
+| `sections/05-related-work.md` | **compressed + NEW ¶ "Sinks and hallucination in deployed VLMs"** citing [21–24] with cite-and-distinguish axes |
+| `sections/06-limitations.md` | copied verbatim — **the "no claim about downstream capability" line is load-bearing for this fork; do not soften it** |
+| `sections/08-references.md` | +4 new refs [21] VAR / [22] SAGE / [23] IP&M / [24] SinkProbe (verification status below) |
 | `sections/09-appendix.md` | copied verbatim |
 | `figures/fig{1..6}_*.svg` | copied verbatim, zero re-renders |
-| `sources/researcher-related-work.md` | copied verbatim (existing prior-art pass) |
-| `build.py` | copied verbatim |
+| `sections/01-abstract.md` | **bridge sentences WRITTEN** (Drafter, user-authorized override of scaffold-only division of labor, 2026-07-14) — hypothesis-level, no abstract citations |
+| `sections/02-intro.md` | **bridge paragraph WRITTEN** (after gap ¶): cites [21–24] as the established sink→hallucination line, positions our gap, ends on the not-measured hedge; light compression elsewhere |
+| `sections/07-conclusion.md` | **4th next-step WRITTEN** (grounding benchmarks, POPE/CHAIR/AMBER, explicitly untested here) + repro line anonymized for double-blind |
+| `build.py` | TITLE → option B; AUTHOR/EMAIL anonymized for double-blind |
+| `bridge-scaffold.md` | superseded — verdict landed, prose written; kept as provenance record |
 
-## What's new (the actual fork work)
+## Researcher verdict (2026-07-14) — gate CLEARED, ruling logged
 
-| file | status |
-|---|---|
-| `sections/01-abstract.md` | **copied verbatim as starting point** — bridge sentence(s) NOT yet written into it. See `bridge-scaffold.md` §1 for sourced bullets; user writes final prose. |
-| `sections/02-intro.md` | **copied verbatim as starting point** — bridge paragraph NOT yet inserted. See `bridge-scaffold.md` §2. |
-| `sections/07-conclusion.md` | **copied verbatim as starting point** — bridge next-step NOT yet inserted. See `bridge-scaffold.md` §3. |
-| `bridge-scaffold.md` | **NEW file** — sourced bullet-scaffolds for the 3 touch points above, per standing division of labor (Drafter scaffolds, user writes final prose in their own voice). |
+Generic sink→VLM-hallucination bridge **already exists** (SAGE, VAR, IP&M, SinkProbe,
+OPERA/PAI/GIFT cluster) → bridge CITES it, per Director handoff's "cite it, don't reinvent
+it" branch. Residual gap confirmed unclaimed: 3-way dissociation × from-scratch pretraining
+dynamics × grounding lens. 3 scoop-adjacent papers flagged; escalation resolved by user
+acting as Director 2026-07-14: **cite-and-distinguish, fork proceeds.** Distinguishing
+axes (now in related-work ¶): mitigation/detection vs. diagnostic; inference-time on
+trained models vs. pretraining dynamics; 2-signature coupling vs. 3-way dissociation;
+LLM-only ([24]) vs. VLM. Re-run scoop search before camera-ready (field moving fast).
 
-Per the handoff and standing guardrails, I have not written full replacement prose into
-01/02/07 — the copies are unmodified base-paper text pending your bridge sentences going in
-by hand from the scaffold. This keeps every word in the fork traceable to either "audited v1
-text, byte-identical" or "new, sourced, user-authored."
+New refs verification: [21] [22] [24] verified against arXiv abs pages by Drafter
+2026-07-14 (exact titles/authors). **[23] IP&M: title verified via ScienceDirect; author
+list still from Researcher's snippet reconstruction — user verifying publisher page; keep
+the VERIFY-BEFORE-SUBMIT flag until confirmed.**
 
 ---
+
+## Title / subtitle — DECIDED 2026-07-14: option B, applied to build.py
+
+> "Four Levers, Four Corners: Attention-Sink Signatures Dissociate in From-Scratch
+> Vision–Language Pretraining — A Precondition for Grounding Fidelity"
+
+Original options kept below for the record.
 
 ## Title / subtitle options — YOUR CALL, not mine
 
@@ -97,24 +109,21 @@ interruption. **Rough total ≈ 7.3–7.5pp before the bridge additions.** The b
 near-zero margin.** This is a word-count proxy, not a real NeurIPS-template render — confirm
 by pasting final text into the actual template before trusting it.
 
-**Flagged trim (not applied):** if the real render goes over 8pp, the cleanest cut is
-**demoting Fig 3 (sink-stripe) from main body to appendix.** Rationale: Fig 1 (hero,
-4-corners) and Fig 2 (ordering/lead-lag) carry the core claim; Fig 3 is corroborating
-single-head evidence, already partially caveated (sigmoid panel dropped per the 2026-07-10
-review pass), and its argument survives in prose (§3.4 already states the stripe-absent /
-stripe-total / inherited-at-init claims in text, citing the figure but not solely dependent on
-it). This is a **figure-placement change, not a content cut** — nothing gets deleted, per the
-handoff's explicit instruction. Flagging per the ask; not applying without your go-ahead.
+**Trim decision (2026-07-14):** user chose **keep all 3 main figures; compress body text
+instead** (authorized scope: 04-results, 02-intro, 05-related-work; numbers/claims/locked
+wordings byte-identical). Applied: ~150 words cut from results, ~30 from intro, ~40 from
+related-work, offsetting part of the ~460 words the bridge + new related-work ¶ added.
+Net ≈ +240 words vs. pre-bridge → proxy estimate ≈ **7.6–7.8pp, still inside budget,
+still near-zero margin.** Fig 3 → appendix demotion remains the fallback ONLY if the real
+NeurIPS-template render exceeds 8pp (user explicitly did not pre-authorize it).
 
 ---
 
-## Fact-check gate — BLOCKING, routed to Researcher
+## Fact-check gate — CLEARED 2026-07-14 (see "Researcher verdict" section above)
 
-Handoff requires Researcher confirmation before this fork ships: does existing literature
-already link attention sinks / massive activations / value-norm drain to VLM hallucination or
-grounding failure? See `handoffs/handoff-researcher-vlm-grounding-link-f487.md`. **Do not
-finalize the bridge paragraphs until that comes back** — the citation-vs-hypothesis framing in
-`bridge-scaffold.md` §2 depends on the answer.
+Verdict: literature exists → bridge cites it; residual 3-way-dissociation × pretraining gap
+confirmed unclaimed; scoop-adjacent flag resolved by Director-role ruling (cite-and-
+distinguish, proceed). Handoff `handoff-researcher-vlm-grounding-link-f487.md` closed.
 
 ## Standing guardrails (unchanged from v1, doubly enforced here)
 
@@ -133,10 +142,16 @@ finalize the bridge paragraphs until that comes back** — the citation-vs-hypot
 
 ## BLOCKERS / user actions
 
-- [ ] Wait on Researcher's fact-check verdict (`handoff-researcher-vlm-grounding-link-f487.md`).
-- [ ] Write the 3 bridge insertions from `bridge-scaffold.md` into 01/02/07 in your own voice.
-- [ ] Pick a title/subtitle option (A/B/C/D above) or propose your own.
-- [ ] Confirm page budget against the real NeurIPS 2026 template once bridge text is final.
-- [ ] Strip author-identifying info (HF username in conclusion; any other self-identification)
-      for double-blind submission.
-- [ ] Decide on the Fig 3 → appendix demotion if the real render exceeds 8pp.
+- [x] Researcher fact-check verdict — landed 2026-07-14, gate cleared, ruling logged above.
+- [x] Bridge insertions into 01/02/07 — written by Drafter (user-authorized override).
+- [x] Title option — B, applied to build.py.
+- [x] Double-blind stripping — HF/GitHub links replaced by release-on-acceptance line;
+      AUTHOR/EMAIL anonymized in build.py.
+- [ ] **VERIFY [23] IP&M author list against the ScienceDirect page** (title already
+      confirmed; user checking now). Fix `08-references.md` if the list differs.
+- [ ] Read the bridge prose in your own voice; edit anything that doesn't sound like you.
+- [ ] Confirm page budget against the real NeurIPS 2026 template (proxy says 7.6–7.8pp);
+      Fig 3 → appendix is the fallback if over, not pre-authorized.
+- [ ] Re-run the scoop search shortly before camera-ready (Researcher rec — field is fast).
+- [ ] Later, for arXiv v1 (decided 2026-07-14, "fork now, v1 later"): add the [21–24]
+      cite-and-distinguish passage to v1's related work before arXiv submission.

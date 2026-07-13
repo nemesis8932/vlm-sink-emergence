@@ -8,11 +8,11 @@ around interpreting and mitigating it [13]. In text language models the sink als
 with company. Attention concentration, near-zero value-vector norms at the sink token
 ("value-state drain" [6]), and abnormally large residual-stream activations ("massive
 activations" [10, 11]) have been observed to emerge together, concentrating on the same few
-tokens [1] and co-emerging early in training, by roughly step 1k [2]. Their consistent
-co-occurrence has led these signatures to be treated, often implicitly, as facets of a
+tokens [1] and co-emerging early in training, by roughly step 1k [2]. This consistent
+co-occurrence has led the signatures to be treated, often implicitly, as facets of a
 single attention-sink phenomenon.
 
-Whether they actually are one phenomenon is unsettled, and actively contested. One line of
+Whether they actually are one phenomenon is actively contested. One line of
 work argues for genuine causal unity: massive activations in the residual stream
 mathematically require representational compression, and ablating them eliminates both
 compression valleys and sink formation [2]. A companion view holds that outlier-driven
@@ -31,8 +31,23 @@ Second, existing multimodal sink studies analyze frozen, already-trained backbon
 inference time [7, 8]. They establish that vision-side and language-side sinks have
 distinct origins, but a frozen model cannot answer an emergence question. Whether the three
 signatures arise together, in sequence, or independently is only observable while they
-form, and that requires from-scratch pretraining with all three logged separately, densely,
-from step 0. To our knowledge no prior work does this in a multimodal model.
+form, which requires from-scratch pretraining with all three logged separately from step 0.
+To our knowledge no prior work does this in a multimodal model.
+
+The question has acquired deployment stakes. Attention allocation is the mechanism by which
+a VLM grounds generated language in image content, and a sink is a measurable failure mode
+of *where* that allocation goes. A growing literature ties these same signatures to
+hallucination in deployed VLMs: visual attention sinks, driven by massive activation of
+specific hidden dimensions, absorb attention that redistribution methods recover [21];
+hallucination errors cluster immediately after sink-token generation, motivating sink-aware
+decoding [22]; a causal chain from positional encoding through massive activations to
+visual sinks and hallucination has been proposed [23]; and in text LMs, sink attention
+combined with value-norm structure carries enough signal to detect hallucinations [24].
+All of that work probes or intervenes on already-trained models. When in training these
+signatures form — and whether they form as one thing or several — is the question
+underneath it, and the one this paper answers. Whether their dissociation predicts
+grounding or hallucination behavior we do not measure; this paper establishes the
+training-dynamics precondition.
 
 We do it at deliberately small scale: a 222M-parameter nanoVLM [18] — a pretrained
 SigLIP-B/16 encoder [16] feeding a randomly initialized decoder with the SmolLM2-135M

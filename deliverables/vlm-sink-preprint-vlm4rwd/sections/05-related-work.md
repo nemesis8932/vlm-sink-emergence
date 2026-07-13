@@ -5,9 +5,8 @@ empirical account: the sink token acts "more like key biases, storing extra atte
 scores, which could be non-informative and not contribute to the value computation" —
 small key/value norms at the sink are reported as part of the same phenomenon — and the
 sink is connected to massive residual-stream activations [10, 11]. They also show that
-removing softmax normalization (unnormalized sigmoid attention) prevents sink formation in
-text LMs up to 1B parameters at near-zero validation-loss cost, the result our *sigmoid*
-arm builds on. Guo et al. [6] describe the concentration/value-drain coupling as
+unnormalized sigmoid attention prevents sink formation in text LMs up to 1B parameters,
+the result our *sigmoid* arm builds on. Guo et al. [6] describe the concentration/value-drain coupling as
 "active-dormant" heads, the sink head's value state actively driven toward zero.
 Queipo-de-Llano, Arroyo et al. [2] make the strongest unity claim, and the only genuinely
 *causal* one: massive activations mathematically require representational compression, and
@@ -21,10 +20,9 @@ dynamics, text-only, without signature decoupling.
 **Prior decoupling results: text-only, two axes.** Two recent papers already separate
 pairs of these signatures in text models, and our claim is scoped around them. Sun,
 Canziani, LeCun & Zhu [3] show massive activations and attention sinks are dissociable
-architectural artifacts. Switching normalization scheme (Sandwich, DynamicTanh, QKNorm vs.
-Pre-Norm) crushes the massive-activation spike while the sink ratio survives — a two-way
-dissociation (massive activation vs. concentration), text-only, via a normalization lever,
-on trained checkpoints. Chen & Yao [4] decouple the same pair from the opposite direction
+architectural artifacts: switching normalization scheme crushes the massive-activation
+spike while the sink ratio survives — a two-way dissociation, text-only, via a
+normalization lever, on trained checkpoints. Chen & Yao [4] decouple the same pair from the opposite direction
 and from scratch: in 0.1–0.3B text LMs probed at dense checkpoints, a value-scale
 intervention preserves sinks while suppressing massive activations. Neither treats
 value-norm drain as a third, independently moving axis; neither is multimodal. On the
@@ -42,6 +40,21 @@ both analyze already-trained models, so neither can observe emergence, and neith
 measures the three signatures as separate quantities. Relatedly, vision transformers grow
 high-norm "register" tokens of their own [9], which is why the pretrained encoder gets its
 own limitation in §5.
+
+**Sinks and hallucination in deployed VLMs.** A parallel line ties these signatures to
+grounding failure. Kang et al. [21] attribute *visual* attention sinks to massive
+activation of specific hidden dimensions and redistribute the absorbed attention to reduce
+hallucination; Shukla & Kira [22] report that hallucination errors concentrate within a
+few decoding steps of sink-token generation and decode sink-aware; Zhang et al. [23] trace
+a causal chain from rotary position encoding through massive activations to visual sinks
+to hallucination. In text LMs, Binkowski et al. [24] detect hallucinations from sink
+structure, their classifier preferentially relying on sinks whose value vectors have large
+norms — the closest precedent for treating value norms as a signal. All four operate on
+already-trained models at inference time, and each treats massive activation and
+concentration as one coupled mechanism ([24] is text-only besides). None tracks the
+signatures across training, and none treats value-norm drain as an independently moving
+third axis. Our result — that the coupling this line leans on is lever-dependent rather
+than fixed — is its training-dynamics complement.
 
 **The gating lever.** Qiu et al. [5] introduce the head-specific, zero-initialized
 elementwise sigmoid gate on attention output that our *g1gate* arm uses; in text LLMs it

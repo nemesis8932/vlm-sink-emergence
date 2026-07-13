@@ -12,9 +12,9 @@ from pathlib import Path
 HERE = Path(__file__).parent
 SECTIONS = sorted((HERE / "sections").glob("[0-9][0-9]-*.md"))
 
-TITLE = "Four Levers, Four Corners: Attention-Sink Signatures Dissociate in From-Scratch Vision–Language Pretraining"
-AUTHOR = "Samvat Tiwari"          # <-- confirm spelling before submission
-EMAIL = "samvat.t@gmail.com"
+TITLE = "Four Levers, Four Corners: Attention-Sink Signatures Dissociate in From-Scratch Vision–Language Pretraining — A Precondition for Grounding Fidelity"
+AUTHOR = "Anonymous author(s)"    # double-blind: real name/email restored only in camera-ready
+EMAIL = "Submitted to VLM4RWD @ NeurIPS 2026"
 DATE = "July 2026 · Preprint draft v2"
 
 def inline(s: str) -> str:

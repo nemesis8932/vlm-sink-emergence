@@ -63,4 +63,17 @@ Vision-Language Models?* (Idefics2 / The Cauldron). NeurIPS 2024. arXiv:2405.022
 A. Roy Gosthipaty, A. Marafioti. *FineVision: Open Data Is All You Need.* arXiv:2510.17269,
 2025.
 
+[21] S. Kang, J. Kim, J. Kim, S. J. Hwang. *See What You Are Told: Visual Attention Sink in
+Large Multimodal Models.* ICLR 2025. arXiv:2503.03321.
+
+[22] T. Shukla, Z. Kira. *SAGE: Sink-Aware Grounded Decoding for Multimodal Hallucination
+Mitigation.* arXiv:2603.27898, 2026.
+
+[23] Zhang, Zhu, Gu, Cao, Cheng, Wu. *What Drives Attention Sinks? A Study of Massive
+Activations and Rotational Positional Encoding in Large Vision&ndash;Language Models.*
+Information Processing &amp; Management, 2026.
+
+[24] J. Binkowski, K. Adamczewski, T. Kajdanowicz. *Attention Sinks as Internal Signals for
+Hallucination Detection in Large Language Models.* arXiv:2604.10697, 2026.
+
 </div>

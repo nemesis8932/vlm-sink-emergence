@@ -40,8 +40,8 @@ rather than re-derived first-hand (§5).
 | textinit | s2 | 60M | 0.578 | 0.232 | 0.484 | 12.2 |
 
 Collapsing seeds to per-arm ranges (Table 2), **no two arms share a signature triple**.
-The value-norm axis alone takes three qualitatively different directions: drained below 1,
-essentially unchanged at 1, amplified above 1.
+The value-norm axis alone takes three qualitatively different directions: drained,
+unchanged, amplified.
 
 **Table 2 — the four corners.**
 
@@ -60,15 +60,14 @@ drained) and on massive activation (none vs. extreme). One lever moves one axis 
 the others where a different lever put them; Figure 1 shows the four trajectories fanning
 out of a common origin.
 
-Reproducibility differs by arm. *g1gate* is the tightest: Sink^0.2 = 0.004/0.011/0.0037
-across three seeds — at most 1% of heads — with mean and max attention→pos0 flat across
-seeds. *baseline* and *sigmoid* (n = 2) are tight in both seeds. *textinit* is the messy
-one: the corner is robust but its magnitudes are not. All three seeds show high
-concentration, strong value-drain, and h-ratio > 5, but seed 0 sits far above the other
-two on every signature at once (Sink 0.85 vs. 0.56–0.58; mean attn→pos0 0.63 vs. 0.23;
-h-ratio 42.5 vs. 5.5–12.2), while seeds 1 and 2 track each other. The h-ratio has plateaued
-by 60–100M tokens in both lower seeds, so the spread is genuine seed sensitivity rather
-than an unconverged transient. We therefore report textinit's massive activation as a
+Reproducibility differs by arm. *g1gate* is tightest (Sink^0.2 = 0.004/0.011/0.0037
+across three seeds — at most 1% of heads); *baseline* and *sigmoid* (n = 2) are tight in
+both seeds. *textinit*'s corner is robust but its magnitudes are not: all three seeds show
+high concentration, strong value-drain, and h-ratio > 5, but seed 0 sits far above the
+other two on every signature at once (Sink 0.85 vs. 0.56–0.58; mean attn→pos0 0.63 vs.
+0.23; h-ratio 42.5 vs. 5.5–12.2). The h-ratio has plateaued by 60–100M tokens in both
+lower seeds, so the spread is genuine seed sensitivity rather than an unconverged
+transient. We therefore report textinit's massive activation as a
 **range (5.5–42.5×), median ≈ 12×**, everywhere in this paper, and treat the corner as the
 reproducible claim rather than any particular magnitude.
 
@@ -173,17 +172,14 @@ each arm's top sink head. The vertical stripe at key = pos0 (every query attendi
 first image token) is absent in *baseline* at both the early and final checkpoint, and
 total in *textinit*. Most telling is the rightmost panel: **the stripe is already there at
 step 0 in textinit**, imported with the text-LM weights before the model has seen a single
-image. *sigmoid* is deliberately absent from this figure: its checkpoint dump selected
-heads by an unnormalized gate score and missed the arm's true top sink head (L7H3, 0.87
-normalized attention→pos0), so any map we could draw would understate the arm; sigmoid's
-concentration rests on Tables 1–2 and Figure 2 instead.
+image. *sigmoid* is absent for the measurement reason given in the caption; its
+concentration rests on Tables 1–2 and Figure 2.
 Attention-entropy collapse, the text-LM literature's usual concentration correlate,
-separates the same way: only *sigmoid* and *textinit* collapse, while *baseline*,
-*g1gate*, and *RF* stay flat (Appendix Fig. A3). Entropy collapse tracks the concentration
-axis, not the norm axes.
+separates the same way: only *sigmoid* and *textinit* collapse (Appendix Fig. A3) —
+entropy collapse tracks the concentration axis, not the norm axes.
 
-**A positional footnote.** In *textinit*, the three signatures partially decouple in
-*position* as well as magnitude. In some seeds the most-attended token, the residual-norm
-peak, and the value-drain minimum sit on three different tokens (e.g., attention at pos1
-with the norm peak and drain at pos13). We report this as a caveat on where to anchor
-textinit's magnitudes (§5), not as an independent finding.
+**A positional footnote.** In *textinit*, the signatures partially decouple in *position*
+as well as magnitude: in some seeds the most-attended token, the residual-norm peak, and
+the value-drain minimum sit on three different tokens (e.g., attention at pos1, norm peak
+and drain at pos13). We report this as a caveat on where to anchor textinit's magnitudes
+(§5), not as an independent finding.
