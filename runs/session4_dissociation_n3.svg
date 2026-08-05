@@ -1,0 +1,83 @@
+<svg viewBox="0 0 720 640" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial,sans-serif">
+<rect width="720" height="640" fill="var(--background,#fff)"/>
+<text x="92" y="22" font-size="13.5" font-weight="700" fill="var(--foreground,#111)">Four-way signature dissociation (n=3 where available; matched ~100M tok, textinit @60M floor)</text>
+<rect x="92" y="54" width="604" height="150" fill="none" stroke="var(--border,#e5e5e5)"/>
+<text x="92" y="48" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">Sink^0.2  (concentration)</text>
+<line x1="92" y1="204.0" x2="696" y2="204.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="207.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">0</text>
+<line x1="92" y1="154.0" x2="696" y2="154.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="157.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">0.3</text>
+<line x1="92" y1="104.0" x2="696" y2="104.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="107.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">0.6</text>
+<line x1="92" y1="54.0" x2="696" y2="54.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="57.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">0.9</text>
+<line x1="92" y1="195.7" x2="696" y2="195.7" stroke="var(--muted-foreground,#bbb)" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="694" y="192.7" text-anchor="end" font-size="9" fill="var(--muted-foreground,#999)">gate 0.05</text>
+<circle cx="161.0" cy="204.0" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="174.0" cy="204.0" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="305.5" cy="203.3" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="318.5" cy="202.2" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="331.5" cy="203.4" r="4.2" fill="#D85A30" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="463.0" cy="65.7" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="476.0" cy="78.0" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="607.5" cy="62.0" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="620.5" cy="111.3" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="633.5" cy="107.7" r="4.2" fill="#D85A30" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<rect x="92" y="238" width="604" height="150" fill="none" stroke="var(--border,#e5e5e5)"/>
+<text x="92" y="232" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">v_ratio  (value-norm; 1=neutral)</text>
+<line x1="92" y1="388.0" x2="696" y2="388.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="391.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">0.3</text>
+<line x1="92" y1="345.1" x2="696" y2="345.1" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="348.1" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">0.7</text>
+<line x1="92" y1="313.0" x2="696" y2="313.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="316.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">1</text>
+<line x1="92" y1="280.9" x2="696" y2="280.9" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="283.9" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">1.3</text>
+<line x1="92" y1="238.0" x2="696" y2="238.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="241.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">1.7</text>
+<line x1="92" y1="313.0" x2="696" y2="313.0" stroke="var(--muted-foreground,#bbb)" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="694" y="310.0" text-anchor="end" font-size="9" fill="var(--muted-foreground,#999)">neutral 1.0</text>
+<circle cx="161.0" cy="342.7" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="174.0" cy="346.5" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="305.5" cy="333.9" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="318.5" cy="329.6" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="331.5" cy="328.6" r="4.2" fill="#D85A30" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="463.0" cy="261.7" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="476.0" cy="248.4" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="607.5" cy="379.8" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="620.5" cy="352.2" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="633.5" cy="368.3" r="4.2" fill="#D85A30" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<rect x="92" y="422" width="604" height="150" fill="none" stroke="var(--border,#e5e5e5)"/>
+<text x="92" y="416" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">h_ratio  (massive-activation; log)</text>
+<line x1="92" y1="572.0" x2="696" y2="572.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="575.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">1</text>
+<line x1="92" y1="545.4" x2="696" y2="545.4" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="548.4" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">2</text>
+<line x1="92" y1="510.3" x2="696" y2="510.3" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="513.3" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">5</text>
+<line x1="92" y1="483.7" x2="696" y2="483.7" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="486.7" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">10</text>
+<line x1="92" y1="457.1" x2="696" y2="457.1" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="460.1" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">20</text>
+<line x1="92" y1="422.0" x2="696" y2="422.0" stroke="var(--border,#eee)" stroke-width="0.6"/>
+<text x="86" y="425.0" text-anchor="end" font-size="9.5" fill="var(--muted-foreground,#999)">50</text>
+<line x1="92" y1="572.0" x2="696" y2="572.0" stroke="var(--muted-foreground,#bbb)" stroke-width="1" stroke-dasharray="4 3"/>
+<circle cx="161.0" cy="542.6" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="174.0" cy="551.5" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<text x="167.5" y="594.0" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">baseline</text>
+<circle cx="305.5" cy="552.2" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="318.5" cy="544.7" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="331.5" cy="541.1" r="4.2" fill="#D85A30" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<text x="318.5" y="594.0" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">g1gate</text>
+<circle cx="463.0" cy="568.5" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="476.0" cy="562.0" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<text x="469.5" y="594.0" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">sigmoid</text>
+<circle cx="607.5" cy="428.2" r="4.2" fill="#534AB7" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="620.5" cy="506.6" r="4.2" fill="#1D9E75" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<circle cx="633.5" cy="476.0" r="4.2" fill="#D85A30" fill-opacity="0.85" stroke="white" stroke-width="0.8"/>
+<text x="620.5" y="594.0" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--foreground,#222)">textinit</text>
+<text x="92" y="634" font-size="10" fill="var(--muted-foreground,#777)">seeds:</text>
+<circle cx="144" cy="630.5" r="4.2" fill="#534AB7"/><text x="152" y="634" font-size="10" fill="var(--muted-foreground,#777)">s0</text>
+<circle cx="196" cy="630.5" r="4.2" fill="#1D9E75"/><text x="204" y="634" font-size="10" fill="var(--muted-foreground,#777)">s1</text>
+<circle cx="248" cy="630.5" r="4.2" fill="#D85A30"/><text x="256" y="634" font-size="10" fill="var(--muted-foreground,#777)">s2</text>
+</svg>

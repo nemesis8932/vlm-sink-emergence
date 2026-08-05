@@ -3,7 +3,9 @@
 Forked from `deliverables/vlm-sink-preprint/` (arXiv v1, unchanged, stays the priority copy).
 Target: **VLM4RWD 2nd ed., NeurIPS 2026 workshop, Sydney, Dec 2026** — "Grounded and Faithful
 Vision-Language Models for Real-World Deployment." Non-archival; NeurIPS 2026 template, ≤8pp
-excl. refs/appendix, double-blind/OpenReview. **Deadline Aug 31, 2026, notify Sep 30.**
+excl. refs/appendix, double-blind/OpenReview. **Deadline Aug 30, 2026 — treat as Aug 30, notify
+Sep 29.** (Site says Aug 30 / notify Sep 29; OpenReview showed Aug 31 09:30. Sources disagree by
+one day — plan to the EARLIER date. Re-confirm on OpenReview before submitting.)
 (Source: https://vlm4rwd.github.io/, fetched by Director 2026-07-14 — not elsewhere in-repo.)
 
 This is a **reframing fork, not new research.** Science/figures/tables are locked and audited

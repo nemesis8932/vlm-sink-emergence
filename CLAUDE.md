@@ -14,6 +14,7 @@ pretraining, and do attention-concentration vs value-norm / massive-activation s
 - `technical-reference-manual.md` - core research document
 - `references/plan_when-sinks-emerge-in-vlms.md` — the plan, scoop check, deadlines.
 - `REPORT.md` — findings so far. Read before proposing experiments; don't re-derive.
+- `docs/open-questions.md` — known soft spots / reviewer-critique pre-empts + cheap fixes (read before writeup).
 - `docs/experiments.md` — arms, knobs, how to run.
 - `docs/conventions.md` — metric definitions, probe contract, key files.
 - `docs/cloud-agent.md` — north star + rules for the vast.ai cloud agent.
@@ -31,7 +32,8 @@ Director (1, Opus) ── orchestrates, holds context, go/no-go
 │   ├─ Cloud Agent (3) ── billed GPU; self-stops on waste (docs/cloud-agent.md)
 │   └─ local Agent (4) ── builds/tests infra; zero-cost verifications
 ├─ Auditor (2, Opus) ── audits data, kills bias, publication viz
-└─ Researcher (2, Desktop) ── prior-art scout, no code access
+├─ Researcher (2, Desktop) ── prior-art scout, no code access
+└─ Drafter (2, Opus) ── writes project docs, outline-first; fact-checks peer-to-peer w/ Auditor/Researcher
 ```
 
 Director never ingests raw logs — EM/Auditor compact first. Rank-2s report straight to Director.

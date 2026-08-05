@@ -7,3 +7,5 @@ wandb/
 *.npz
 *.tar.gz
 runs/keepers/
+ideas/
+.DS_Store

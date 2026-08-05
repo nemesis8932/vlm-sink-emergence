@@ -35,3 +35,12 @@ Ubiquitous language for vlm-sink-emergence. Glossary only — no implementation,
 - **Overfitting confound** — repeated baseline reached ~74 visual epochs, train_loss→0.015,
   val flat/rising. Taints Gate A's "no sink" reading. Does **not** taint the norm/value
   signatures or the 4-way dissociation (survive n=2).
+
+- **Fresh shards** — FineVision re-encoded to **litdata** chunks (encoded bytes, decode
+  on-demand), converted off-box and served from HF with a capped local cache. The foolproof
+  replacement for the leaky HF `datasets` streaming loader. Decision: `docs/adr/0002`.
+
+- **Cloud-agent (role)** — the highest-autonomy executor: owns the billed instance, runs the
+  research, self-stops on waste, babysits the run with minimal supervision. **Go/no-go and
+  spend authority stay with the Director** — cloud-agent is the most *critical* role, not the
+  deciding one.
