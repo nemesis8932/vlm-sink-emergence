@@ -39,7 +39,12 @@ def smooth(y, k=9):
 
 
 def draw(ax, xs, ys_raw, color, label):
+    xs_raw = np.asarray(xs, float)
     xs = smooth(xs, 5); ys = smooth(ys_raw); ys_raw = np.asarray(ys_raw, float)
+    # faint RAW probe points behind the smoothed path, so the smoothing (5-point on x,
+    # 9-point on y) never hides the underlying scatter
+    ax.scatter(xs_raw, ys_raw, s=3.0, color=color, alpha=0.16, zorder=2,
+               edgecolors='none', rasterized=True)
     # white underlay = separation from grid + other paths
     ax.plot(xs, ys, color='white', lw=3.4, alpha=0.75, zorder=3, solid_capstyle='round')
     ax.plot(xs, ys, color=color, lw=1.9, alpha=0.95, zorder=4, label=label,

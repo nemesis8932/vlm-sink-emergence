@@ -30,12 +30,13 @@ Vision–language models make a sharp instrument for this question, for two reas
 the multimodal setting changes what position 0 *is*. Our sequence starts with 49 image
 tokens and has no BOS token. The candidate sink token is therefore a visual token. It has
 none of the special-token machinery that text-LM sink accounts use. Second, the multimodal
-sink studies we know analyze frozen, already-trained backbones at inference time [7, 8].
-They show that vision-side and language-side sinks have different origins. A frozen model
-cannot answer a question about emergence. A reader can only see whether the three
-signatures arrive together, in sequence, or independently while the signatures form. That
-requires from-scratch pretraining with all three logged separately from step 0. To our
-knowledge no prior work does this in a multimodal model.
+sink studies we know analyze mostly frozen, already-trained backbones at inference time
+[7, 8]. They show that vision-side and language-side sinks have different origins. Luo et
+al. [7] do track sink-dimension magnitudes across alignment checkpoints, with a frozen
+vision transformer and a pretrained language model. A reader still cannot see, in that
+setting, whether the three signatures arrive together, in sequence, or independently while
+they form in a decoder that starts from random weights. That requires pretraining with a
+randomly initialized decoder and all three signatures logged separately from step 0.
 
 The question also carries deployment stakes. Attention allocation is the mechanism that
 connects the language a vision–language model generates to the content of the image. A sink
@@ -57,34 +58,36 @@ We work at deliberately small scale. The model is a 222M-parameter nanoVLM [18].
 pretrained SigLIP-B/16 encoder [16] feeds a randomly initialized decoder with the
 SmolLM2-135M architecture [17]. We train it under four levers. Each lever targets one
 sink-relevant mechanism. *baseline* uses standard softmax attention. *g1gate* adds a
-zero-initialized elementwise output gate on attention, which removes both the sink and
-massive activations in text language models [5]. *sigmoid* replaces softmax with
-unnormalized sigmoid attention. That removes the normalization from which sinks are argued
-to come [1]. *textinit* initializes the decoder from the pretrained SmolLM2 text language
-model, and thus imports whatever sink structure text pretraining built. A validated probe
-logs concentration, value-norm ratio, and massive activation for each (layer, head) pair
-every 100 steps. The four-arm comparison reuses a small image pool at high epoch counts. We therefore
-re-test the central negative result on a fresh, non-repeated stream of one billion tokens
-(*RF*). That run removes the overfitting confound.
+Qiu-style G1 output gate in our zero-initialized variant, an elementwise gate on attention
+output, which removes both the sink and massive activations in text language models [5].
+*sigmoid* replaces softmax with unnormalized sigmoid attention. That removes the
+normalization from which sinks are argued to come [1]. *textinit* initializes the decoder
+from the pretrained SmolLM2 text language model, and thus imports whatever sink structure
+text pretraining built. A validated probe logs concentration per query head, value-norm
+ratio per KV head, and the residual-norm ratio per layer, every 100 steps. The four-arm
+comparison reuses a small image pool; we therefore re-test the central negative result
+under low repetition, on a fresh stream of one billion tokens (*RF*, 2.39 effective visual
+epochs).
 
 **Contributions.**
 
 1. **Four levers, four corners (n = 2–3 seeds/arm).** The four arms reach four different
-   corners of (concentration × value-norm × massive-activation) space. No two arms share a
-   signature triple. The value-norm ratio alone moves in three qualitatively different
-   directions, drained or unchanged or amplified, and the lever decides which (Fig. 1,
-   Table 2).
-2. **Repetition-confound-free decoupling at 1B tokens (n = 1).** On fresh, non-repeated
-   data, massive activation rises 130% (h-ratio 1.43 → 3.22) across a full billion tokens.
-   Attention concentration stays at exactly zero for the entire single-seed run. No head
-   ever crosses the sink threshold (§3.2, §5).
-3. **No fixed-sign head-level coupling.** The per-head correlation between concentration
-   and value-norm flips sign across arms (+0.67 baseline → −0.76 textinit, pooled −0.20).
-   No fixed-sign coupling links the two axes (§3.3).
+   corners of (concentration × value-norm × massive-activation-proxy) space. No two arms
+   share a signature triple. The value-norm ratio alone moves in three qualitatively
+   different directions, drained or unchanged or amplified, and which one occurs differs by
+   lever (Fig. 1, Table 2). The four arms are not a factorial design, so we report distinct
+   intervention-associated profiles, not isolated causal effects.
+2. **Low-repetition decoupling at 1B tokens (n = 1).** On a fresh stream at 2.39 effective
+   visual epochs, with no observed overfit, the massive-activation proxy rises from an
+   h-ratio of 1.43 to 3.22, about 2.3×, across a full billion tokens. Attention
+   concentration stays at exactly zero for the entire single-seed run. No head ever crosses
+   the sink threshold (§3.2, §5).
+3. **No consistent-sign head-level relationship.** The per-head correlation between
+   concentration and value-norm flips sign across arms (+0.67 baseline → −0.76 textinit,
+   pooled −0.20). We report these descriptively (§3.3).
 
 Text-only work already separates massive activations from concentration through
 normalization [3] and value-path [4] interventions. Decoupling by itself is therefore not
-new, and we do not claim it. The new part is the conjunction. All three signatures respond
-separately to ordinary levers during from-scratch *multimodal* pretraining, and value-norm
-drain is a third axis that moves on its own. No prior decoupling study and no prior
-co-emergence study has examined this setting.
+new, and we do not claim it. The new part is the conjunction: dense, joint tracking of all
+three signatures under randomly initialized decoders in a multimodal model, with value-norm
+drain as a third axis that moves on its own.

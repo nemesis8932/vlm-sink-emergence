@@ -15,10 +15,36 @@ from pathlib import Path
 HERE = Path(__file__).parent
 SECTIONS = sorted((HERE / "sections").glob("[0-9][0-9]-*.md"))
 
-TITLE = "Four Levers, Four Corners: Attention-Sink Signatures Dissociate in From-Scratch Vision–Language Pretraining — A Precondition for Grounding Fidelity"
-AUTHOR = "Anonymous author(s)"    # double-blind: real name/email restored only in camera-ready
-EMAIL = "Submitted to VLM4RWD @ NeurIPS 2026"
-DATE = "July 2026 · Preprint draft v2 · Simplified Technical English edition"
+TITLE = "Four Levers, Four Corners: Attention-Sink Signatures Dissociate in Vision–Language Pretraining"
+
+# Default = anonymous double-blind workshop build. `python3 build.py --arxiv` produces the
+# named arXiv build (separate output files; the anonymous build is never overwritten).
+ARXIV = "--arxiv" in sys.argv
+
+if ARXIV:
+    AUTHOR = "Samvat Tiwari"
+    EMAIL = "Independent Researcher · samvat.t@gmail.com"
+    DATE = ""                       # no draft/version/edition language in the arXiv build
+    SLUG = "paper-v2-ste-arxiv"
+else:
+    AUTHOR = "Anonymous author(s)"    # double-blind: real name/email restored only in camera-ready
+    EMAIL = "Submitted to VLM4RWD @ NeurIPS 2026"
+    DATE = "July 2026 · Preprint draft v2 · Simplified Technical English edition"
+    SLUG = "paper-v2-ste"
+
+# The double-blind build withholds the repro links; the arXiv build shows them. Matched as a
+# whitespace-tolerant regex because the source wraps this sentence across lines.
+REPRO_ANON = re.compile(
+    r"We\s+will\s+release\s+the\s+code,.*?double-blind\s+review\.", re.S)
+REPRO_NAMED = ("We release the code, the probe, the run configurations, and the per-run logs at "
+               "https://github.com/nemesis8932/vlm-sink-emergence, and the training checkpoints "
+               "at https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts.")
+
+URL_RE = re.compile(r"(?<![\"'>=])(https?://[^\s<>)\]]+?)(?=[.,;:]?(?:\s|$|\)|\]))")
+
+def linkify(s: str) -> str:
+    """Bare URLs -> clickable anchors (arXiv readers get working repro links)."""
+    return URL_RE.sub(r'<a href="\1">\1</a>', s)
 
 def inline(s: str) -> str:
     s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
@@ -28,6 +54,7 @@ def inline(s: str) -> str:
     # typographic quotes/apostrophes; the (?<!=) guard skips HTML attribute quotes
     s = re.sub(r'(?<!=)"([^"<>]*?)"', r"“\1”", s)
     s = re.sub(r"(\w)'(\w)", r"\1’\2", s)
+    s = linkify(s)
     return s
 
 def table_html(lines):
@@ -87,11 +114,17 @@ def md_to_html(text: str) -> str:
     return "\n".join(out)
 
 CSS = """
-@page { size: letter; margin: 20mm 18mm 22mm 18mm; }
+/* Layout skeleton follows the lean single-column arXiv/NeurIPS convention (cf.
+   arXiv:2511.17036): letter page, ~1in side margins, Times-family serif at 10pt,
+   bold run-in section heads, small justified captions. */
+@page { size: letter; margin: 19mm 24mm 20mm 24mm; }
+@page { @bottom-center { content: counter(page); font-size: 9pt; color: #444; } }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; }
-body { font-family: 'Charter', 'Bitstream Charter', 'Iowan Old Style', 'Georgia', serif;
-       font-size: 10.5pt; line-height: 1.42; color: #111; margin: 0 auto; max-width: 7.3in; }
+body { font-family: 'Nimbus Roman', 'Times New Roman', 'Liberation Serif', Times, serif;
+       font-size: 10pt; line-height: 1.34; color: #111; margin: 0 auto; max-width: 6.5in;
+       orphans: 3; widows: 3; }
+a { color: #0b3d91; text-decoration: none; word-break: break-word; }
 @media screen { body { padding: 40px 20px; } }
 h1.title { font-size: 16.5pt; text-align: center; line-height: 1.25; margin: 0 0 0.7em; }
 .author, .affil, .date { text-align: center; margin: 0.15em 0; }
@@ -100,9 +133,11 @@ h1.title { font-size: 16.5pt; text-align: center; line-height: 1.25; margin: 0 0
 .date { font-size: 9pt; color: #666; font-style: italic; margin-bottom: 1.6em; }
 .abstract { margin: 0 2.1em 1.4em; font-size: 9.8pt; text-align: justify; hyphens: auto; }
 .abstract-head { font-weight: bold; }
-h2 { font-size: 12.5pt; margin: 1.5em 0 0.5em; break-after: avoid; }
-h3 { font-size: 11pt; margin: 1.2em 0 0.4em; break-after: avoid; }
-p { text-align: justify; hyphens: auto; margin: 0 0 0.55em; }
+h2 { font-size: 12pt; font-weight: bold; margin: 1.45em 0 0.45em;
+     break-after: avoid; page-break-after: avoid; }
+h3 { font-size: 10.5pt; font-weight: bold; margin: 1.1em 0 0.35em;
+     break-after: avoid; page-break-after: avoid; }
+p { text-align: justify; hyphens: auto; margin: 0 0 0.5em; orphans: 3; widows: 3; }
 ol, ul { margin: 0.2em 0 0.7em; padding-left: 1.7em; }
 li { text-align: justify; margin-bottom: 0.35em; }
 figure { margin: 1.2em 0 1.3em; break-inside: avoid; text-align: center; }
@@ -123,8 +158,14 @@ code { font-family: 'Menlo', 'Consolas', monospace; font-size: 90%; }
 sup, sub { line-height: 0; }
 """
 
+def section_text(p):
+    t = p.read_text()
+    if ARXIV:
+        t = REPRO_ANON.sub(REPRO_NAMED, t)
+    return t
+
 def build():
-    body = "\n\n".join(md_to_html(p.read_text()) for p in SECTIONS)
+    body = "\n\n".join(md_to_html(section_text(p)) for p in SECTIONS)
     html = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <title>{TITLE}</title><style>{CSS}</style></head>
@@ -136,16 +177,42 @@ def build():
 {body}
 </body></html>
 """
-    (HERE / "paper-v2-ste.html").write_text(html)
-    stitched = "\n\n---\n\n".join(p.read_text() for p in SECTIONS)
-    (HERE / "draft-v2-ste.md").write_text(f"# {TITLE}\n\n*{AUTHOR} — {DATE}*\n\n---\n\n{stitched}")
-    print("wrote paper-v2-ste.html, draft-v2-ste.md")
+    (HERE / f"{SLUG}.html").write_text(html)
+    stitched = "\n\n---\n\n".join(section_text(p) for p in SECTIONS)
+    draft = "draft-v2-ste-arxiv.md" if ARXIV else "draft-v2-ste.md"
+    (HERE / draft).write_text(f"# {TITLE}\n\n*{AUTHOR} — {DATE}*\n\n---\n\n{stitched}")
+    print(f"wrote {SLUG}.html, {draft}")
     chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    pdf = HERE / f"{SLUG}.pdf"
     subprocess.run([chrome, "--headless", "--disable-gpu", "--no-pdf-header-footer",
                     "--virtual-time-budget=20000",
-                    f"--print-to-pdf={HERE / 'paper-v2-ste.pdf'}",
-                    (HERE / "paper-v2-ste.html").as_uri()], check=True)
-    print("wrote paper-v2-ste.pdf")
+                    f"--print-to-pdf={pdf}",
+                    (HERE / f"{SLUG}.html").as_uri()], check=True)
+    print(f"wrote {SLUG}.pdf")
+    stamp_metadata(pdf)
+
+
+def stamp_metadata(pdf):
+    """Chrome writes no Title/Author into the PDF. Stamp them with pypdf (an untitled PDF
+    looks unfinished, and some readers surface this metadata). The anonymous build is
+    stamped 'Anonymous' so the double-blind PDF never leaks the author through metadata."""
+    title = TITLE.replace("–", "-").replace("—", "-")
+    author = AUTHOR if ARXIV else "Anonymous author(s)"
+    try:
+        from pypdf import PdfReader, PdfWriter
+    except ImportError:
+        print("[warn] PDF metadata not stamped (pypdf missing); pip install pypdf to enable")
+        return
+    reader = PdfReader(str(pdf))
+    writer = PdfWriter()
+    for page in reader.pages:
+        writer.add_page(page)
+    writer.add_metadata({"/Title": title, "/Author": author,
+                         "/Subject": "Attention sinks in vision-language pretraining",
+                         "/Creator": "build.py"})
+    with open(pdf, "wb") as f:
+        writer.write(f)
+    print(f"stamped metadata: Title='{title[:40]}...' Author='{author}'")
 
 if __name__ == "__main__":
     build()

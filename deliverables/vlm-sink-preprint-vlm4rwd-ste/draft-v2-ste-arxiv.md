@@ -1,6 +1,6 @@
 # Four Levers, Four Corners: Attention-Sink Signatures Dissociate in Vision–Language Pretraining
 
-*Anonymous author(s) — July 2026 · Preprint draft v2 · Simplified Technical English edition*
+*Samvat Tiwari — *
 
 ---
 
@@ -776,9 +776,7 @@ and AMBER [21–23]. This paper does not test that last link. It establishes whe
 form, and in what combinations, which is the measurement that has to exist first.
 
 **Reproducibility.** A self-validating probe (§2) computes all signatures on a fixed probe
-batch, from dense logs taken every 100 steps. The Appendix holds the per-seed tables. We
-will release the code, the probe, the run configurations, the per-run logs, and the
-training checkpoints on acceptance. We withhold the links for double-blind review.
+batch, from dense logs taken every 100 steps. The Appendix holds the per-seed tables. We release the code, the probe, the run configurations, and the per-run logs at https://github.com/nemesis8932/vlm-sink-emergence, and the training checkpoints at https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts.
 
 
 ---

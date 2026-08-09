@@ -69,11 +69,15 @@ Large Multimodal Models.* ICLR 2025. arXiv:2503.03321.
 [22] T. Shukla, Z. Kira. *SAGE: Sink-Aware Grounded Decoding for Multimodal Hallucination
 Mitigation.* arXiv:2603.27898, 2026.
 
-[23] Zhang, Zhu, Gu, Cao, Cheng, Wu. *What Drives Attention Sinks? A Study of Massive
-Activations and Rotational Positional Encoding in Large Vision&ndash;Language Models.*
-Information Processing &amp; Management, 2026.
+[23] X. Zhang, Y. Zhu, C. Gu, J. Cao, H. Cheng, K. Wu. *What Drives Attention Sinks? A Study
+of Massive Activations and Rotational Positional Encoding in Large Vision&ndash;Language
+Models.* Information Processing &amp; Management, 63(2A), art. 104431, 2026.
+DOI 10.1016/j.ipm.2025.104431.
 
 [24] J. Binkowski, K. Adamczewski, T. Kajdanowicz. *Attention Sinks as Internal Signals for
 Hallucination Detection in Large Language Models.* arXiv:2604.10697, 2026.
+
+[25] L. Fesser, M. Jacobs, T. Fel, A. Keller, S. Kakade. *A Unifying View of Attention Sinks:
+Two Algorithms, Two Solutions.* arXiv:2606.08105, 2026.
 
 </div>

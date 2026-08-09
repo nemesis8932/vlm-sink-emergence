@@ -4,18 +4,20 @@
 
 <figure id="figA1">
 <img src="figures/fig1_layerhead_grid.svg" alt="Per-(layer,head) attention to pos0 over training">
-<figcaption><b>Figure A1: Where concentration lives in the network.</b> Attention to pos0
-for each (layer, head) pair through training, row-normalized. baseline and RF stay cold
-throughout. textinit is hot from initialization. sigmoid lights up a band of mid-network
-layers.</figcaption>
+<figcaption><b>Figure A1: Where concentration lives in the network.</b> Mean attention to
+pos0 for each of the 270 (layer, query-head) pairs through training, row-normalized; seed 0
+for every arm, run to each arm's final checkpoint (174M tokens baseline, 103M g1gate, 102M
+sigmoid, 60M textinit, 1B RF). baseline and RF stay cold throughout. textinit is hot from
+initialization. sigmoid lights up a band of mid-network layers.</figcaption>
 </figure>
 
 <figure id="figA2">
 <img src="figures/fig3_perhead_scatter.svg" alt="Per-head concentration vs value-norm scatter">
 <figcaption><b>Figure A2: No universal head-level coupling.</b> Concentration against
-value-norm ratio for each (layer, query-head) pair at the final checkpoint, by arm, at
-n = 270 per arm. Under grouped-query attention those pairs hold 90 independent value-norm
-observations (&sect;3.3). The sign of the correlation flips by arm, from +0.67 in baseline
+value-norm ratio for each (layer, query-head) pair at each arm's final checkpoint, seed 0,
+at n = 270 pairs per arm. Under grouped-query attention those pairs hold 90 independent value-norm
+observations, so these correlations are descriptive and we report no p-values
+(&sect;3.3). The sign of the correlation flips by arm, from +0.67 in baseline
 to &minus;0.76 in textinit (Table 4). The pooled cloud is weak, at &minus;0.20, only
 because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most
 individual arms show a strong |r|.</figcaption>
@@ -23,8 +25,8 @@ individual arms show a strong |r|.</figcaption>
 
 <figure id="figA3">
 <img src="figures/fig5_entropy.svg" alt="Attention entropy over training by arm">
-<figcaption><b>Figure A3: Entropy collapse tracks concentration only.</b> Attention entropy
-through training. Only sigmoid and textinit collapse. baseline, g1gate, and RF stay flat.
+<figcaption><b>Figure A3: Entropy collapse tracks concentration only.</b> Mean attention
+entropy through training, seed 0, to each arm's final checkpoint. Only sigmoid and textinit collapse. baseline, g1gate, and RF stay flat.
 The entropy-collapse correlate from the text-LM literature therefore follows the
 concentration axis, not the norm axes.</figcaption>
 </figure>
@@ -66,10 +68,27 @@ alone. It is the direct check behind the position-0 anchoring defense of §5.
 | sigmoid | 0.30 | 0.66 | 0 | pos0 max; broad raw-sigmoid mass |
 | textinit | 0.63 | 0.99 | 0 | pos0 max; razor spike (pos1 = 0.009) |
 
-Per-position **mass** profiles for seeds 1 and 2 and for RF were not available when we
-wrote this paper. They need a checkpoint re-dump on a GPU. Only live-probe argmax
-data exists for those runs, and it is the source of the textinit position-migration caveat
-in §5.
+### C.2 Per-position scan at the remaining seeds, and for RF
+
+We re-dumped per-position attention mass at the other seeds and for RF, and per-position
+residual and value norms for all three *textinit* seeds. The table gives the position at
+which each quantity peaks (for value norms, the position at which the norm is smallest).
+
+| run | seed | attention-mass argmax | residual-norm peak | value-norm minimum | reading |
+|---|---|---|---|---|---|
+| baseline | s0, s1 | 0 | — | — | pos0 max |
+| g1gate | s0, s1, s2 | 0 | — | — | pos0 max |
+| sigmoid | s0, s1 | 0 | — | — | pos0 max |
+| textinit | s0 | 0 | 0 | 0 | all three coincide |
+| textinit | s1 | 0 | 1 | 5 | norms move off pos0 |
+| textinit | s2 | **1** | **13** | **13** | all three separate |
+| RF | s0 | 1 | — | — | mass 0.100 vs 0.083 at pos0; diffuse, not a sink |
+
+Two readings follow. Position 0 remains the maximum-mass token in every arm with a randomly
+initialized decoder, so the pos0 anchoring holds where the central negative result lives.
+In *textinit* the three signatures need not share a token, which is the positional
+dissociation reported in §3.4 and the reason the pos0-anchored textinit magnitudes at seeds
+1 and 2 understate that arm's peaks.
 
 ## D. Notes on metric hygiene
 
@@ -79,5 +98,5 @@ attention→pos0, and thereby manufactured an apparent seed anomaly in *g1gate*.
 like-for-like, the anomaly disappears, and g1gate becomes the most reproducible arm.
 Second, an earlier draft claimed that the residual-norm peak of textinit "stays pinned at
 pos0." We checked that claim against the norm dump. It is wrong. The ‖h‖ peak sits at
-pos1 or at pos13, depending on the seed. That is the positional-decoupling footnote of
-§3.4, which states the corrected form.
+pos0, pos1 or pos13, depending on the seed (Appendix C.2). That is the positional
+dissociation reported in §3.4, which states the corrected form.

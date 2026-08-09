@@ -27,6 +27,13 @@ models [5, 1]. The *textinit* lever has no precedent in the sink literature. It 
 inheritance control. It imports whatever sink structure text pretraining already built into
 SmolLM2.
 
+**A scale confound in our gate variant.** Qiu et al. [5] use ordinary initialization for
+the G1 gate. We initialize the gate parameters at exactly zero, so the sigmoid opens at
+σ(0) = 0.5 at step 0. Our gated arm therefore begins as a half-scale attention-output
+intervention as well as a gating one, and the two effects are not separated here. We call
+the arm **Qiu-style G1 in our zero-initialized variant** throughout, and we repeat the
+caveat in §5. Any comparison to the published G1 result carries it.
+
 **Data and the two training regimes.** The four-arm comparison trains on four curated
 subsets of `the_cauldron` [19], which hold about 146K images. The arms are matched at about
 100M tokens each. *textinit* stops at 60M tokens, because it reaches its three-signature
@@ -34,27 +41,56 @@ floor earlier (§3.1). Reuse of a 146K-image pool gives high visual-epoch counts
 could therefore treat a "no sink emerges" result as an overfitting artifact. The **RF** arm
 (random-fresh) answers that objection. It re-trains the *baseline* recipe on a fresh
 FineVision stream [20] to 1B tokens. That stream holds about 4.6M natural images and gives
-2.39 effective visual epochs, against about 74 epochs for the repeated pool. A change of
-dataset trades the repetition confound for a domain-shift confound. We accept that trade
-and document it. The fresh pool holds natural images, leans heavily on COCO, and overlaps
-the repeated subsets by less than 3%. We did not run a third, domain-matched control (§5).
+**2.39 effective visual epochs**, against about 74 epochs for the 1B-token repeated pool.
+The 100M-token comparison arms sit at roughly 7 epochs, so the 74-epoch figure describes
+the repeated pool at 1B tokens, not those arms. RF is therefore a **low-repetition** run,
+not a repetition-free one: examples do repeat, about 2.4 times on average. What we observe
+is that no overfit accompanies it — held-out fresh validation loss tracks train loss (§2,
+recipe). A change of dataset also trades the repetition confound for a domain-shift
+confound. We accept that trade and document it. The fresh pool holds natural images and
+leans heavily on COCO. We estimate its overlap with the repeated subsets at under 3% from
+the config-level composition of the two pools; we did not run image-level deduplication, so
+that number is an estimate, not measured evidence. We did not run a third, domain-matched
+control (§5).
 
 **Three signatures, tracked separately.** We log the three sink symptoms that the text-LM
-literature reports together as independent per-(layer, head) quantities. The metric
-conventions follow Gu et al. [1] at a fixed sequence length.
+literature reports together, as separate quantities, each at its own granularity. The
+metric conventions follow Gu et al. [1] at a fixed sequence length. Write *L* = 30 layers,
+*H* = 9 query heads per layer, *G* = 3 KV heads per layer, and *T* = 128 positions. Let
+a<sub>ℓh</sub>(0) be the mean attention that layer ℓ, query head *h* sends to position 0,
+averaged over queries and over the probe batch.
 
-- **Concentration** — Sink<sup>ε</sup><sub>1</sub>: the fraction of (layer, head) pairs
-  whose *mean* attention to position 0 is above ε. We also log the mean and the maximum
-  attention to position 0. We use the ε = 0.3 default of [1] and check robustness at
-  ε ∈ {0.2, 0.4}. Cross-arm tables report the stricter ε = 0.2, which makes an absence
-  claim harder to pass.
-- **Value-norm ratio** (v-ratio) — ‖v‖ at position 0 divided by the mean ‖v‖ of the other
-  positions. A value below 1 is value-drain [6]. A value above 1 is amplification. Under
-  grouped-query attention the value vector belongs to a KV group. Each per-(layer,
-  query-head) v-ratio therefore repeats its group value across 3 query heads, which gives
-  90 independent value observations, not 270.
-- **Massive activation** (h-ratio) — the residual-stream norm at position 0 divided by the
-  mean norm of the other positions.
+- **Concentration** — the fraction of query heads whose mean attention to position 0
+  exceeds ε, over the *L·H* = 270 (layer, query-head) pairs:
+
+  Sink<sup>ε</sup><sub>1</sub> = |{(ℓ,h) : a<sub>ℓh</sub>(0) > ε}| / (L·H)
+
+  We use the ε = 0.3 default of [1] and check robustness at ε ∈ {0.2, 0.4}. Cross-arm
+  tables report the stricter ε = 0.2, which makes an absence claim harder to pass.
+- **Value-norm ratio** (v-ratio) — ‖v‖ at position 0 divided by the mean ‖v‖ over the other
+  valid positions, averaged over the *L·G* = 90 (layer, KV-head) value projections:
+
+  v-ratio = (1/L) Σ<sub>ℓ</sub> ‖v<sub>ℓ</sub>(0)‖ / mean<sub>t>0</sub> ‖v<sub>ℓ</sub>(t)‖
+
+  A value below 1 is value-drain [6]. A value above 1 is amplification. Under grouped-query
+  attention the value vector belongs to a KV group, so a per-(layer, query-head) v-ratio
+  repeats its group value across 3 query heads. There are 90 independent value
+  observations, not 270. This matters for §3.3.
+- **Residual-norm ratio** (h-ratio) — the residual-stream norm at position 0 divided by the
+  mean norm over the other positions, averaged over the *L* = 30 layers:
+
+  h-ratio = (1/L) Σ<sub>ℓ</sub> ‖h<sub>ℓ</sub>(0)‖ / mean<sub>t>0</sub> ‖h<sub>ℓ</sub>(t)‖
+
+  This is a **massive-activation proxy**, and we call it that on first use in each section.
+  Massive activations are normally defined by channel-level outliers [10, 11]. We never
+  measured channel-level statistics. The h-ratio measures a position-specific residual-norm
+  asymmetry, which is a necessary but not sufficient condition for that definition.
+
+**Why a sink is expected at all.** Softmax forces every attention row to sum to one. A head
+with nothing informative to retrieve must still place its mass somewhere. Gu et al. [1]
+argue that the sink token absorbs that surplus and acts "more like key biases." That
+sum-to-one constraint is the standing mechanism against which our *sigmoid* arm, which
+removes normalization, is the direct test.
 
 All three metrics **anchor on position 0 by construction**. We state this as a measurement
 choice, and we check it. At seed 0, per-position attention mass makes position 0 the
@@ -75,5 +111,30 @@ the first threshold crossing of each signature (§3.4).
 The schedule is cosine with 3% warmup. The learning rates are 4e-4 for the language model,
 2e-3 for the projector, and 1e-4 for the vision encoder. We use bf16 autocast,
 `torch.compile`, and a batch size of 128. Arms in a comparison differ only in the lever
-under test. Training stays healthy in all reported runs. On the 1B fresh run, held-out
-fresh validation loss falls from 1.46 to 0.638 and tracks train loss with no overfit gap.
+under test. Training stays healthy in all reported runs.
+
+**Reporting details.** *Token accounting:* one token is one image token or one non-padding
+text token. A full sequence contributes 49 image tokens plus its non-padding text tokens, so
+a step of batch 128 contributes at most 16,384 tokens and about 9.5K on average. All "M
+tokens" figures in this paper use that definition. *Probe:* the fixed probe batch holds
+n = 32 samples, drawn with `random.seed(0)` from the repeated `the_cauldron` tail; we label
+this probe version `v1-repeatedtail-32`. RF uses the same probe batch as the repeated arms,
+so its signatures stay comparable to theirs even though its training stream differs (§5).
+Probes fire every 100 steps. *Validation:* 1,024 held-out examples, evaluated every 500
+steps; we report `val_unseen`, which holds out images, and also log `val_seen`, which
+re-uses training images with fresh question–answer text. *Seeds:* two for *baseline* and
+*sigmoid*, three for *g1gate* and *textinit*, one for *RF*. *Aggregation:* the three
+formulas above; each per-layer or per-head quantity is first averaged over the probe batch
+and over valid query positions, then aggregated as written.
+
+**Validation losses, and what they do and do not license.** At the matched 100M-token
+checkpoint the held-out losses are 1.182 for *baseline*, 1.133 for *g1gate*, 1.206 for
+*sigmoid*, and 0.877 for *textinit* (seed 1 or 2; seed-0 archive values are 1.161, 1.138,
+1.108, and 0.832). RF reaches 0.638 at 1B tokens. Two cautions. First, *textinit* starts
+from a pretrained text decoder, so its lower loss reflects unequal competence, not a lever
+effect; only *baseline*, *g1gate*, and *sigmoid* are equal-token, equal-initialization
+comparisons. Second, the repeated-data arms show a large train–validation asymmetry
+(`val_seen` near 0.44 against `val_unseen` near 1.18), which is the overfitting signal that
+motivates RF. RF shows no such gap: `val_seen` 0.641 against `val_unseen` 0.638. **We did
+not run MMStar or any other downstream benchmark on any arm**, so this paper makes no
+capability claim (§5).

@@ -1,0 +1,36 @@
+{
+ "step250": {
+  "layer": 7,
+  "head": 3,
+  "norm_pos0": 0.0551,
+  "raw_pos0": 0.3887,
+  "raw_rowsum": 13.4618,
+  "top_head_normalized": [
+   27,
+   1,
+   0.0751
+  ],
+  "top_head_raw": [
+   0,
+   7,
+   0.6178
+  ]
+ },
+ "step10664": {
+  "layer": 7,
+  "head": 3,
+  "norm_pos0": 0.7858,
+  "raw_pos0": 0.0517,
+  "raw_rowsum": 0.0831,
+  "top_head_normalized": [
+   7,
+   2,
+   0.8163
+  ],
+  "top_head_raw": [
+   23,
+   4,
+   0.7321
+  ]
+ }
+}

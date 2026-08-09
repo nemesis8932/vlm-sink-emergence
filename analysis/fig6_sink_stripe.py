@@ -28,7 +28,16 @@ def pick_strong(M2):
     return M2[int(np.argmax(shares))]
 
 
-def panel(ax, M, title, color, show_pos0_share=True):
+def true_share(run_dir, step, layer, head):
+    """norm_to_pos0 from the reprobe dump: masked to valid queries, as the paper reports."""
+    import os
+    p = f'{run_dir}/reprobe/reprobe_step{step}.npz'
+    if not os.path.exists(p):
+        return None
+    return float(np.load(p)['norm_to_pos0'][layer, head])
+
+
+def panel(ax, M, title, color, show_pos0_share=True, share_override=None):
     P = rownorm(M)
     im = ax.imshow(P, aspect='equal', cmap='magma', norm=PowerNorm(0.5, 0, VMAX),
                    interpolation='nearest')
@@ -36,9 +45,9 @@ def panel(ax, M, title, color, show_pos0_share=True):
     ax.axvline(N_IMG - 0.5, color='white', lw=0.5, alpha=0.4, ls=':')  # img|text boundary
     ax.axhline(N_IMG - 0.5, color='white', lw=0.5, alpha=0.4, ls=':')
     ax.set_xticks([]); ax.set_yticks([])
-    ax.set_title(title, fontsize=8, color=color, weight='bold', pad=2)
+    ax.set_title(title, fontsize=7.6, color=color, weight='bold', pad=3, linespacing=1.25)
     if show_pos0_share:
-        share = float(P[:, 0].mean())
+        share = float(P[:, 0].mean()) if share_override is None else share_override
         ax.text(0.96, 0.06, f'pos0={share:.2f}', transform=ax.transAxes, fontsize=6.6,
                 ha='right', va='bottom', color='cyan')
     return im
@@ -51,32 +60,49 @@ def steps_for(pref):
 
 def main():
     d = np.load(NPZ)
-    # sigmoid column DROPPED (review 2026-07-10): its checkpoint dump selected heads by
-    # raw (unnormalized) gate score and missed the arm's true top sink head (L7H3, 0.87
-    # normalized) — a panel from the dumped heads visually understates sigmoid's
-    # concentration. Caveat lives in the paper prose; sigmoid's concentration is carried
-    # by the summary tables + lead-lag figure.
-    arms = [('baseline', 'baseline_s0'), ('g1gate', 'g1gate_s0'), ('textinit', 'textinit_s0')]
-    fig, axes = plt.subplots(2, 4, figsize=(10.4, 5.9))
+    # sigmoid column RESTORED (2026-08-10): re-dumped its true top sink head L7H3
+    # (0-indexed; norm_to_pos0 = 0.873 at the final ckpt, the arm max) with
+    # analysis/dump_sigmoid_l7h3.py. The original dump selected heads by raw
+    # (unnormalized) gate score and picked L8H3/L1H5, which understated the arm.
+    arms = [('baseline', 'baseline_s0'), ('g1gate', 'g1gate_s0'),
+            ('sigmoid', 'sigmoid_s0'), ('textinit', 'textinit_s0')]
+    fig, axes = plt.subplots(2, 5, figsize=(12.6, 5.9))
+    SIG_LH = (7, 3)   # 0-indexed: the sigmoid arm's true top sink head
+    TOK = {('baseline', 250): '2.4M', ('baseline', 18287): '174M',
+           ('g1gate', 250): '2.4M', ('g1gate', 10786): '103M',
+           ('sigmoid', 250): '2.4M', ('sigmoid', 10664): '102M',
+           ('textinit', 250): '2.4M', ('textinit', 6244): '60M', ('textinit', 0): '0'}
     for j, (arm, pref) in enumerate(arms):
-        sts = steps_for(pref)
-        early, final = sts[0], sts[-1]
-        im = panel(axes[0, j], pick_strong(d[f'{pref}_step{early}']), f'{arm}  ·  step {early} (early)',
-                   fc.ARM_COLORS[arm])
-        panel(axes[1, j], pick_strong(d[f'{pref}_step{final}']), f'{arm}  ·  step {final} (final)',
-              fc.ARM_COLORS[arm])
-    # 4th column: textinit @ init (inherited) on top, note + colorbar below
-    panel(axes[0, 3], pick_strong(d['textinit_s0_step0']), 'textinit · step 0\nINHERITED @init',
+        if arm == 'sigmoid':
+            early, final = 250, 10664
+            Me = d[f'{pref}_l7h3_step{early}']; Mf = d[f'{pref}_l7h3_step{final}']
+            se = true_share('runs/sigmoid', early, *SIG_LH)
+            sf = true_share('runs/sigmoid', final, *SIG_LH)
+            tag = f'  (L{SIG_LH[0]}H{SIG_LH[1]})'
+        else:
+            sts = [s for s in steps_for(pref) if s > 0] if arm == 'textinit' else steps_for(pref)
+            early, final = sts[0], sts[-1]
+            Me = pick_strong(d[f'{pref}_step{early}']); Mf = pick_strong(d[f'{pref}_step{final}'])
+            se = sf = None
+            tag = ''
+        im = panel(axes[0, j], Me,
+                   f'{arm}{tag} · seed 0\nstep {early} · {TOK.get((arm, early), "?")} tok',
+                   fc.ARM_COLORS[arm], share_override=se)
+        panel(axes[1, j], Mf,
+              f'{arm}{tag} · seed 0 · FINAL\nstep {final} · {TOK.get((arm, final), "?")} tok',
+              fc.ARM_COLORS[arm], share_override=sf)
+    # 5th column: textinit @ init (inherited) on top, note + colorbar below
+    panel(axes[0, 4], pick_strong(d['textinit_s0_step0']), 'textinit · seed 0 · step 0\nINHERITED @init (0 tok)',
           fc.ARM_COLORS['textinit'])
-    axes[0, 3].spines[:].set_color(fc.ARM_COLORS['textinit'])
-    axes[0, 3].spines[:].set_linewidth(2)
-    axes[1, 3].axis('off')
-    axes[1, 3].text(0.0, 0.95,
+    axes[0, 4].spines[:].set_color(fc.ARM_COLORS['textinit'])
+    axes[0, 4].spines[:].set_linewidth(2)
+    axes[1, 4].axis('off')
+    axes[1, 4].text(0.0, 0.95,
                     'query × key attention\n(top sink head per arm)\n\n'
                     '• bright stripe at key=pos0\n  (cyan line) = sink\n'
                     '• baseline: no stripe\n• textinit: total\n'
                     '• textinit @init already\n  has it (inherited from\n  the text LM)\n\n'
-                    'sigmoid omitted: dump\nmissed its true top sink\nhead (L7H3) — see text\n\n'
+                    'sigmoid: head L7H3, the\narm\'s true top sink head\n(0.87 row-normalized)\n\n'
                     'dotted line = image|text\nboundary (key/query 49)',
                     fontsize=7.2, va='top')
     cax = fig.add_axes([0.80, 0.03, 0.14, 0.022])
@@ -87,6 +113,7 @@ def main():
         axes[i, 0].set_ylabel('query position', fontsize=7.5)
     for j in range(4):
         axes[1, j].set_xlabel('key position', fontsize=7.5)
+    axes[0, 4].set_xlabel('key position', fontsize=7.5)
     fig.suptitle('The sink stripe: every query attends to the first image token — '
                  'absent in baseline, total in textinit, and already present at init (inherited)',
                  fontsize=10, weight='bold', y=0.99)

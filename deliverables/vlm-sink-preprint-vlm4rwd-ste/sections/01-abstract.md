@@ -1,30 +1,5 @@
-<div class="abstract">
-<p><span class="abstract-head">Abstract.</span>
-Trained language models show three effects at the same early token. Attention
-concentrates on the token. The value vector at that token has a very small norm. The
-residual stream at that token has a very large norm. These three effects occur together so
-often that the literature treats them as one &ldquo;attention sink&rdquo; phenomenon. We
-test that reading in a setting where a reader can watch the three effects form. That
-setting is from-scratch multimodal pretraining. We train a 222M-parameter
-vision&ndash;language model. A SigLIP-B/16 encoder feeds a randomly initialized decoder
-with the SmolLM2-135M architecture. We train this model under four levers: standard
-softmax attention, output-gated softmax, unnormalized sigmoid attention, and decoder
-initialization from a pretrained text language model. We log all three signatures as
-separate per-head quantities through training.
-The three signatures come apart. Across three seeds, the four levers reach four different
-corners of (concentration &times; value-norm &times; massive-activation) space. No two arms
-share a signature triple. The value-norm ratio alone moves in three directions. The lever
-drains it (0.38&ndash;0.72), leaves it near 1, or amplifies it (1.48&ndash;1.60). We then
-train one repetition-confound-free run over one billion fresh tokens (single seed). In that
-run massive activation grows by 130 percent while attention concentration stays at exactly
-zero. The per-head correlation between concentration and value-norm also flips sign across
-arms (+0.67 to &minus;0.76, pooled &minus;0.20). No fixed-sign coupling links the two axes.
-Earlier text-only work separates massive activations from attention sinks. We show, for the
-first time in from-scratch multimodal pretraining, that all three signatures respond
-independently to ordinary training-time choices. Value-norm drain is one of the three.
-This result speaks to grounding as a precondition question. Attention mass that a
-positional artifact captures is attention that the model does not spend on image evidence.
-Other work links sink-like attention to hallucination in deployed vision&ndash;language
-models. We do not test whether signature dissociation predicts grounding behavior. We
-establish when and how each signature forms, which is the step that comes first.</p>
-</div>
+Abstract. Hallucination is one of the most pressing limitations of large language models, and in vision–language models it is more rampant still. No clean solution has emerged, but several measurable symptoms track it. Attention sinks are among the most studied: positions that absorb a disproportionate share of attention regardless of content, repeatedly linked to hallucination in deployed VLMs [22], and partially mitigated with verifiable gains. In text language models the sink is well characterised, and it carries three signatures that co-occur so reliably they are usually treated as facets of a single phenomenon — attention concentration (Sink^ε_1, per query head), a near-zero value-norm at the attended token (v-ratio, per KV head), and an outsized residual-stream norm at that position (h-ratio, per layer), which we read as a *massive-activation proxy* rather than a channel-level measurement of massive activations. In vision–language models the picture is far less settled.
+
+We study how those three signatures emerge in a 222M-parameter VLM — a SigLIP-B/16 encoder feeding a randomly initialized SmolLM2-135M-architecture decoder, where position 0 is the first image token and there is no BOS — trained under four levers: standard softmax attention, output-gated softmax, unnormalized sigmoid attention, and decoder initialization from a pretrained text LM. The encoder is pretrained in every arm, so this is vision–language pretraining with randomly initialized decoders, not fully from-scratch training. Logging all three signatures separately throughout training, we find they come apart. Across n = 2–3 seeds per arm the four levers land in four distinct corners of (concentration × value-norm × massive-activation-proxy) space, and no two arms share a signature triple; the value-norm axis alone is drained, left unchanged, or amplified, and which of the three occurs differs by lever. On a low-repetition run over one billion fresh tokens (2.39 effective visual epochs, with no observed overfit — held-out validation tracks train), the massive-activation proxy more than doubles while attention concentration stays at exactly zero. The per-head relationship between concentration and value-norm flips sign from one arm to the next, so no consistent-sign relationship holds across arms.
+
+Prior text-only work separates massive activations from attention sinks [3, 4]; we add dense, joint tracking of all three signatures under randomly initialized decoders in the multimodal setting, and show that all three — value-norm drain included — respond separately to ordinary training-time choices. Whether that dissociation predicts grounding or hallucination behaviour we do not test here; we establish when and how each signature forms, which is the step that comes first.
