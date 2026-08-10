@@ -214,7 +214,7 @@ the most weight. **The stripe is already there at step 0 in textinit**, imported
 text-LM weights before the model has seen one image.
 
 **Raw against row-normalized sigmoid.** The *sigmoid* panel needs one measurement note,
-because row-normalization changes the object being measured and Gu et al. [1] state their
+because row-normalization changes the object being measured and Gu et al. [6] state their
 result for *unnormalized* sigmoid attention. Head L7H3 of the sigmoid arm sends 0.873 of its
 row-normalized attention to position 0 at the final checkpoint, which is the arm maximum.
 Its raw gate mass to position 0 is 0.052, and the raw mass summed over all keys in that row
@@ -258,7 +258,7 @@ This subsection is **speculative**. Nothing in it is tested by our experiments, 
 it is a claim of this paper. We offer it because a reader is entitled to ask *why* the
 signatures come apart, and because these hypotheses are cheap to state and testable later.
 
-Gu et al. [1] account for the sink as a key bias: softmax must distribute a full unit of
+Gu et al. [6] account for the sink as a key bias: softmax must distribute a full unit of
 attention mass per row, and a head with nothing informative to retrieve parks the surplus
 on a token whose value contributes little. If that account is right, each of our levers
 touches a different part of it, which would explain why each moves a different axis.
@@ -267,7 +267,7 @@ touches a different part of it, which would explain why each moves a different a
   residual stream. A model with that gate may be able to *afford* concentration, because
   concentration no longer forces a matching change in the value path. That would be
   consistent with a gate whose measured effect here is on the value-norm axis rather than
-  the concentration axis. Fesser et al. [25] make a compatible argument from another
+  the concentration axis. Fesser et al. [23] make a compatible argument from another
   direction: they distinguish a sink that acts as an "adaptive nop" (a no-op: the head
   suppresses its own update by routing attention to a token whose value contributes
   nothing), recognizable by a negligible value norm, from a sink that broadcasts global information, and they note that

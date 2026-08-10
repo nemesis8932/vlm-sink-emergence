@@ -16,9 +16,9 @@ signatures separated in position as well, sitting on different tokens at two of 
 
 The signatures are plainly related in general. Work on text language models documents real
 interactions among them, which include a causal route from massive activations to sinks and
-compression valleys [2]. Our results show that the coupling is not obligatory. In
+compression valleys [7]. Our results show that the coupling is not obligatory. In
 multimodal pretraining with a randomly initialized decoder, each axis moved separately under
-ordinary training-time levers. That extends the two-way text-only dissociations [3, 4] to a
+ordinary training-time levers. That extends the two-way text-only dissociations [9, 10] to a
 third axis and to a new setting. For interpretability work and mitigation work the practical
 result is blunt. One signature is not a proxy for the others. A model with no attention sink
 can still carry a growing residual-norm asymmetry. A gate that changes value-drain can leave
@@ -29,7 +29,7 @@ encoder, to isolate the contribution of the decoder to the residual-norm signal.
 fresh-data run past 1B tokens, to match text-LM budgets. Test whether the signature corner
 of an arm predicts hallucination or grounding behavior.
 Use the benchmarks that the sink-intervention literature already uses, such as POPE, CHAIR,
-and AMBER [21–23]. This paper does not test that last link. It establishes when the signatures
+and AMBER [13–15]. This paper does not test that last link. It establishes when the signatures
 form, and in what combinations, which is the measurement that has to exist first.
 
 **Reproducibility.** A self-validating probe (§2) computes all signatures on a fixed probe

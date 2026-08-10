@@ -17,7 +17,7 @@ at pos1, but with mass 0.100 against 0.083 at pos0, a diffuse profile rather tha
 displaced sink; the RF negative result does not depend on the anchor.
 
 **The gate arm carries a scale confound.** We initialize the G1 gate at exactly zero, so it
-opens at σ(0) = 0.5 and halves attention output at step 0, where Qiu et al. [5] use ordinary
+opens at σ(0) = 0.5 and halves attention output at step 0, where Qiu et al. [20] use ordinary
 initialization (§2, §4). Gating and initial output scaling are therefore confounded in our
 *g1gate* arm, and its differences from baseline cannot be attributed to gating alone. A
 scale-matched control is future work.
@@ -26,8 +26,8 @@ scale-matched control is future work.
 pretrained and trainable in every arm, and *textinit* additionally uses a pretrained
 decoder. What we study is therefore vision–language pretraining with randomly initialized
 decoders, not from-scratch training of the whole model, and we word it that way throughout.
-Vision transformers grow high-norm register tokens of their own [9], and sinks can propagate
-from a vision transformer into a large vision–language model [7]. Part of our residual-norm
+Vision transformers grow high-norm register tokens of their own [25], and sinks can propagate
+from a vision transformer into a large vision–language model [11]. Part of our residual-norm
 signal could therefore be inherited rather than decoder-formed. Our defense is the
 trajectory. The h-ratio starts at 1.0–1.4 at initialization and *rises* through training,
 from 1.43 to 3.22 across 1B tokens in the RF arm. Pure inheritance from a static encoder
@@ -35,14 +35,14 @@ predicts a high, flat h-ratio from step 0 instead. A control with a randomly ini
 vision transformer, which would isolate the decoder entirely, is future work.
 
 **The h-ratio is a proxy, not a measurement of massive activations.** Massive activations
-are normally defined by channel-level outliers [10, 11]. We measured a position-specific
+are normally defined by channel-level outliers [2, 5]. We measured a position-specific
 residual-norm ratio and never computed channel-level statistics, so we report the h-ratio as
 a massive-activation proxy (§2). A large h-ratio is consistent with massive activations but
 does not establish them.
 
 **Token scale.** Our runs reach at most 1B tokens per arm, against the roughly 5B tokens
-that are canonical in the text-LM sink literature [1]. Sink emergence is early relative to
-that budget. Text-LM sinks and their companions form near step 1000 [2], far inside our
+that are canonical in the text-LM sink literature [6]. Sink emergence is early relative to
+that budget. Text-LM sinks and their companions form near step 1000 [7], far inside our
 range. We nonetheless cannot rule out that a signature absent at 1B tokens emerges later.
 Confirmation at larger scale is future work.
 
