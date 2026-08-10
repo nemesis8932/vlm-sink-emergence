@@ -20,7 +20,7 @@ import fig_common as fc
 NPZ = 'analysis/per_key_attention.npz'
 ARM_KEY = {'baseline': 'baseline_s0', 'g1gate': 'g1gate_s0', 'sigmoid': 'sigmoid_s0',
            'textinit': 'textinit_s0', 'rf': 'rf'}
-TOK_PER_STEP = 16384 / 1e6   # ~0.0164 M tok/step (bs128 * 128 ctx); x-axis in M tokens
+FLOOR_M = 0.02               # log-x floor for the step-0 probe
 
 
 def norm_entropy(marg):
@@ -32,6 +32,17 @@ def norm_entropy(marg):
     return h / np.log(T)
 
 
+def tokens_at(arm):
+    """step -> tokens_seen (M), interpolated over the probe log. A fixed tokens/step constant
+    is wrong: padding makes the true rate ~9.5K/step, not the 16,384 maximum, so a constant put
+    the curves ~1.7x too far right. Probes fire every 100 steps and the reprobe dumps sit at
+    other steps, hence the interpolation over an essentially linear accumulator."""
+    s = fc.load_summ(arm)
+    xs = np.array([r['step'] for r in s], float)
+    ys = np.array([r['tokens_seen'] for r in s], float) / 1e6
+    return lambda st: float(np.interp(st, xs, ys))
+
+
 def main():
     d = np.load(NPZ)
     fig, ax = plt.subplots(figsize=(7.6, 5.0))
@@ -40,11 +51,12 @@ def main():
         pref = ARM_KEY[arm]
         steps = sorted(int(re.search(r'step(\d+)', k).group(1))
                        for k in d.files if k.startswith(pref + '_step'))
+        tok = tokens_at(arm)
         xs, ys = [], []
         for st in steps:
             a = d[f'{pref}_step{st}']             # (30,9,128)
             H = norm_entropy(a).mean()            # mean over layers+heads
-            xs.append(max(st * TOK_PER_STEP, 0.02)); ys.append(float(H))
+            xs.append(max(tok(st), FLOOR_M)); ys.append(float(H))
         c = fc.ARM_COLORS[arm]
         ax.plot(xs, ys, 'o-', color=c, lw=1.7, ms=4.5, label=fc.ARM_LABELS[arm])
         rows.append((arm, ys[0], ys[-1]))

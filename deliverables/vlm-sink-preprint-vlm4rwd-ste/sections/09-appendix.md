@@ -14,11 +14,11 @@ initialization. sigmoid lights up a band of mid-network layers.</figcaption>
 <figure id="figA2">
 <img src="figures/fig3_perhead_scatter.svg" alt="Per-head concentration vs value-norm scatter">
 <figcaption><b>Figure A2: No universal head-level coupling.</b> Concentration against
-value-norm ratio for each (layer, query-head) pair at each arm's final checkpoint, seed 0,
-at n = 270 pairs per arm. Under grouped-query attention those pairs hold 90 independent value-norm
-observations, so these correlations are descriptive and we report no p-values
-(&sect;3.3). The sign of the correlation flips by arm, from +0.67 in baseline
-to &minus;0.76 in textinit (Table 4). The pooled cloud is weak, at &minus;0.20, only
+value-norm ratio for each (layer, KV-group) pair at each arm's final checkpoint, seed 0,
+at n = 90 pairs per arm. Grouping this way avoids triplicating each value-norm observation
+across the 3 query heads that share it, so these correlations are descriptive and we report
+no p-values (&sect;3.3). The sign of the correlation flips by arm, from +0.76 in baseline
+to &minus;0.79 in textinit (Table 4). The pooled cloud is weak, at &minus;0.20, only
 because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most
 individual arms show a strong |r|.</figcaption>
 </figure>
@@ -51,9 +51,10 @@ include it. We therefore keep it out of the main comparative table.
 | textinit | s2 | 60M | 0.578 | 0.232 | ~0.59 | 0.484 | 12.2 |
 
 A note on g1gate. Both seeds with max-attention data show one head at about 0.21–0.22
-maximum attention→pos0. The arm mean meanwhile stays near 0.07, and Sink^0.2 stays far
-below 0.05. That pattern repeats across seeds, and it sits below every sink threshold this paper
-uses.
+maximum attention→pos0. That single head does clear the strict ε = 0.2 threshold, which is
+why the arm's Sink^0.2 is small but not exactly zero, and no head comes close to the ε = 0.3
+default of [6]. The arm mean meanwhile stays near 0.07 and Sink^0.2 stays far below 0.05.
+That pattern repeats across seeds.
 
 ## C. Per-position attention mass (seed 0)
 
@@ -81,7 +82,7 @@ which each quantity peaks (for value norms, the position at which the norm is sm
 | sigmoid | s0, s1 | 0 | — | — | pos0 max |
 | textinit | s0 | 0 | 0 | 0 | all three coincide |
 | textinit | s1 | 0 | 1 | 5 | norms move off pos0 |
-| textinit | s2 | **1** | **13** | **13** | all three separate |
+| textinit | s2 | **1** | **13** | **13** | attention separates from coincident norm extrema |
 | RF | s0 | 1 | — | — | mass 0.100 vs 0.083 at pos0; diffuse, not a sink |
 
 Two readings follow. Position 0 remains the maximum-mass token in every arm with a randomly

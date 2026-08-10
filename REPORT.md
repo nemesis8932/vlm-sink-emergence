@@ -88,7 +88,8 @@ framed as an emergence signal (see RF @1B below; consistent with `GATE_A_REPORT.
 confound.** On a fresh FineVision stream to 1B tokens, **Sink^0.3_1 = 0.000 across the
 entire run** while **h_ratio rises 1.43→3.22 (+130%, init→1B, continuing post-warmup)**;
 v_ratio ends at 0.69 but is non-monotone (~75% of its net drop is the 0–57M warmup, then
-recovers). Fresh val_loss 1.46→0.638, no overfit. Massive-activation grows without any
+recovers). Fresh val_loss 1.46→0.638, never turns upward (RF has **no distinct seen split** —
+`val_seen` reuses the held-out pool, so no seen/unseen gap test for this arm). Massive-activation grows without any
 concentration sink forming — the decoupling, on fresh data. Full rulings + figure:
 `runs/rf_fresh_baseline/GATE_A_REPORT.md`, `runs/rf_fresh_baseline/decoupling_figure.svg`.
 

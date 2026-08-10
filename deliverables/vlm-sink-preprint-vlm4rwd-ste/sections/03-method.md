@@ -10,7 +10,9 @@ decoder trains **from random initialization** in every arm except *textinit*, be
 point is to watch the signatures form. Each sequence holds 49 image tokens as a causal
 prefix, then 79 left-padded text tokens, for 128 tokens in all. **Position 0 is the first
 image token, and there is no BOS token.** What happens at position 0 is therefore a property
-of the visual prefix. It is not inherited BOS machinery.
+of the visual prefix, and not of inherited BOS machinery, in the arms with a randomly
+initialized decoder. *textinit* is the exception by design: it imports first-position
+structure from text pretraining, and it shows a sink before any multimodal step (§3.1).
 
 **Arms.** We use four training levers. Each lever targets one sink-relevant mechanism.
 Everything else stays byte-identical across arms.
@@ -45,7 +47,7 @@ FineVision stream [22] to 1B tokens. That stream holds about 4.6M natural images
 The 100M-token comparison arms sit at roughly 7 epochs, so the 74-epoch figure describes
 the repeated pool at 1B tokens, not those arms. RF is therefore a **low-repetition** run,
 not a repetition-free one: examples do repeat, about 2.4 times on average. What we observe
-is that no overfit accompanies it: held-out fresh validation loss tracks train loss (§2,
+is that its held-out loss stays stable, and falls throughout, with no upward turn (§2,
 recipe). A change of dataset also trades the repetition confound for a domain-shift
 confound. We accept that trade and document it. The fresh pool holds natural images and
 leans heavily on COCO. We estimate its overlap with the repeated subsets at under 3% from
@@ -110,9 +112,12 @@ tokens" figures in this paper use that definition. *Probe:* the fixed probe batc
 n = 32 samples, drawn with `random.seed(0)` from the repeated `the_cauldron` tail; we label
 this probe version `v1-repeatedtail-32`. RF uses the same probe batch as the repeated arms,
 so its signatures stay comparable to theirs even though its training stream differs (§5).
-Probes fire every 100 steps. *Validation:* 1,024 held-out examples, evaluated every 500
-steps; we report `val_unseen`, which holds out images, and also log `val_seen`, which
-re-uses training images with fresh question–answer text. *Seeds:* two for *baseline* and
+Probes fire every 100 steps. *Validation:* a 1,024-example held-out pool, evaluated every
+500 steps; each estimate is the mean over the first 512 examples of that pool (four batches
+of 128, in fixed order). We report `val_unseen`, which holds out images. For the repeated
+arms we also log `val_seen`, which re-uses training images with fresh question–answer text.
+The RF run has no distinct seen split: at 2.39 visual epochs its `val_seen` loader re-uses
+the held-out pool, so we report only `val_unseen` for RF. *Seeds:* two for *baseline* and
 *sigmoid*, three for *g1gate* and *textinit*, one for *RF*. *Aggregation:* the three
 formulas above; each per-layer or per-head quantity is first averaged over the probe batch
 and over valid query positions, then aggregated as written.
@@ -125,6 +130,9 @@ from a pretrained text decoder, so its lower loss reflects unequal competence, n
 effect; only *baseline*, *g1gate*, and *sigmoid* are equal-token, equal-initialization
 comparisons. Second, the repeated-data arms show a large train–validation asymmetry
 (`val_seen` near 0.44 against `val_unseen` near 1.18), which is the overfitting signal that
-motivates RF. RF shows no such gap: `val_seen` 0.641 against `val_unseen` 0.638. **We did
+motivates RF. RF cannot be checked the same way, because it has no distinct seen split. The
+weaker statement its data supports is that the held-out loss falls throughout and never
+turns upward: it goes from 1.35 over the first ten evaluations to 0.68 over the last ten,
+and the fitted slope over the second half of the run stays negative. **We did
 not run MMStar or any other downstream benchmark on any arm**, so this paper makes no
 capability claim (§5).

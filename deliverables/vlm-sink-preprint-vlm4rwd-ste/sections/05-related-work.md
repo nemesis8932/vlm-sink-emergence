@@ -66,8 +66,10 @@ encoding through massive activations to visual sinks and then to hallucination. 
 language models, Binkowski et al. [16] detect hallucinations from sink structure. Their
 classifier relies preferentially on sinks whose value vectors have large norms, which makes
 it the closest precedent for treating value norms as a signal. All four papers work on
-models that are already trained, at inference time. Each one treats massive activation and
-concentration as one coupled mechanism, and [16] is text-only as well. None of them tracks
+models that are already trained, at inference time. Kang et al. [13] and Zhang et al. [15]
+both treat massive activation and concentration as one coupled mechanism; Shukla and Kira
+[14] work at the level of sink tokens and grounding rather than massive activations, and
+[16] is text-only as well. None of them tracks
 the signatures across training. None of them treats value-norm drain as a third axis that
 moves on its own. Our result is the training-dynamics complement to that line. The coupling
 on which the line depends is lever-dependent, not fixed.

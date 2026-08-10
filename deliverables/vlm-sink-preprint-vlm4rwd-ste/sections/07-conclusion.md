@@ -6,7 +6,8 @@ signatures are concentration, value-norm drain, and a residual-norm ratio that w
 massive-activation proxy. They came apart everywhere we looked. Four training levers
 produced four different signature corners, and the value-norm axis alone moved in three
 different directions. On a low-repetition, single-seed run over a billion fresh tokens, at
-2.39 effective visual epochs and with no observed overfit, the massive-activation proxy grew
+2.39 effective visual epochs and with a held-out loss that never turned upward, the
+massive-activation proxy grew
 about 2.3× while concentration never left zero. The per-head correlation between
 concentration and value-norm flipped sign across arms. The signatures even arrived in
 different orders. Norms came first and concentration never came in the softmax arms with

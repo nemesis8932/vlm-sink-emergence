@@ -74,17 +74,19 @@ epochs).
 1. **Four levers, four corners (n = 2–3 seeds/arm).** The four arms reach four different
    corners of the three-signature space. No two arms
    share a signature triple. The value-norm ratio alone moves in three qualitatively
-   different directions, drained or unchanged or amplified, and which one occurs differs by
+   different directions, strongly drained or mildly drained or amplified, and which one
+   occurs differs by
    lever (Fig. 1, Table 2). The four arms are not a factorial design, so we report distinct
    intervention-associated profiles, not isolated causal effects.
 2. **Low-repetition decoupling at 1B tokens (n = 1).** On a fresh stream at 2.39 effective
-   visual epochs, with no observed overfit, the massive-activation proxy rises from an
+   visual epochs, with a held-out loss that never turns upward, the massive-activation
+   proxy rises from an
    h-ratio of 1.43 to 3.22, about 2.3×, across a full billion tokens. Attention
    concentration stays at exactly zero for the entire single-seed run. No head ever crosses
    the sink threshold (§3.2, §5).
 3. **No consistent-sign head-level relationship.** The per-head correlation between
-   concentration and value-norm flips sign across arms (+0.67 baseline → −0.76 textinit,
-   pooled −0.20). We report these descriptively (§3.3).
+   concentration and value-norm flips sign across arms (+0.76 baseline → −0.79 textinit,
+   pooled −0.20, over 90 KV groups per arm). We report these descriptively (§3.3).
 
 Text-only work already separates massive activations from concentration through
 normalization [9] and value-path [10] interventions. Decoupling by itself is therefore not

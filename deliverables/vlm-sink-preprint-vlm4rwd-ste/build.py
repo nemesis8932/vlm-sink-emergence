@@ -5,7 +5,7 @@ STE edition: same content and figures as the VLM4RWD fork, prose rewritten in
 ASD-STE100 Simplified Technical English (STE-flavored mode).
 
 Usage: python3 build.py            # writes paper-v2-ste.html, draft-v2-ste.md, paper-v2-ste.pdf
-Markdown subset: # h2 / ## h3, pipe tables, -/1. lists, **bold**, *italic*, `code`,
+Markdown subset: # h2 / ## h3 / ### h4, pipe tables, -/1. lists, **bold**, *italic*, `code`,
 raw-HTML blocks (lines starting with '<' pass through), [n] refs styled when a block
 starts with '['.
 """
@@ -113,6 +113,8 @@ def md_to_html(text: str) -> str:
         elif len(lines) == 1 and EQ_RE.match(first):
             # displayed equation: centred, never justified or hyphenated
             out.append(f'<p class="eq">{inline(first)}</p>')
+        elif first.startswith("### "):
+            out.append(f"<h4>{inline(first[4:])}</h4>")
         elif first.startswith("## "):
             out.append(f"<h3>{inline(first[3:])}</h3>")
         elif first.startswith("# "):
@@ -185,6 +187,8 @@ p.eq { text-align: center; hyphens: none; text-indent: 0;
 h2 { font-size: 12pt; font-weight: bold; margin: 1.45em 0 0.45em;
      break-after: avoid; page-break-after: avoid; }
 h3 { font-size: 10.5pt; font-weight: bold; margin: 1.1em 0 0.35em;
+     break-after: avoid; page-break-after: avoid; }
+h4 { font-size: 10pt; font-weight: bold; font-style: italic; margin: 1em 0 0.3em;
      break-after: avoid; page-break-after: avoid; }
 p { text-align: justify; hyphens: auto; margin: 0 0 0.5em; orphans: 3; widows: 3; }
 ol, ul { margin: 0.2em 0 0.7em; padding-left: 1.7em; }
