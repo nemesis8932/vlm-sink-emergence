@@ -42,12 +42,23 @@ REPRO_NAMED = ("We release the code, the probe, the run configurations, and the 
 
 URL_RE = re.compile(r"(?<![\"'>=])(https?://[^\s<>)\]]+?)(?=[.,;:]?(?:\s|$|\)|\]))")
 EQ_RE = re.compile(r"^(Sink<sup>|Sink\^|v-ratio\s*=|h-ratio\s*=)")
+# citation markers: [7], [10, 11], [21–23] -> internal links to the reference entries
+CITE_RE = re.compile(r"\[(\d+(?:\s*[,–-]\s*\d+)*)\]")
+
+
+def cite_links(s: str) -> str:
+    def repl(m):
+        inner = re.sub(r"\d+",
+                       lambda d: f'<a class="cite" href="#ref-{d.group(0)}">{d.group(0)}</a>',
+                       m.group(1))
+        return f"[{inner}]"
+    return CITE_RE.sub(repl, s)
 
 def linkify(s: str) -> str:
     """Bare URLs -> clickable anchors (arXiv readers get working repro links)."""
     return URL_RE.sub(r'<a href="\1">\1</a>', s)
 
-def inline(s: str) -> str:
+def inline(s: str, cite: bool = True) -> str:
     s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
     s = re.sub(r"(?<![\w*])\*([^*\n]+?)\*(?![\w*])", r"<em>\1</em>", s)
     s = re.sub(r"`([^`]+?)`", r"<code>\1</code>", s)
@@ -59,6 +70,8 @@ def inline(s: str) -> str:
     # Times carries ‖ but draws it as a thin single bar; force a math face for norm spans
     s = re.sub(r"‖([^‖]{1,60}?)‖", r'<span class="mth">‖\1‖</span>', s)
     s = linkify(s)
+    if cite:
+        s = cite_links(s)
     return s
 
 def table_html(lines):
@@ -111,12 +124,18 @@ def md_to_html(text: str) -> str:
         elif re.match(r"^\s*\d+\.\s+", first):
             out.append(list_html(lines, ordered=True))
         else:
-            para = inline(" ".join(ln.strip() for ln in lines))
+            is_ref = first.startswith("[")
+            para = inline(" ".join(ln.strip() for ln in lines), cite=not is_ref)
             cls = ""
             if para.startswith("<strong>Table"):
                 cls = ' class="table-caption"'
-            elif para.startswith("["):
+            elif is_ref:
                 cls = ' class="ref"'
+                # the entry's own [n] becomes the anchor the citations jump to
+                m = re.match(r"\[(\d+)\]", para)
+                if m:
+                    para = (f'<span id="ref-{m.group(1)}">[{m.group(1)}]</span>'
+                            + para[m.end():])
             out.append(f"<p{cls}>{para}</p>")
     return "\n".join(out)
 
@@ -135,6 +154,9 @@ body { font-family: 'Nimbus Roman', 'Times New Roman', 'Liberation Serif', Times
        font-size: 10pt; line-height: 1.34; color: #111; margin: 0 auto; max-width: 6.5in;
        orphans: 3; widows: 3; }
 a { color: #0b3d91; text-decoration: none; word-break: break-word; }
+/* citation jumps stay ink-coloured so the printed page keeps its plain look; they are
+   still live links in the PDF */
+a.cite { color: inherit; text-decoration: none; }
 @media screen { body { padding: 40px 20px; } }
 h1.title { font-size: 16.5pt; text-align: center; line-height: 1.25; margin: 0 0 0.7em; }
 .author, .affil, .date { text-align: center; margin: 0.15em 0; }
@@ -232,10 +254,11 @@ def stamp_metadata(pdf):
     except ImportError:
         print("[warn] PDF metadata not stamped (pypdf missing); pip install pypdf to enable")
         return
+    # clone_from keeps the whole catalog. Copying pages one by one instead rebuilds it and
+    # silently drops /Dests (the named destinations behind the [n] citation jumps),
+    # /StructTreeRoot and /Lang (tagged-PDF accessibility).
     reader = PdfReader(str(pdf))
-    writer = PdfWriter()
-    for page in reader.pages:
-        writer.add_page(page)
+    writer = PdfWriter(clone_from=reader)
     writer.add_metadata({"/Title": title, "/Author": author,
                          "/Subject": "Attention sinks in vision-language pretraining",
                          "/Creator": "build.py"})
