@@ -268,8 +268,9 @@ touches a different part of it, which would explain why each moves a different a
   concentration no longer forces a matching change in the value path. That would be
   consistent with a gate whose measured effect here is on the value-norm axis rather than
   the concentration axis. Fesser et al. [25] make a compatible argument from another
-  direction: they distinguish a sink that acts as an "adaptive nop", recognizable by a
-  negligible value norm, from a sink that broadcasts global information, and they note that
+  direction: they distinguish a sink that acts as an "adaptive nop" (a no-op: the head
+  suppresses its own update by routing attention to a token whose value contributes
+  nothing), recognizable by a negligible value norm, from a sink that broadcasts global information, and they note that
   gating implicitly assumes the nop mechanism. If that is right, a gate should act on the
   value-norm axis first, which is where our gated arm differs from baseline.
 - *sigmoid.* Removing the softmax removes the sum-to-one constraint itself. A head with

@@ -30,7 +30,8 @@ massive activations. Neither paper treats value-norm drain as a third axis that 
 its own. Neither paper is multimodal. Fesser et al. [25] come at the same question from
 another direction, and their result is the closest external support for tracking the value
 norm separately: they argue that one sink pattern can hide two different algorithms, an
-"adaptive nop" that routes a head's update to a null token and a "broadcast" that
+"adaptive nop" (a no-op: the head suppresses its own update by routing to a null token)
+and a "broadcast" that
 aggregates and redistributes global information, and that the two leave different traces —
 nop sinks show negligible value norms, broadcast sinks produce low-rank outputs. On their
 account gating implicitly assumes the nop mechanism and registers implicitly assume

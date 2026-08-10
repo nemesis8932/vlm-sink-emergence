@@ -158,7 +158,12 @@ a { color: #0b3d91; text-decoration: none; word-break: break-word; }
    still live links in the PDF */
 a.cite { color: inherit; text-decoration: none; }
 @media screen { body { padding: 40px 20px; } }
-h1.title { font-size: 16.5pt; text-align: center; line-height: 1.25; margin: 0 0 0.7em; }
+/* rules above and below the title, in the single-column arXiv/NeurIPS house style */
+h1.title { font-size: 16.5pt; text-align: center; line-height: 1.25;
+           margin: 0 0 0.9em; padding: 0.42em 0;
+           border-top: 2.2px solid #111; border-bottom: 2.2px solid #111; }
+h2.abstract-title { font-size: 11.5pt; text-align: center; font-weight: bold;
+                    margin: 1.5em 0 0.5em; }
 .author, .affil, .date { text-align: center; margin: 0.15em 0; }
 .author { font-size: 11.5pt; }
 .affil { font-size: 9.5pt; color: #444; }
@@ -169,6 +174,8 @@ h1.title { font-size: 16.5pt; text-align: center; line-height: 1.25; margin: 0 0
 .abstract-head { font-weight: bold; font-variant: small-caps; letter-spacing: 0.03em;
                  margin-right: 0.15em; }
 .mth { font-family: 'STIX Two Math', 'Cambria Math', 'Nimbus Roman', Times, serif; }
+math.eqm { display: block; width: fit-content; margin: 0.9em auto 1.0em; font-size: 1.06em;
+           font-family: 'STIX Two Math', 'Cambria Math', 'Nimbus Roman', Times, serif; }
 p.eq { text-align: center; hyphens: none; text-indent: 0;
        margin: 0.85em 0 0.95em; font-size: 10.5pt;
        font-family: 'STIX Two Math', 'Cambria Math', 'Nimbus Roman',
@@ -209,9 +216,8 @@ def render_section(p):
     txt = section_text(p)
     html = md_to_html(txt)
     if txt.lstrip().startswith("Abstract."):
-        html = html.replace("<p>Abstract.",
-                            '<p><span class="abstract-head">Abstract.</span>', 1)
-        html = f'<div class="abstract">{html}</div>'
+        html = html.replace("<p>Abstract. ", "<p>", 1)
+        html = f'<h2 class="abstract-title">Abstract</h2>\n<div class="abstract">{html}</div>'
     return html
 
 

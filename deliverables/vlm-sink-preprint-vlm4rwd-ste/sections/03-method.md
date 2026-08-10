@@ -55,35 +55,26 @@ control (§5).
 
 **Three signatures, tracked separately.** We log the three sink symptoms that the text-LM
 literature reports together, each at its own granularity, following Gu et al. [1] at a
-fixed sequence length. Write *L* = 30 layers, *H* = 9 query heads per layer, *G* = 3 KV
-heads per layer. Let a<sub>ℓh</sub>(0) be the mean attention that layer ℓ, query head *h*
-sends to position 0, and let ‖v<sub>ℓ</sub>(t)‖ and ‖h<sub>ℓ</sub>(t)‖ be the value norm
-and residual-stream norm at position *t* in layer ℓ. All are averaged over valid queries
-and over the probe batch.
+fixed sequence length. The decoder has *L* = 30 layers, *H* = 9 query heads per layer, and
+*G* = 3 KV heads per layer. Every quantity below is averaged over valid query positions and
+over the fixed probe batch.
 
-*Concentration*, over the *L·H* = 270 (layer, query-head) pairs:
+*Concentration* (Sink^ε_1) is the fraction of the *L·H* = 270 (layer, query-head) pairs
+whose mean attention to position 0 exceeds ε. We use the ε = 0.3 default of [1] and check
+ε ∈ {0.2, 0.4}. Cross-arm tables report the stricter ε = 0.2, which makes an absence claim
+harder to pass.
 
-Sink<sup>ε</sup><sub>1</sub> = |{(ℓ,h) : a<sub>ℓh</sub>(0) > ε}| / (L·H)
-
-We use the ε = 0.3 default of [1] and check ε ∈ {0.2, 0.4}. Cross-arm tables report the
-stricter ε = 0.2, which makes an absence claim harder to pass.
-
-*Value-norm ratio* (v-ratio), over the *L·G* = 90 (layer, KV-head) value projections:
-
-v-ratio = (1/L) Σ<sub>ℓ</sub> ‖v<sub>ℓ</sub>(0)‖ / mean<sub>t>0</sub> ‖v<sub>ℓ</sub>(t)‖
-
+*Value-norm ratio* (v-ratio) is the value norm at position 0 divided by the mean value norm
+over the other valid positions, computed per layer and then averaged over the 30 layers.
 Below 1 is value-drain [6]; above 1 is amplification. Under grouped-query attention a value
-vector belongs to a KV group and repeats across 3 query heads, so there are 90 independent
-value observations, not 270. This matters for §3.3.
+vector belongs to a KV group and repeats across 3 query heads, so the ratio rests on
+*L·G* = 90 independent value projections, not 270. This matters for §3.3.
 
-*Residual-norm ratio* (h-ratio), over the *L* = 30 layers:
-
-h-ratio = (1/L) Σ<sub>ℓ</sub> ‖h<sub>ℓ</sub>(0)‖ / mean<sub>t>0</sub> ‖h<sub>ℓ</sub>(t)‖
-
-We call this a **massive-activation proxy**. Massive activations are normally defined by
+*Residual-norm ratio* (h-ratio) is the residual-stream norm at position 0 divided by the
+mean norm over the other positions, again per layer and then averaged over the 30 layers.
+We call it a **massive-activation proxy**. Massive activations are normally defined by
 channel-level outliers [10, 11], which we never measured; the h-ratio captures a
-position-specific residual-norm asymmetry, necessary but not sufficient for that
-definition.
+position-specific residual-norm asymmetry, necessary but not sufficient for that definition.
 
 **Why a sink is expected at all.** Softmax forces every attention row to sum to one. A head
 with nothing informative to retrieve must still place its mass somewhere. Gu et al. [1]
