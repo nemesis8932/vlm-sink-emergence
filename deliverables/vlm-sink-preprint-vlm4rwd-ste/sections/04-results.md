@@ -3,8 +3,8 @@
 <figure id="fig1">
 <img src="figures/fig2_phase_portrait.svg" alt="Decoupling phase portrait">
 <figcaption><b>Figure 1: Decoupling phase-portrait.</b> Training trajectories of every arm
-in (concentration &times; value-norm) space, at left, and in (concentration &times;
-massive-activation-proxy) space, at right, on a log scale. <b>Note the metric difference
+in concentration-against-value-norm space, at left, and concentration against the
+residual-norm ratio, at right, on a log scale. <b>Note the metric difference
 from the tables:</b> the horizontal axis here is the <em>maximum</em> attention→pos0 over
 heads, a continuous quantity that keeps a trajectory visible, whereas Tables 1&ndash;2
 report Sink<sup>ε</sup><sub>1</sub>, the <em>fraction of query heads above a threshold</em>.
@@ -65,8 +65,8 @@ it below 1, leaves it near 1, or amplifies it above 1.
 | textinit | strong (0.56–0.85) | strong drain (0.38–0.63) | extreme (5.5–42.5) |
 
 The corners separate pairwise on single axes. *g1gate* differs from *baseline* on the
-value-norm axis alone. Concentration is absent or near-absent in both arms — note that
-*g1gate* sits *above* the exact 0.000 of baseline, not below it — and the residual-norm
+value-norm axis alone. Concentration is absent or near-absent in both arms (note that
+*g1gate* sits *above* the exact 0.000 of baseline, not below it), and the residual-norm
 ratio is moderate in both. The gate nonetheless makes the mild value-drain of the baseline
 milder still, from 0.69–0.72 to 0.81–0.85, which is a 15–19% drain rather than none.
 *sigmoid* and *textinit* both reach strong concentration, and they then part on two axes.
@@ -218,7 +218,7 @@ because row-normalization changes the object being measured and Gu et al. [1] st
 result for *unnormalized* sigmoid attention. Head L7H3 of the sigmoid arm sends 0.873 of its
 row-normalized attention to position 0 at the final checkpoint, which is the arm maximum.
 Its raw gate mass to position 0 is 0.052, and the raw mass summed over all keys in that row
-is 0.083 — that is, the row does not sum to one, and pos0 takes about 62% of what little
+is 0.083: the row does not sum to one, and pos0 takes about 62% of what little
 gate mass the head opens at all. Early in training the same head shows the opposite picture:
 raw pos0 mass 0.389 against a raw row sum of 13.5, so only about 3% of a very large gate
 budget. The concentration this arm develops is therefore a **relative** reallocation of a
@@ -237,7 +237,7 @@ residual norms, and value norms across all three *textinit* seeds shows that the
 signatures need not share a token. At seed 0 they coincide: attention mass, the
 residual-norm peak, and the value-norm minimum all sit at position 0. At seed 1 the
 attention maximum stays at position 0 while the residual peak moves to pos1 and the value
-minimum to pos5. At seed 2 they separate furthest — the attention maximum sits at **pos1**
+minimum to pos5. At seed 2 they separate furthest: the attention maximum sits at **pos1**
 while the residual peak and the value trough both sit at **pos13**. The softmax arms with
 randomly initialized decoders behave differently: position 0 remains the maximum-mass token
 in *baseline*, *g1gate*, and *sigmoid* at every seed we scanned (Appendix C). In *RF* the

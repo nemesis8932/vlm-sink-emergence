@@ -72,7 +72,7 @@ epochs).
 **Contributions.**
 
 1. **Four levers, four corners (n = 2–3 seeds/arm).** The four arms reach four different
-   corners of (concentration × value-norm × massive-activation-proxy) space. No two arms
+   corners of the three-signature space. No two arms
    share a signature triple. The value-norm ratio alone moves in three qualitatively
    different directions, drained or unchanged or amplified, and which one occurs differs by
    lever (Fig. 1, Table 2). The four arms are not a factorial design, so we report distinct

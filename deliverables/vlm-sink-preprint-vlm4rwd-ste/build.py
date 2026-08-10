@@ -15,7 +15,7 @@ from pathlib import Path
 HERE = Path(__file__).parent
 SECTIONS = sorted((HERE / "sections").glob("[0-9][0-9]-*.md"))
 
-TITLE = "Four Levers, Four Corners: Attention-Sink Signatures Dissociate in Vision–Language Pretraining"
+TITLE = "Attention-Sink Signatures Dissociate During Vision–Language Pretraining"
 
 # Default = anonymous double-blind workshop build. `python3 build.py --arxiv` produces the
 # named arXiv build (separate output files; the anonymous build is never overwritten).
@@ -41,6 +41,7 @@ REPRO_NAMED = ("We release the code, the probe, the run configurations, and the 
                "at https://huggingface.co/datasets/nemesismaniac/vlm-sink-emergence-ckpts.")
 
 URL_RE = re.compile(r"(?<![\"'>=])(https?://[^\s<>)\]]+?)(?=[.,;:]?(?:\s|$|\)|\]))")
+EQ_RE = re.compile(r"^(Sink<sup>|Sink\^|v-ratio\s*=|h-ratio\s*=)")
 
 def linkify(s: str) -> str:
     """Bare URLs -> clickable anchors (arXiv readers get working repro links)."""
@@ -50,10 +51,13 @@ def inline(s: str) -> str:
     s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
     s = re.sub(r"(?<![\w*])\*([^*\n]+?)\*(?![\w*])", r"<em>\1</em>", s)
     s = re.sub(r"`([^`]+?)`", r"<code>\1</code>", s)
-    s = re.sub(r"Sink\^([0-9.]+|ε)", r"Sink<sup>\1</sup>", s)
+    # Sink^0.2 / Sink^ε / Sink^ε_1 all carry the same "_1" subscript of the metric
+    s = re.sub(r"Sink\^([0-9.]+|ε)(?:_1)?", r"Sink<sup>\1</sup><sub>1</sub>", s)
     # typographic quotes/apostrophes; the (?<!=) guard skips HTML attribute quotes
     s = re.sub(r'(?<!=)"([^"<>]*?)"', r"“\1”", s)
     s = re.sub(r"(\w)'(\w)", r"\1’\2", s)
+    # Times carries ‖ but draws it as a thin single bar; force a math face for norm spans
+    s = re.sub(r"‖([^‖]{1,60}?)‖", r'<span class="mth">‖\1‖</span>', s)
     s = linkify(s)
     return s
 
@@ -93,6 +97,9 @@ def md_to_html(text: str) -> str:
         first = lines[0].lstrip()
         if first.startswith("<"):
             out.append(b)
+        elif len(lines) == 1 and EQ_RE.match(first):
+            # displayed equation: centred, never justified or hyphenated
+            out.append(f'<p class="eq">{inline(first)}</p>')
         elif first.startswith("## "):
             out.append(f"<h3>{inline(first[3:])}</h3>")
         elif first.startswith("# "):
@@ -121,7 +128,10 @@ CSS = """
 @page { @bottom-center { content: counter(page); font-size: 9pt; color: #444; } }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; }
-body { font-family: 'Nimbus Roman', 'Times New Roman', 'Liberation Serif', Times, serif;
+/* math fonts sit at the END of the stack: Latin text still renders in Times, and only the
+   glyphs Times lacks (‖, ℓ, Σ) fall through to a math face */
+body { font-family: 'Nimbus Roman', 'Times New Roman', 'Liberation Serif', Times,
+                    'STIX Two Math', 'Cambria Math', serif;
        font-size: 10pt; line-height: 1.34; color: #111; margin: 0 auto; max-width: 6.5in;
        orphans: 3; widows: 3; }
 a { color: #0b3d91; text-decoration: none; word-break: break-word; }
@@ -131,8 +141,16 @@ h1.title { font-size: 16.5pt; text-align: center; line-height: 1.25; margin: 0 0
 .author { font-size: 11.5pt; }
 .affil { font-size: 9.5pt; color: #444; }
 .date { font-size: 9pt; color: #666; font-style: italic; margin-bottom: 1.6em; }
-.abstract { margin: 0 2.1em 1.4em; font-size: 9.8pt; text-align: justify; hyphens: auto; }
-.abstract-head { font-weight: bold; }
+.abstract { margin: 0.4em 2.4em 1.6em; font-size: 9.6pt; line-height: 1.36;
+            text-align: justify; hyphens: auto; }
+.abstract p { margin: 0 0 0.5em; }
+.abstract-head { font-weight: bold; font-variant: small-caps; letter-spacing: 0.03em;
+                 margin-right: 0.15em; }
+.mth { font-family: 'STIX Two Math', 'Cambria Math', 'Nimbus Roman', Times, serif; }
+p.eq { text-align: center; hyphens: none; text-indent: 0;
+       margin: 0.85em 0 0.95em; font-size: 10.5pt;
+       font-family: 'STIX Two Math', 'Cambria Math', 'Nimbus Roman',
+                    'Times New Roman', Times, serif; }
 h2 { font-size: 12pt; font-weight: bold; margin: 1.45em 0 0.45em;
      break-after: avoid; page-break-after: avoid; }
 h3 { font-size: 10.5pt; font-weight: bold; margin: 1.1em 0 0.35em;
@@ -164,8 +182,19 @@ def section_text(p):
         t = REPRO_ANON.sub(REPRO_NAMED, t)
     return t
 
+def render_section(p):
+    """Section -> HTML. The abstract gets the indented, bold-run-in-head block treatment."""
+    txt = section_text(p)
+    html = md_to_html(txt)
+    if txt.lstrip().startswith("Abstract."):
+        html = html.replace("<p>Abstract.",
+                            '<p><span class="abstract-head">Abstract.</span>', 1)
+        html = f'<div class="abstract">{html}</div>'
+    return html
+
+
 def build():
-    body = "\n\n".join(md_to_html(section_text(p)) for p in SECTIONS)
+    body = "\n\n".join(render_section(p) for p in SECTIONS)
     html = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <title>{TITLE}</title><style>{CSS}</style></head>
