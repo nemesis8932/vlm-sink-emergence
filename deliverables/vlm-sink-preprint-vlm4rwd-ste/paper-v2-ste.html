@@ -15,9 +15,7 @@ body { font-family: 'Nimbus Roman', 'Times New Roman', 'Liberation Serif', Times
        font-size: 10pt; line-height: 1.34; color: #111; margin: 0 auto; max-width: 6.5in;
        orphans: 3; widows: 3; }
 a { color: #0b3d91; text-decoration: none; word-break: break-word; }
-/* citation jumps stay ink-coloured so the printed page keeps its plain look; they are
-   still live links in the PDF */
-a.cite { color: inherit; text-decoration: none; }
+a.cite { color: #0b3d91; text-decoration: none; }
 @media screen { body { padding: 40px 20px; } }
 /* rules above and below the title, in the single-column arXiv/NeurIPS house style */
 h1.title { font-size: 16.5pt; text-align: center; line-height: 1.25;
@@ -27,7 +25,11 @@ h2.abstract-title { font-size: 11.5pt; text-align: center; font-weight: bold;
                     margin: 1.5em 0 0.5em; }
 .author, .affil, .date { text-align: center; margin: 0.15em 0; }
 .author { font-size: 11.5pt; }
-.affil { font-size: 9.5pt; color: #444; }
+/* affiliation/e-mail line in Computer Modern, as in the NeurIPS/arXiv sample. Falls back to
+   Times if no CM-family face is installed locally (none ships with macOS). */
+.affil { font-size: 9.5pt; color: #444;
+         font-family: 'CMU Serif', 'Latin Modern Roman', 'LMRoman10', 'Computer Modern',
+                      'Nimbus Roman', 'Times New Roman', serif; }
 .date { font-size: 9pt; color: #666; font-style: italic; margin-bottom: 1.6em; }
 .abstract { margin: 0.4em 2.4em 1.6em; font-size: 9.6pt; line-height: 1.36;
             text-align: justify; hyphens: auto; }
