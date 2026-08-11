@@ -1,17 +1,16 @@
 # 2. Setup
 
 **Model and token layout.** All runs use a 222M-parameter nanoVLM [17]. A pretrained,
-trainable SigLIP-B/16 vision encoder [18] feeds a decoder with the SmolLM2-135M
-architecture [19] through a learned modality projector. The decoder has 30 layers of
-grouped-query attention, with 9 query heads per layer sharing 3 KV heads, so it has 270
-(layer, query-head) pairs but only 90 (layer, KV-group) value projections, a distinction
-that matters in §3.3. The decoder trains **from random initialization** in every arm except
-*textinit*, because the point is to watch the signatures form. Each sequence holds 49 image
-tokens as a causal prefix, then 79 left-padded text tokens, for 128 tokens in all.
-**Position 0 is the first image token, and there is no BOS token.** What happens at position
-0 is therefore a property of the visual prefix in the arms with a randomly initialized
-decoder, not of inherited BOS machinery. *textinit* is the exception by design: it imports
-first-position structure from text pretraining, and shows a sink before any multimodal step
+trainable SigLIP-B/16 vision encoder [18] feeds a decoder with the SmolLM2-135M architecture
+[19] through a learned modality projector. The decoder has 30 layers of grouped-query
+attention, 9 query heads per layer sharing 3 KV heads, so it has 270 (layer, query-head)
+pairs but only 90 (layer, KV-group) value projections, a distinction that matters in §3.3.
+It trains **from random initialization** in every arm except *textinit*, because the point
+is to watch the signatures form. Each sequence holds 49 image tokens as a causal prefix,
+then 79 left-padded text tokens, 128 in all. **Position 0 is the first image token, and
+there is no BOS token**, so what happens there is a property of the visual prefix rather
+than inherited BOS machinery. *textinit* is the designed exception: it imports
+first-position structure from text pretraining and shows a sink before any multimodal step
 (§3.1).
 
 **Arms.** We use four training levers. Each lever targets one sink-relevant mechanism.
@@ -25,8 +24,8 @@ Everything else stays byte-identical across arms.
 | *textinit* | softmax | pretrained SmolLM2-135M | pretrained | — (novel control) |
 
 The *g1gate* and *sigmoid* levers have established sink effects in text-only models [20, 6].
-The *textinit* lever has no precedent in the sink literature. It works as an inheritance
-control, importing whatever sink structure text pretraining already built into SmolLM2.
+*textinit* has no precedent in that literature and works as an inheritance control, carrying
+in whatever sink structure text pretraining already built into SmolLM2.
 
 **A scale confound in our gate variant.** Qiu et al. [20] use ordinary initialization for
 the G1 gate. We initialize at exactly zero, so the sigmoid opens at σ(0) = 0.5 and the arm
@@ -46,10 +45,10 @@ config-level composition of the two pools rather than image-level deduplication.
 datasets trades the repetition confound for a domain-shift confound, which §5 takes up.
 
 **Three signatures, tracked separately.** We log the three sink symptoms that the text-LM
-literature reports together, each at its own granularity, following Gu et al. [6] at a
-fixed sequence length. The decoder has *L* = 30 layers, *H* = 9 query heads per layer, and
-*G* = 3 KV heads per layer. Every quantity below is averaged over valid query positions and
-over the fixed probe batch.
+literature reports together, each at its own granularity, following Gu et al. [6] at fixed
+sequence length. The decoder has *L* = 30 layers, *H* = 9 query heads per layer, *G* = 3 KV
+heads per layer. Every quantity below is averaged over valid query positions and over the
+fixed probe batch.
 
 *Concentration* (Sink^ε_1) is the fraction of the *L·H* = 270 (layer, query-head) pairs
 whose mean attention to position 0 exceeds ε. We use the ε = 0.3 default of [6] and check
@@ -74,9 +73,9 @@ The *sigmoid* arm reports the row-normalized attention view, which keeps concent
 comparable across arms, and we also log the raw sigmoid mass (Appendix D).
 
 **Why a sink is expected at all.** Softmax forces every attention row to sum to one, so a
-head with nothing informative to retrieve must still place its mass somewhere. Gu et al. [6]
-argue that the sink token absorbs that surplus and acts "more like key biases." Our
-*sigmoid* arm, which removes normalization, is the direct test of that constraint.
+head with nothing worth retrieving must still put its mass somewhere. Gu et al. [6] argue
+the sink token absorbs that surplus and acts "more like key biases." Our *sigmoid* arm,
+which removes normalization, tests that constraint directly.
 
 **Probe.** The function `probe_sinks()` re-walks the decoder from the live module weights in
 eager mode, in fp32, with no gradients, independent of the training path, which uses fused

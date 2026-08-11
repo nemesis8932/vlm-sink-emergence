@@ -3,16 +3,15 @@
 <figure id="fig1">
 <img src="figures/fig2_phase_portrait.svg" alt="Decoupling phase portrait">
 <figcaption><b>Figure 1: Decoupling phase-portrait.</b> Trajectories of every arm in
-concentration-against-value-norm space (left) and concentration against the residual-norm
-ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint, at
-about 100M tokens for <em>baseline</em>, <em>g1gate</em> and <em>sigmoid</em>, 60M for
-<em>textinit</em>, and 1B for <em>RF</em>. Seed 0 unless labelled. <b>Note the metric
-difference from the tables:</b> the horizontal axis is the <em>maximum</em> attention→pos0
-over heads, whereas Table 1 reports Sink<sup>ε</sup><sub>1</sub>, the <em>fraction of query
-heads above a threshold</em>, so an arm can sit off zero here while its Sink<sup>ε</sup>
-stays 0.000. Paths are smoothed and the end markers use raw values (Appendix D). Were the
-three signatures one phenomenon, these trajectories would move along one
-direction.</figcaption>
+concentration-against-value-norm space (left) and against the residual-norm ratio (right,
+log scale). Circles mark initialization, diamonds the final checkpoint: about 100M tokens
+for <em>baseline</em>, <em>g1gate</em> and <em>sigmoid</em>, 60M for <em>textinit</em>, 1B
+for <em>RF</em>. Seed 0 unless labelled. <b>The horizontal axis differs from the tables:</b>
+it is the <em>maximum</em> attention→pos0 over heads, where Table 1 reports
+Sink<sup>ε</sup><sub>1</sub>, the <em>fraction of heads above a threshold</em>, so an arm
+can sit off zero here with Sink<sup>ε</sup> = 0.000. Paths are smoothed, end markers use raw
+values (Appendix D). Were the three signatures one phenomenon, these trajectories would move
+along one direction.</figcaption>
 </figure>
 
 ## 3.1 Four training levers reach four different signature corners
@@ -116,16 +115,15 @@ and it does not.
 
 <figure id="fig2">
 <img src="figures/fig4_birth_leadlag.svg" alt="Sink birth and lead-lag ordering">
-<figcaption><b>Figure 2: Sink birth and ordering.</b> Seed 0 throughout. <em>Top:</em> a
-time-to-event view. Each shaded track spans the tokens for which we observed that arm (60M
-to 1B). A filled marker is the first probe at which a signature crossed its per-head
-threshold (h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it
-never crossed within the observed run. <b>All crossing times are interval-censored</b> at
-the 100-step probe cadence, so two signatures crossing within one interval of each other
-should not be read as ordered. <em>Bottom:</em> birth-maps, the step at which each (layer,
-query-head) pair first crosses the concentration threshold. No baseline and no RF head ever
-crosses. 1% of g1gate heads do, against 89% for sigmoid and 87% for
-textinit.</figcaption>
+<figcaption><b>Figure 2: Sink birth and ordering.</b> Seed 0 throughout. <em>Top:</em>
+time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A
+filled marker is the first probe at which a signature crossed its per-head threshold
+(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never
+crossed. <b>Crossing times are interval-censored</b> at the 100-step probe cadence, so two
+signatures crossing within one interval should not be read as ordered. <em>Bottom:</em>
+birth-maps, the step at which each (layer, query-head) pair first crosses the concentration
+threshold. No baseline and no RF head ever crosses. 1% of g1gate heads do, against 89% for
+sigmoid and 87% for textinit.</figcaption>
 </figure>
 
 Dense probing lets us timestamp each signature's arrival (Figure 2), and the ordering stays
@@ -144,15 +142,15 @@ most sink structure, the norm signatures precede concentration.
 <figure id="fig3">
 <img src="figures/fig6_sink_stripe.svg" alt="Query-by-key attention maps, top sink head per arm">
 <figcaption><b>Figure 3: The sink stripe.</b> Query &times; key attention of each arm's top
-sink head, row-normalized, seed 0. Panels are labelled with seed, step and token count. Top
-row early in training (step 250, about 2.4M tokens), bottom row the final checkpoint. The
-cyan line marks key = pos0, the dotted line the image-to-text boundary. The pos0 stripe is
+sink head, row-normalized, seed 0. Panels carry their seed, step and token count. Top row is
+early training (step 250, about 2.4M tokens), bottom row the final checkpoint. The cyan line
+marks key = pos0, the dotted line the image-to-text boundary. The pos0 stripe is
 <em>absent</em> in baseline throughout and strong in textinit (attn→pos0 = 0.62 at its final
-checkpoint), and the rightmost panel shows it <em>already present at step 0</em> in
-textinit, inherited from the text language model. The <em>sigmoid</em> column uses head
-<b>L7H3</b>, the arm's top sink head on the fixed probe batch. Its heat maps are re-rendered
-from an auxiliary streaming batch, while every printed sigmoid number comes from the fixed
-probe batch (Appendix D).</figcaption>
+checkpoint). The rightmost panel shows it <em>already present at step 0</em> in textinit,
+inherited from the text language model. The <em>sigmoid</em> column uses head <b>L7H3</b>,
+that arm's top sink head on the fixed probe batch. Its heat maps come from an auxiliary
+streaming batch, while every printed sigmoid number comes from the fixed probe batch
+(Appendix D).</figcaption>
 </figure>
 
 Figure 3 shows the same result at the level of a single head. The vertical stripe at
