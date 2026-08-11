@@ -49,18 +49,56 @@ Reproducibility differs by arm. *g1gate* is tightest, at Sink^0.2 of 0.004, 0.01
 across three seeds. The corner of *textinit* repeats across seeds and its magnitudes do not:
 seed 0 sits far above the other two on every signature at once, at h-ratio 42.5 against
 5.5–12.2, partly because at seeds 1 and 2 its peak signatures move off position 0, where our
-metrics anchor (§3.4, Appendix B). We therefore report the massive-activation proxy of
+metrics anchor (Appendix B, Appendix H). We therefore report the massive-activation proxy of
 textinit as a **range (5.5–42.5×) with a median near 12×** throughout, and treat the corner
 as the reproducible claim rather than any magnitude.
+
+**The corners also form in a consistent order.** Probes every 100 steps timestamp each
+signature's arrival (Figure 2). In the softmax arms with randomly initialized decoders,
+*baseline* and *g1gate* and *RF*, the norm signatures cross first and concentration never
+crosses at all. *sigmoid* mirrors that, crossing on concentration alone. *textinit* imports
+both norm signatures at 0 tokens and grows concentration after. In every arm the norm
+signatures precede concentration, and under text initialization the three need not even
+settle on the same token. Appendix H gives the timings, the positional scan and the
+entropy-collapse correlate, which follows the concentration axis alone.
+
+<figure id="fig2">
+<img src="figures/fig4_leadlag_top.svg" alt="Sink lead-lag ordering">
+<figcaption><b>Figure 2: When each signature first crosses threshold.</b> Seed 0 throughout.
+Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A
+filled marker is the first probe at which a signature crossed its per-head threshold
+(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never
+crossed. <b>Crossing times are interval-censored</b> at the 100-step probe cadence, so two
+signatures crossing within one interval should not be read as ordered. Appendix H, Fig. A4 maps the
+crossings head by head.</figcaption>
+</figure>
+
+Figure 3 shows the separation inside a single head. The vertical stripe at key = pos0 is
+*absent* in *baseline* at both checkpoints and strong in *textinit*, where the rightmost
+panel carries the most weight: **the stripe is already there at step 0**, imported with the
+text-LM weights before the model has seen one image.
+
+<figure id="fig3">
+<img src="figures/fig6_sink_stripe.svg" alt="Query-by-key attention maps, top sink head per arm">
+<figcaption><b>Figure 3: The sink stripe.</b> Query &times; key attention of each arm's top
+sink head, row-normalized, seed 0. Panels carry their seed, step and token count. Top row is
+early training (step 250, about 2.4M tokens), bottom row the final checkpoint. The cyan line
+marks key = pos0, the dotted line the image-to-text boundary. The pos0 stripe is
+<em>absent</em> in baseline throughout and strong in textinit (attn→pos0 = 0.62 at its final
+checkpoint). The rightmost panel shows it <em>already present at step 0</em> in textinit,
+inherited from the text language model. The <em>sigmoid</em> column uses head <b>L7H3</b>,
+that arm's top sink head on the fixed probe batch. Its heat maps come from an auxiliary
+streaming batch, while every printed sigmoid number comes from the fixed probe batch
+(Appendix D).</figcaption>
+</figure>
 
 ## 3.2 The massive-activation proxy grows across 1B low-repetition tokens while concentration stays at zero
 
 The four-arm comparison reuses a 146K-image pool, so a reader could read its "concentration
 never emerges" result as an overfitting artifact. The RF arm addresses that: the identical
 *baseline* recipe on a fresh FineVision stream to one billion tokens, at **2.39 effective
-visual epochs**. Examples still repeat, about 2.4 times on average, so this is a
-**low-repetition** run rather than a repetition-free one. Its held-out loss falls through
-the full billion tokens and never turns upward (§2, §5).
+visual epochs**, a **low-repetition** run rather than a repetition-free one, whose held-out
+loss falls throughout and never turns upward (§2, §5).
 
 Concentration never arrives. **Sink^0.3 = 0.000 across the entire 0 → 1B run**, with no
 head of the 270 crossing the threshold at any of about 700 probes. The massive-activation
@@ -110,78 +148,3 @@ ones under text initialization, and the pooled correlation is weak only because 
 opposite sign cancel. We therefore claim no consistent-sign relationship across arms. We do
 not claim the absence of a coupling law: a fixed coupling would show one sign everywhere,
 and it does not.
-
-## 3.4 Ordering: norm signatures lead, and concentration is late, mirrored, or absent
-
-<figure id="fig2">
-<img src="figures/fig4_birth_leadlag.svg" alt="Sink birth and lead-lag ordering">
-<figcaption><b>Figure 2: Sink birth and ordering.</b> Seed 0 throughout. <em>Top:</em>
-time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A
-filled marker is the first probe at which a signature crossed its per-head threshold
-(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never
-crossed. <b>Crossing times are interval-censored</b> at the 100-step probe cadence, so two
-signatures crossing within one interval should not be read as ordered. <em>Bottom:</em>
-birth-maps, the step at which each (layer, query-head) pair first crosses the concentration
-threshold. No baseline and no RF head ever crosses. 1% of g1gate heads do, against 89% for
-sigmoid and 87% for textinit.</figcaption>
-</figure>
-
-Dense probing lets us timestamp each signature's arrival (Figure 2), and the ordering stays
-consistent inside each arm family. In the softmax arms with randomly initialized decoders,
-*baseline* and *g1gate* and *RF*, the norm signatures come early: the residual-norm ratio
-crosses within the first few to about 15M tokens and value-drain follows within about 50M.
-Concentration never comes. No baseline or RF head ever crosses it, and g1gate reaches 1% of
-heads, a single-layer blip late in training. *sigmoid* mirrors that pattern, with
-concentration crossing at about 6M tokens and 89% of heads eventually, while neither norm
-signature ever crosses. *textinit* inherits its norm signatures rather than growing them:
-value-drain and an elevated residual-norm ratio are both present at 0 tokens, imported with
-the pretrained text-LM weights. Concentration is *not* inherited the same way, since
-Sink^0.3 is 0.000 at step 0 and crosses before 1M tokens. Even in the arm that imports the
-most sink structure, the norm signatures precede concentration.
-
-<figure id="fig3">
-<img src="figures/fig6_sink_stripe.svg" alt="Query-by-key attention maps, top sink head per arm">
-<figcaption><b>Figure 3: The sink stripe.</b> Query &times; key attention of each arm's top
-sink head, row-normalized, seed 0. Panels carry their seed, step and token count. Top row is
-early training (step 250, about 2.4M tokens), bottom row the final checkpoint. The cyan line
-marks key = pos0, the dotted line the image-to-text boundary. The pos0 stripe is
-<em>absent</em> in baseline throughout and strong in textinit (attn→pos0 = 0.62 at its final
-checkpoint). The rightmost panel shows it <em>already present at step 0</em> in textinit,
-inherited from the text language model. The <em>sigmoid</em> column uses head <b>L7H3</b>,
-that arm's top sink head on the fixed probe batch. Its heat maps come from an auxiliary
-streaming batch, while every printed sigmoid number comes from the fixed probe batch
-(Appendix D).</figcaption>
-</figure>
-
-Figure 3 shows the same result at the level of a single head. The vertical stripe at
-key = pos0 marks every query attending to the first image token. It is absent in *baseline*
-at both checkpoints and strong in *textinit*, and the rightmost panel carries the most
-weight: **the stripe is already there at step 0 in textinit**, imported with the text-LM
-weights before the model has seen one image.
-
-The *sigmoid* arm needs one measurement note, because row-normalization changes the object
-being measured and Gu et al. [6] state their result for *unnormalized* sigmoid attention.
-The concentration this arm develops is a **relative** reallocation of a shrinking gate
-budget onto position 0, not the growth of a large absolute mass there (Appendix D). We
-report the row-normalized view in the tables so the arms stay comparable.
-
-Attention-entropy collapse, the text-LM literature's usual correlate of concentration,
-separates the same way: only *sigmoid* and *textinit* collapse (Appendix Fig. A3). It tracks
-the concentration axis, not the norm axes.
-
-**The signatures also dissociate in position.** A per-position scan across all three
-*textinit* seeds shows they need not share a token. At seed 0 they coincide at position 0.
-At seed 1 the attention maximum stays there while the residual peak moves to pos1 and the
-value minimum to pos5. At seed 2 they separate furthest, attention at **pos1** and both norm
-extrema at **pos13**. The arms with randomly initialized decoders behave differently:
-position 0 stays the maximum-mass token in *baseline*, *g1gate* and *sigmoid* at every seed
-scanned, and in *RF* the attention argmax sits at pos1 with mass 0.100 against 0.083 at
-position 0, a diffuse profile rather than a sink (Appendix C).
-
-We report this as a supporting observation, not a second headline. It has one consequence
-for measurement: because all three metrics anchor on position 0, the *textinit* magnitudes
-at seeds 1 and 2 are read at a token that is no longer the peak and therefore **understate**
-the arm's true peaks, a further reason to report that arm as a range and a median (§3.1,
-§5). The anchoring holds for the randomly initialized decoders, which carry the central
-negative result. Appendix E sets out, as untested hypotheses, how each lever might move a
-different axis.

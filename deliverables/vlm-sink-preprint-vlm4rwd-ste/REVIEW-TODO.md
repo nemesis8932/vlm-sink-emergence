@@ -9,13 +9,11 @@ maintaining. There is one paper, and it must land **under 8 pages of body** (exc
 constraint, not a target.** The binding test is the rendered page count in the NeurIPS 2026
 template; word budgets below are only a proxy — measure real pages.
 
-Target: body (§1–7) **9,129 → ~5,500 words**. Now **7,329**.
+Target: body (§1–7) **9,129 → ~5,500 words**. Now **5,473** — target met. The binding number is pages, and the body renders at **10pp**.
 
-⚠ **Pass two will not close the gap on its own.** The three remaining sections total **2,538**
-(abstract 406, intro 921, related work 1,211); trimming them to ~1,550 removes ~988 → **~6,341**,
-still ~840 over. The already-trimmed sections sit ~640 above their own targets (method 1,309 vs
-~1,100; results 2,215 vs ~1,900; conclusion 341 vs ~250). Expect a **second-round cut across
-already-trimmed sections** — to be proposed and reviewed, not applied unilaterally.
+⚠ **Words are no longer the binding constraint; figures are.** With every section at or near
+its word target the body renders at **10pp**. Rendered with the three figures stripped out and
+nothing else changed, the same text is **8pp**. The two remaining body figures cost 2pp.
 
 ---
 
@@ -51,14 +49,14 @@ Concrete consequences to handle:
 
 | section | now | target | main action |
 |---|---:|---:|---|
-| 01-abstract | 406 → **288** | ~200 | ✅ reframed on three signatures; caveats and closing disclaimer removed |
-| 02-intro | 1031 → **838** | ~700 | ✅ hallucination 5 → 1; new which-signature-you-measure frame |
-| 03-method | 1630 → **1314** | ~1100 | ✅ notation block kept; reporting details → App. F |
-| 04-results | 3341 → **1924** | ~1900 | ✅ target met. Per-seed table → App. B; sigmoid raw/normalized → App. D; hypotheses → App. E |
-| 05-related-work | 1211 → **835** | ~650 | ✅ hallucination ¶ → 1 sentence; [9]/[10] ¶ and Luo [11] clause kept |
-| 06-limitations | 1075 → **941** | ~900 | ✅ deduped against §2, absorbed 4 migrated caveats; every item kept |
-| 07-conclusion | 435 → **312** | ~250 | ✅ shortened |
-| 09-appendix | 1051 → **2179** | ~1500 | ✅ grew: B per-seed, D measurement, E hypotheses, F reporting |
+| 01-abstract | 406 → 288 → **226** | ~200 | ✅ reframed on three signatures; caveats and closing disclaimer removed |
+| 02-intro | 1031 → 838 → **765** | ~700 | ✅ hallucination 5 → 1; new which-signature-you-measure frame |
+| 03-method | 1630 → 1314 → **1144** | ~1100 | ✅ notation block kept; reporting details → App. F |
+| 04-results | 3341 → 1924 → **1466** | ~1900 | ✅ target met. Per-seed table → App. B; sigmoid raw/normalized → App. D; hypotheses → App. E |
+| 05-related-work | 1211 → 835 → **695** | ~650 | ✅ hallucination ¶ → 1 sentence; [9]/[10] ¶ and Luo [11] clause kept |
+| 06-limitations | 1075 → 941 → **908** | ~900 | ✅ deduped against §2, absorbed 4 migrated caveats; every item kept |
+| 07-conclusion | 435 → 312 → **269** | ~250 | ✅ shortened |
+| 09-appendix | 1051 → 2179 → **2612** | ~1500 | (grew again: §3.4 prose is now App. H, plus Fig. A4) ✅ grew: B per-seed, D measurement, E hypotheses, F reporting |
 
 ---
 
@@ -80,7 +78,9 @@ Concrete consequences to handle:
 - [x] **Hallucination framing**: 12 → **2** body mentions (intro 1, related work 1), both as
       downstream stakes only. Conclusion's hallucination next-step removed. Motivation reframed around the three
       signatures (see RESOLVED section above).
-- [ ] **Citation integrity sweep**: after the hallucination cut, remove any now-orphaned
+- [x] **Citation integrity sweep** (pass 5): 25 references declared, **0 orphaned, 0 dangling,
+      0 duplicate numbers**. Nothing had to be deleted or renumbered. Original note follows.
+- [ ] ~~**Citation integrity sweep**: after the hallucination cut, remove any now-orphaned~~
       references ([21]/[22]/[24] are the candidates).
 
 ---
@@ -141,29 +141,32 @@ epochs)", "randomly initialized decoders", "not a factorial design", "descriptiv
 statistics, no p-values", "understate", "supporting context", "positive long-horizon
 trend", the interval-censoring note, and the MMStar line.
 
-## Structural cut — MEASURED AND PROPOSED, NOT APPLIED
+## Structural cut — DIRECTOR'S LADDER, EXECUTED (pass 5, 2026-08-12)
 
-Line-level tightening took the body 12pp → 11pp (−462 words). The limit is 8pp, so ~3pp
-must come out structurally. Measured options:
+Ruling: §5 Limitations stays in the body. §3.4 prose → appendix, approved. Figures stay in
+the body if at all possible. Fig 3 (sink stripe) may not move without the user's approval.
 
-| option | body pages | body words |
-|---|---:|---:|
-| current | 11 | 6,368 |
-| move Fig 3 to appendix | 11 | 6,368 |
-| move Figs 2 + 3 | 10 | 6,368 |
-| move all three figures | 9 | 6,368 |
-| **move §3.4 (ordering, with Figs 2 and 3)** | **9** | **5,561** |
-| move §5 Limitations | 10 | 5,427 |
-| **move §3.4 *and* §5** | **8** | **4,620** |
+| rung | action | body pages | body words |
+|---|---|---:|---:|
+| — | start of pass 5 | 11 | 6,174 |
+| 1 | §3.4 prose → Appendix H (figures kept in body) | 11 | 5,781 |
+| 2 | compact every section to its word target | 11 | 5,580 |
+| 3 | Fig 2 bottom panel (birth-maps) → Appendix H, Fig. A4 | **10** | 5,555 |
+| 4 | Fig 2 entirely → appendix | 10 | 5,471 |
+| 4b | **Fig 2 restored to the body** (rung 4 bought 0 pages, and figures-in-body outranks it) | **10** | 5,473 |
 
-Shrinking the figures does not help: at 78% and at 62% of text width the body still renders
-at 11pp.
+**Where it plateaus: 10pp, over the hard limit by 2.** The next rung is Fig 3, which is
+blocked pending the user's decision.
 
-**Recommended:** move §3.4 into the appendix (9pp), then cut roughly 700 further words from
-§2, §4 and §5 to reach 8pp. §3.4 is the most self-contained unit in the body, it carries two
-of the three figures with it, and its claim survives in §3.1 and the conclusion.
+**The diagnosis is that this is now a figure problem, not a word problem.** Rendered with all
+figures stripped and nothing else changed, the same text is **8pp**. Body words fell 6,174 →
+5,473 across this pass and bought exactly one page, all of it at rung 3. Cutting to the word
+targets was worth ~0 pages on its own.
 
-**Not recommended, though it is the only combination measured at exactly 8pp:** moving §5
-Limitations out of the body. It hits the number, but it directly contradicts the reviewer's
-main ask that the caveats live in one visible section, and it weakens the NeurIPS
-limitations checklist answer.
+Two ways to close the remaining 2pp, both needing a decision:
+
+1. **Move Fig 3 (sink stripe) to the appendix**, which the ruling forbids without approval.
+   Measured cost of the two body figures together is 2pp, so this plus Fig 2 reaches 8pp.
+2. **Cut ~1,100 more words** with both figures kept. That is a fifth of the remaining body,
+   and every section is already at its target, so it would mean removing content, not
+   tightening it — most plausibly §3.3 or the §5 items.

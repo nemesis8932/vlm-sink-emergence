@@ -10,6 +10,7 @@ signatures cross early and concentration never arrives; sigmoid is the mirror im
 BOTTOM — birth-map: per-(layer,head) step-of-first-crossing of attn->pos0>0.3, for the
 arms that DO form concentration. baseline/RF never cross (no panel).
 """
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
@@ -47,8 +48,15 @@ def birth_grid(arm, eps=EPS_CONC):
 
 
 def main():
-    fig = plt.figure(figsize=(11, 7.6))
-    gs = fig.add_gridspec(2, 4, height_ratios=[1.05, 1.0], hspace=0.42, wspace=0.28)
+    # --top-only renders the lead-lag panel alone, for the page-limited body build; the
+    # birth-maps then live in the appendix and their percentages are stated in prose.
+    top_only = '--top-only' in sys.argv
+    if top_only:
+        fig = plt.figure(figsize=(11, 3.9))
+        gs = fig.add_gridspec(1, 4)
+    else:
+        fig = plt.figure(figsize=(11, 7.6))
+        gs = fig.add_gridspec(2, 4, height_ratios=[1.05, 1.0], hspace=0.42, wspace=0.28)
 
     # ---- TOP: lead-lag as time-to-event tracks ----
     # Each arm gets a light "observation track" spanning the tokens we actually probed
@@ -116,6 +124,14 @@ def main():
                framealpha=0.95, ncol=2, columnspacing=1.2)
 
     # ---- BOTTOM: birth-maps for arms that form concentration ----
+    if top_only:
+        fig.suptitle('Sink birth & ordering: norm signatures lead; concentration is late, '
+                     'mirror-imaged, or never', fontsize=11, weight='bold', y=1.02)
+        out = 'analysis/fig4_leadlag_top.svg'
+        fig.savefig(out, bbox_inches='tight')
+        fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
+        print('wrote', out)
+        return
     form_arms = ['g1gate', 'sigmoid', 'textinit']
     # shared color scale over actual crossing steps
     allvals = []
