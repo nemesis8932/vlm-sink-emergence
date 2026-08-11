@@ -29,7 +29,8 @@ if ARXIV:
 else:
     AUTHOR = "Anonymous author(s)"    # double-blind: real name/email restored only in camera-ready
     EMAIL = "Submitted to VLM4RWD @ NeurIPS 2026"
-    DATE = "July 2026 · Preprint draft v2 · Simplified Technical English edition"
+    DATE = ""                       # a submission copy must not advertise a draft
+                                    # version or an internal writing-protocol edition
     SLUG = "paper-v2-ste"
 
 # The double-blind build withholds the repro links; the arXiv build shows them. Matched as a

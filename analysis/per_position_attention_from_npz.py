@@ -39,11 +39,17 @@ def latest_npz(run_dir):
     return max(fs, key=lambda f: int(re.search(r'step(\d+)', f).group(1)))
 
 def profile(npz_path, topk=20):
+    """Return the FULL-length profiles plus a truncated copy for display.
+
+    The truncated copy is for printing only. Normalising or taking an argmax over a
+    truncated profile silently rescales the masses -- that bug inflated the reported RF
+    figures (0.100/0.083 instead of the true 0.053/0.044) until it was caught in review.
+    """
     d = np.load(npz_path)
     raw = d['raw_profile']                  # (L, H, T) raw attention mass per position
     mean_pos = raw.mean(axis=(0, 1))        # (T,) mean over layers+heads
     maxhead_pos = raw.max(axis=(0, 1))      # (T,) max over layers+heads (sink-revealing)
-    return mean_pos[:topk], maxhead_pos[:topk]
+    return mean_pos, maxhead_pos, mean_pos[:topk], maxhead_pos[:topk]
 
 def main():
     rows = []
@@ -53,7 +59,8 @@ def main():
             p = latest_npz(rd)
             if p is None:
                 print(f'[missing npz] {rd}  -> sync from HF first'); continue
-            mean_pos, maxhead_pos = profile(p)
+            mean_pos, maxhead_pos, mean_head, maxhead_head = profile(p)
+            # argmax and fractions ALWAYS over the full sequence, never the display slice
             argmax_mean = int(mean_pos.argmax())
             frac_pos0 = float(mean_pos[0] / mean_pos.sum())
             frac_argmax = float(mean_pos[argmax_mean] / mean_pos.sum())

@@ -57,12 +57,13 @@ visual epochs).
    Table 1). The arms are not a factorial design, so we report distinct intervention-associated
    profiles, not isolated causal effects.
 2. **Low-repetition decoupling at 1B tokens (n = 1).** On a fresh stream at 2.39 effective
-   visual epochs, with a held-out loss that never turns upward, the massive-activation proxy
+   visual epochs, with a held-out loss whose second-half fitted slope stays negative, the
+   massive-activation proxy
    rises from an h-ratio of 1.43 to 3.22, about 2.3×. Concentration stays at exactly zero
    for the entire single-seed run, and no head ever crosses the sink threshold (§3.2, §5).
 3. **No consistent-sign head-level relationship.** The per-head correlation between
-   concentration and value-norm flips sign across arms (+0.76 baseline → −0.79 textinit,
-   pooled −0.20, over 90 KV groups per arm). We report these descriptively (§3.3).
+   concentration and value-norm flips sign across arms at seed 0 (+0.76 baseline → −0.79
+   textinit, pooled −0.20, over 90 KV groups per arm). We report these descriptively (§3.3).
 
 Text-only work already separates massive activations from concentration [9, 10], so
 decoupling itself is not new and we do not claim it. The new part is the conjunction: dense,

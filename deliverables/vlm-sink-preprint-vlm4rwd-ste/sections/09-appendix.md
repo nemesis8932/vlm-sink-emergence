@@ -92,7 +92,7 @@ which each quantity peaks (for value norms, the position at which the norm is sm
 | textinit | s0 | 0 | 0 | 0 | all three coincide |
 | textinit | s1 | 0 | 1 | 5 | norms move off pos0 |
 | textinit | s2 | **1** | **13** | **13** | attention separates from coincident norm extrema |
-| RF | s0 | 1 | — | — | mass 0.100 vs 0.083 at pos0; diffuse, not a sink |
+| RF | s0 | 1 | — | — | mass 0.053 vs 0.044 at pos0, diffuse, not a sink |
 
 Two readings follow. Position 0 remains the maximum-mass token in every arm with a randomly
 initialized decoder, so the pos0 anchoring holds where the central negative result lives.
@@ -208,6 +208,11 @@ Second, an earlier draft claimed that the residual-norm peak of textinit "stays 
 pos0." We checked that claim against the norm dump. It is wrong. The ‖h‖ peak sits at
 pos0, pos1 or pos13, depending on the seed (Appendix C.2). That is the positional
 dissociation reported in Appendix H, which states the corrected form.
+Third, the per-position script normalized the profile over a 20-position display slice
+rather than the full 128, which inflated the reported RF masses to 0.100 and 0.083. The
+true full-sequence values are **0.053 at pos1 and 0.044 at pos0**. The diffuse-profile
+reading is unchanged, and the softmax-arm rows of Appendix C were unaffected, because those
+profiles already sum to one over the full sequence.
 
 ## H. Ordering, the sigmoid measurement note, and positional dissociation
 
@@ -252,7 +257,7 @@ At seed 1 the attention maximum stays there while the residual peak moves to pos
 value minimum to pos5. At seed 2 they separate furthest, attention at **pos1** and both norm
 extrema at **pos13**. The arms with randomly initialized decoders behave differently:
 position 0 stays the maximum-mass token in *baseline*, *g1gate* and *sigmoid* at every seed
-scanned, and in *RF* the attention argmax sits at pos1 with mass 0.100 against 0.083 at
+scanned, and in *RF* the attention argmax sits at pos1 with mass 0.053 against 0.044 at
 position 0, a diffuse profile rather than a sink (Appendix C).
 
 We report this as a supporting observation, not a second headline. It has one consequence for
