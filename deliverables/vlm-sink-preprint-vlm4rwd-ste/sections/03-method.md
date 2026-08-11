@@ -58,7 +58,7 @@ harder to pass.
 over the other valid positions, per layer and then averaged over the 30 layers. Below 1 is
 value-drain [4]. Above 1 is amplification. Under grouped-query attention a value vector
 belongs to a KV group and repeats across 3 query heads, so the ratio rests on *L·G* = 90
-independent value projections, not 270. This matters for §3.3.
+distinct value projections, not 270. This matters for §3.3.
 
 *Residual-norm ratio* (h-ratio) is the residual-stream norm at position 0 divided by the
 mean norm over the other positions, again per layer and averaged over the 30 layers. We call
@@ -98,6 +98,7 @@ decoder, so its lower loss reflects unequal competence rather than a lever effec
 *baseline*, *g1gate* and *sigmoid* are equal-token, equal-initialization comparisons. The
 repeated-data arms also show a large train–validation asymmetry (`val_seen` near 0.44
 against `val_unseen` near 1.18), the overfitting signal that motivates RF. RF has no seen
-split, so the weaker statement its data supports is that its held-out loss falls throughout
-and never turns upward (§5). **We did not run MMStar or any other downstream benchmark
+split, so the weaker statement its data supports is that its held-out loss has a negative
+fitted slope over the second half of training and ends at 0.638, while individual
+evaluations fluctuate (§5). **We did not run MMStar or any other downstream benchmark
 on any arm**, so this paper makes no capability claim (§5).

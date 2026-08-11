@@ -2,17 +2,17 @@
 
 We tracked concentration, value-norm drain, and a residual-norm ratio we read as a
 massive-activation proxy as three separate quantities, across multimodal pretraining with a
-randomly initialized decoder. They came apart everywhere we looked. Four levers produced
+randomly initialized decoder. Across the tested arms they need not co-move. Four levers produced
 four different signature corners. The value-norm axis alone moved in three directions. On a
 low-repetition run over a billion fresh tokens the proxy grew about 2.3× while concentration
-never left zero, and the per-head relationship between the first two flipped sign across
-arms. The signatures also arrived in different orders, and under text initialization they
+never left zero, and at seed 0 the per-head relationship between the first two flipped sign
+across arms. The signatures also arrived in different orders, and under text initialization they
 sat on different tokens.
 
 Text-LM work documents real interactions among these signatures, including a causal route
 from massive activations to sinks and compression valleys [7]. What our results add is that
-the coupling is optional. Each axis moved on its own under ordinary levers, which extends
-the two-way text-only dissociations [9, 10] to a third axis and a new setting. The practical
+the coupling is optional. For each axis there is a lever that moves it without the others,
+which extends the two-way text-only dissociations [9, 10] to a third axis and a new setting. The practical
 consequence is blunt. One signature is not a proxy for the others. A model with no attention
 sink can still carry a growing residual-norm asymmetry.
 

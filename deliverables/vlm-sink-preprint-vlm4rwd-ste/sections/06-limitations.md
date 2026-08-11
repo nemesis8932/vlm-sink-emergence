@@ -8,7 +8,7 @@ residual peak moves to pos1 and the value minimum to pos5, and at seed 2 the att
 maximum sits at pos1 while both norm extrema sit at pos13 (Appendix C). Our pos0-anchored
 magnitudes for textinit at those seeds therefore *understate* its peaks, one more reason to
 report that arm as a range and a median and to treat its corner rather than its magnitudes
-as the claim. In *RF* the attention argmax sits at pos1, but with mass 0.100 against 0.083
+as the claim. In *RF* the attention argmax sits at pos1, but with mass 0.053 against 0.044
 at pos0, a diffuse profile rather than a displaced sink, so the RF result does not depend on
 the anchor.
 
@@ -60,8 +60,9 @@ support for the negative claim. A second fresh-data seed would strengthen it.
 
 **What cannot be checked on RF.** RF has no distinct seen split, so we cannot run for it the
 `val_seen` / `val_unseen` comparison that exposes memorization in the repeated arms. The
-weaker statement its data supports is that its held-out loss falls throughout and never
-turns upward (§2). Its streaming shuffle buffer also dropped from 1500 to 500 examples
+weaker statement its data supports is that its held-out loss has a negative fitted slope
+over the second half of training and ends at 0.638, while individual evaluations fluctuate
+(§2). Its streaming shuffle buffer also dropped from 1500 to 500 examples
 partway through, again for memory reasons, so stream ordering is not homogeneous across the
 run, though the Sink^0.3 = 0.000 result and the h-ratio rise hold within each regime
 separately. The RF probe batch is still the **fixed repeated-`the_cauldron` tail** used by
@@ -70,7 +71,7 @@ result needs, at the cost of measuring them on data from the other distribution.
 
 **Domain shift in the fresh-data control.** RF reduces repetition by changing dataset, which
 introduces a domain-shift confound in its place. We took that trade deliberately, because
-repetition is the dominant confound, and chose the fresh pool to minimize shift. The
+we chose to prioritize the repetition confound, and picked the fresh pool to minimize shift. The
 under-3% overlap figure is an estimate from config-level composition, not image-level
 deduplication (§2), and we did not run a third, domain-matched control. That control is the
 known follow-up.

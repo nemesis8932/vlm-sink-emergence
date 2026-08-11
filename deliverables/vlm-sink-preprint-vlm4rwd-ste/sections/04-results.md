@@ -43,7 +43,8 @@ then part on the *direction* of the value-norm move and on the residual-norm rat
 shows a distinct intervention-associated profile. The arms are not a factorial design, so we
 do not attribute these profiles to isolated causal effects of single levers. The
 trajectories in Figure 1 separate early and do not share one origin: *textinit* starts from
-a pretrained text decoder, with an inherited sink already in place.
+a pretrained text decoder that already carries a subthreshold first-position bias, with
+Sink^0.3 still 0.000 at step 0.
 
 Reproducibility differs by arm. *g1gate* is tightest, at Sink^0.2 of 0.004, 0.011 and 0.0037
 across three seeds. The corner of *textinit* repeats across seeds and its magnitudes do not:
@@ -53,20 +54,20 @@ metrics anchor (Appendix B, Appendix H). We therefore report the massive-activat
 textinit as a **range (5.5–42.5×) with a median near 12×** throughout, and treat the corner
 as the reproducible claim rather than any magnitude.
 
-**The corners also form in a consistent order.** Probes every 100 steps timestamp each
-signature's arrival (Figure 2). In the softmax arms with randomly initialized decoders,
-*baseline* and *g1gate* and *RF*, the norm signatures cross first and concentration never
-crosses at all. *sigmoid* mirrors that, crossing on concentration alone. *textinit* imports
-both norm signatures at 0 tokens and grows concentration after. In every arm the norm
-signatures precede concentration, and under text initialization the three need not even
-settle on the same token. Appendix H gives the timings, the positional scan and the
-entropy-collapse correlate, which follows the concentration axis alone.
+**The corners also separate in time.** Probes every 100 steps timestamp each signature's
+arrival (Figure 2, seed 0). The softmax arms with randomly initialized decoders, *baseline*
+and *g1gate* and *RF*, cross the norm thresholds without ever crossing concentration.
+*sigmoid* is the mirror image, crossing concentration without either norm threshold.
+*textinit* starts above both norm thresholds and crosses concentration later. Where a run
+crosses both kinds, the norm signatures come first, and under text initialization the three
+need not even settle on the same token. Appendix H gives the timings, the positional scan
+and the entropy-collapse correlate, which follows the concentration axis alone.
 
 <figure id="fig2">
 <img src="figures/fig4_leadlag_top.svg" alt="Sink lead-lag ordering">
 <figcaption><b>Figure 2: When each signature first crosses threshold.</b> Seed 0 throughout.
 Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A
-filled marker is the first probe at which a signature crossed its per-head threshold
+filled marker is the first probe at which a signature crossed its threshold
 (h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never
 crossed. <b>Crossing times are interval-censored</b> at the 100-step probe cadence, so two
 signatures crossing within one interval should not be read as ordered. Appendix H, Fig. A4 maps the
@@ -98,7 +99,8 @@ The four-arm comparison reuses a 146K-image pool, so a reader could read its "co
 never emerges" result as an overfitting artifact. The RF arm addresses that: the identical
 *baseline* recipe on a fresh FineVision stream to one billion tokens, at **2.39 effective
 visual epochs**, a **low-repetition** run rather than a repetition-free one, whose held-out
-loss falls throughout and never turns upward (§2, §5).
+loss has a negative fitted slope over the second half of training and ends at 0.638, while
+individual evaluations fluctuate (§2, §5).
 
 Concentration never arrives. **Sink^0.3 = 0.000 across the entire 0 → 1B run**, with no
 head of the 270 crossing the threshold at any of about 700 probes. The massive-activation
@@ -125,8 +127,8 @@ multimodal training while attention concentration never leaves zero (n = 1 seed,
 
 A tight coupling between concentration and value-drain should at minimum hold the sign of
 their per-head correlation constant across regimes. It does not. Table 3 reports the Pearson
-r between attention→pos0 and value-norm ratio at each arm's final checkpoint, over the 90
-(layer, KV-group) observations: a value vector is shared by 3 query heads, so we average a
+r between attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over
+the 90 (layer, KV-group) observations: a value vector is shared by 3 query heads, so we average a
 group's query-head attention rather than triplicate its value observation (§2). Appendix
 Fig. A2 plots the scatter.
 
@@ -134,7 +136,7 @@ Fig. A2 plots the scatter.
 
 | baseline | g1gate | sigmoid | textinit | RF | pooled |
 |---|---|---|---|---|---|
-| +0.76 | +0.57 | −0.04 | −0.79 | +0.51 | −0.20 |
+| +0.76 | +0.57 | −0.03 | −0.79 | +0.51 | −0.20 |
 
 These correlations are **descriptive statistics, not inferential ones**, and we deliberately
 report no significance tests: heads within a layer are not independent, and each arm rests
