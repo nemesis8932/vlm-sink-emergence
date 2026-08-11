@@ -8,11 +8,11 @@ organizes a subfield around how to interpret it and how to remove it [3].
 
 In text language models the sink does not arrive alone. Three measurements move together.
 Attention concentrates on the sink token. The value vector there drops to a near-zero norm,
-which the literature calls value-state drain [4]. The residual stream there grows an
-abnormally large norm, which the literature calls a massive activation [2, 5]. Gu et al. [6]
-report that these effects settle on the same few tokens, and Queipo-de-Llano, Arroyo et al.
-[7] that they appear early in training, near step 1000. This regular co-occurrence has led
-the field to treat the three signatures as facets of one attention-sink phenomenon.
+called value-state drain [4]. The residual stream there grows an abnormally large norm,
+called a massive activation [2, 5]. Gu et al. [6] report that these effects settle on the
+same few tokens, and Queipo-de-Llano, Arroyo et al. [7] that they appear near step 1000.
+This co-occurrence has led the field to treat the three signatures as facets of one
+attention-sink phenomenon.
 
 The field disputes whether they really are one phenomenon. One line argues for causal unity:
 massive activations mathematically require representational compression, and ablating them
@@ -37,32 +37,30 @@ changes what position 0 *is*: our sequence starts with 49 image tokens and has n
 so the candidate sink token is a visual token, without the special-token machinery that
 text-LM sink accounts use. The multimodal sink studies we know also analyze mostly frozen,
 already-trained backbones at inference time [11, 12], and where one tracks alignment
-checkpoints [11] it follows sink-dimension magnitude, with a frozen vision transformer and a
-pretrained language model (§4). A reader still cannot see there whether the three signatures
-arrive together, in sequence, or independently while they form in a decoder that starts from
-random weights. That requires pretraining with a randomly initialized decoder and all three
-logged separately from step 0.
+checkpoints [11] it follows sink-dimension magnitude rather than the three signatures (§4).
+A reader still cannot see there whether the signatures arrive together, in sequence, or
+independently while they form in a decoder that starts from random weights. That requires
+pretraining with a randomly initialized decoder and all three logged separately from
+step 0.
 
 We work at deliberately small scale. The model is a 222M-parameter nanoVLM [17], where a
 pretrained SigLIP-B/16 encoder [18] feeds a randomly initialized decoder with the
 SmolLM2-135M architecture [19]. Four levers each target one sink-relevant mechanism (§2):
-standard softmax attention (*baseline*); a Qiu-style G1 output gate in our zero-initialized
-variant, which removes sink and massive activations in text models (*g1gate*) [20];
-unnormalized sigmoid attention, which removes the normalization from which sinks are argued
-to come (*sigmoid*) [6]; and initialization from the pretrained SmolLM2 text model, which
-imports whatever sink structure text pretraining built (*textinit*). A validated probe logs
-all three signatures every 100 steps. The four-arm comparison reuses a small image pool, so
-we re-test the central negative result under low repetition, on a fresh stream of one
-billion tokens (*RF*, 2.39 effective visual epochs).
+standard softmax attention (*baseline*), a Qiu-style G1 output gate in our zero-initialized
+variant [20] (*g1gate*), unnormalized sigmoid attention, which removes the normalization
+from which sinks are argued to come [6] (*sigmoid*), and initialization from the pretrained
+SmolLM2 text model, which imports whatever sink structure text pretraining built
+(*textinit*). A validated probe logs all three signatures every 100 steps. The four-arm
+comparison reuses a small image pool, so we re-test the central negative result under low
+repetition, on a fresh stream of one billion tokens (*RF*, 2.39 effective visual epochs).
 
 **Contributions.**
 
 1. **Four levers, four corners (n = 2–3 seeds/arm).** The four arms reach four different
    corners of the three-signature space, and no two share a signature triple. The value-norm
-   ratio alone moves in three qualitatively different directions, strongly drained or mildly
-   drained or amplified, and which one occurs differs by lever (Fig. 1, Table 1). The arms
-   are not a factorial design, so we report distinct intervention-associated profiles, not
-   isolated causal effects.
+   ratio alone is strongly drained, mildly drained, or amplified, and which occurs differs by
+   lever (Fig. 1, Table 1). The arms are not a factorial design, so we report distinct
+   intervention-associated profiles, not isolated causal effects.
 2. **Low-repetition decoupling at 1B tokens (n = 1).** On a fresh stream at 2.39 effective
    visual epochs, with a held-out loss that never turns upward, the massive-activation proxy
    rises from an h-ratio of 1.43 to 3.22, about 2.3×. Attention concentration stays at
