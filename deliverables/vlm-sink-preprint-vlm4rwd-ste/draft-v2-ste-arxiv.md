@@ -188,8 +188,8 @@ decoder, so its lower loss reflects unequal competence rather than a lever effec
 repeated-data arms also show a large train–validation asymmetry (`val_seen` near 0.44
 against `val_unseen` near 1.18), the overfitting signal that motivates RF. RF has no seen
 split, so the weaker statement its data supports is that its held-out loss falls throughout
-and never turns upward (§5). **We ran no downstream benchmark on any arm**, so this paper
-makes no capability claim (§5).
+and never turns upward (§5). **We did not run MMStar or any other downstream benchmark
+on any arm**, so this paper makes no capability claim (§5).
 
 
 ---
@@ -406,7 +406,8 @@ disappearing. That stays invisible unless the three signatures are logged separa
 text-only models, and the multimodal studies work mostly on frozen ones. Our claim is the
 conjunction: **dense, joint tracking of concentration, value-norm drain, and the
 residual-norm ratio as separately measured quantities, in multimodal pretraining with a
-randomly initialized decoder**. Decoupling itself is not ours, and prior multimodal work
+randomly initialized decoder**, which adds value-norm drain as a third axis beyond the
+text-only dissociations [9, 10]. Decoupling itself is not ours, and prior multimodal work
 could study emergence if it chose to.
 
 
