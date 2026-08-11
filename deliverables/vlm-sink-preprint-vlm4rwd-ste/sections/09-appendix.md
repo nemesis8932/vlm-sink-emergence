@@ -13,29 +13,32 @@ initialization. sigmoid lights up a band of mid-network layers.</figcaption>
 
 <figure id="figA2">
 <img src="figures/fig3_perhead_scatter.svg" alt="Per-head concentration vs value-norm scatter">
-<figcaption><b>Figure A2: No universal head-level coupling.</b> Concentration against
-value-norm ratio for each (layer, KV-group) pair at each arm's final checkpoint, seed 0,
-at n = 90 pairs per arm. Grouping this way avoids triplicating each value-norm observation
-across the 3 query heads that share it, so these correlations are descriptive and we report
-no p-values (&sect;3.3). The sign of the correlation flips by arm, from +0.76 in baseline
-to &minus;0.79 in textinit (Table 4). The pooled cloud is weak, at &minus;0.20, only
-because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most
+<figcaption><b>Figure A2: No consistent-sign head-level relationship.</b> Concentration
+against value-norm ratio for each (layer, KV-group) pair at each arm's final checkpoint,
+seed 0, at n = 90 pairs per arm. Grouping this way avoids triplicating each value-norm
+observation across the 3 query heads that share it, so these correlations are descriptive
+and we report no p-values (&sect;3.3). The sign of the correlation flips by arm, from +0.76
+in baseline to &minus;0.79 in textinit (Table 3). The pooled cloud is weak, at &minus;0.20,
+only because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most
 individual arms show a strong |r|.</figcaption>
 </figure>
 
 <figure id="figA3">
 <img src="figures/fig5_entropy.svg" alt="Attention entropy over training by arm">
 <figcaption><b>Figure A3: Entropy collapse tracks concentration only.</b> Mean attention
-entropy through training, seed 0, to each arm's final checkpoint. Only sigmoid and textinit collapse. baseline, g1gate, and RF stay flat.
-The entropy-collapse correlate from the text-LM literature therefore follows the
-concentration axis, not the norm axes.</figcaption>
+entropy through training, seed 0, to each arm's final checkpoint. Only sigmoid and textinit
+collapse. baseline, g1gate, and RF stay flat. The entropy-collapse correlate from the
+text-LM literature therefore follows the concentration axis, not the norm axes.</figcaption>
 </figure>
 
 ## B. Full per-seed signature table
 
-This table reproduces Table 1 and adds the maximum attention→pos0 where we have it. We
-logged that metric for seeds 1 and 2 only, because the seed-0 archive summary does not
-include it. We therefore keep it out of the main comparative table.
+This table gives the per-seed values behind the collapsed ranges of Table 1, and adds the
+maximum attention→pos0 where we have it. We logged that metric for seeds 1 and 2 only,
+because the seed-0 archive summary does not include it. We trust the seed-0 values from a
+checksummed archive rather than re-derive them first-hand (§5). Each arm is read at its
+final matched checkpoint. All three signatures of *textinit* have plateaued at 60M tokens,
+and its h-ratio changes by less than 10% from 60M to 100M in the seeds that continued.
 
 | arm | seed | tokens | Sink^0.2 | mean attn→pos0 | max attn→pos0 | v-ratio | h-ratio |
 |---|---|---|---|---|---|---|---|
@@ -49,6 +52,12 @@ include it. We therefore keep it out of the main comparative table.
 | textinit | s0 | 60M | 0.852 | 0.627 | — | 0.377 | 42.5 |
 | textinit | s1 | 60M | 0.556 | 0.235 | ~0.53 | 0.634 | 5.50 |
 | textinit | s2 | 60M | 0.578 | 0.232 | ~0.59 | 0.484 | 12.2 |
+
+*baseline* and *sigmoid* are tight across both of their seeds. *textinit* is the loose arm:
+seed 0 sits far above the other two on every signature at once, at Sink 0.85 against
+0.56–0.58, mean attn→pos0 0.63 against 0.23, and h-ratio 42.5 against 5.5–12.2. The h-ratio
+has plateaued by 60–100M tokens in both lower seeds, so the spread is genuine seed
+sensitivity rather than an unconverged transient. Part of it is positional (Appendix C.2).
 
 A note on g1gate. Both seeds with max-attention data show one head at about 0.21–0.22
 maximum attention→pos0. That single head does clear the strict ε = 0.2 threshold, which is
@@ -91,7 +100,74 @@ In *textinit* the three signatures need not share a token, which is the position
 dissociation reported in §3.4 and the reason the pos0-anchored textinit magnitudes at seeds
 1 and 2 understate that arm's peaks.
 
-## D. Notes on metric hygiene
+## D. Measurement and rendering details
+
+**Figure 1 smoothing.** Paths are smoothed with a moving average, 5 points on the horizontal
+axis and 9 on the vertical. The faint dots behind each path are the unsmoothed per-probe
+values, and the initialization and final markers use raw values.
+
+**Correlations at the uncollapsed 270 pairs.** Table 3 collapses to the 90 (layer, KV-group)
+observations. At the uncollapsed 270 (layer, query-head) pairs the same quantities read
++0.67 for baseline, +0.53 for g1gate, −0.03 for sigmoid, −0.76 for textinit, and +0.43 for
+RF. Every sign and every ordering survives the collapse.
+
+**Raw against row-normalized sigmoid attention.** Row-normalization changes the object being
+measured, and Gu et al. [6] state their result for *unnormalized* sigmoid attention. Head
+L7H3 of the sigmoid arm sends 0.873 of its row-normalized attention to position 0 at the
+final checkpoint, which is the arm maximum. Its raw gate mass to position 0 is 0.065, and
+the raw mass summed over all keys in that row is 0.110. The row does not sum to one, and
+pos0 takes about 59% of what little gate mass the head opens at all. Early in training the
+same head shows the opposite picture: raw pos0 mass 0.309 against a raw row sum of 6.44, so
+under 5% of a very large gate budget. The concentration this arm develops is therefore a
+relative reallocation of a shrinking gate budget onto position 0, not the growth of a large
+absolute mass there (§3.4). Raw and row-normalized values here come from the same fixed
+probe batch as every other number in this paper, masked to valid query positions.
+
+**Sigmoid heat-map provenance.** The sigmoid column of Figure 3 uses head L7H3 (0-indexed),
+the arm's top sink head on the fixed probe batch. An earlier dump selected heads by raw,
+unnormalized gate score, picked different heads, and understated the arm. The sigmoid heat
+maps are re-rendered from an auxiliary streaming batch, because the saved matrices covered
+the superseded heads. Every printed sigmoid number, in the text and in the tables, comes
+from the fixed probe batch. The pos0 share printed on each panel is computed over valid
+query positions, the same convention as the tables.
+
+## E. Interpretation (untested hypotheses)
+
+This appendix is **speculative**. Nothing in it is tested by our experiments, and none of it
+is a claim of this paper. We include it because a reader is entitled to ask *why* the
+signatures come apart, and because these hypotheses are cheap to state and testable later.
+
+Gu et al. [6] account for the sink as a key bias: softmax must distribute a full unit of
+attention mass per row, and a head with nothing informative to retrieve parks the surplus on
+a token whose value contributes little. If that account is right, each of our levers touches
+a different part of it, which would explain why each moves a different axis.
+
+- *g1gate.* An output gate can suppress whatever the attended position injects into the
+  residual stream. A model with that gate may be able to *afford* concentration, because
+  concentration no longer forces a matching change in the value path. That would be
+  consistent with a gate whose measured effect here is on the value-norm axis rather than
+  the concentration axis. Fesser et al. [23] make a compatible argument from another
+  direction: they distinguish a sink that acts as an "adaptive nop" (a no-op: the head
+  suppresses its own update by routing attention to a token whose value contributes
+  nothing), recognizable by a negligible value norm, from a sink that broadcasts global
+  information, and they note that gating implicitly assumes the nop mechanism. If that is
+  right, a gate should act on the value-norm axis first, which is where our gated arm
+  differs from baseline.
+- *sigmoid.* Removing the softmax removes the sum-to-one constraint itself. A head with
+  nothing to retrieve can simply attend weakly to everything, with no surplus to park. On
+  this reading the value amplification we observe is what the value path does when it is no
+  longer compensating for a forced allocation.
+- *textinit.* A pretrained text decoder arrives with sink machinery already built. Our
+  observation that its norm signatures are present at step 0 while concentration crosses
+  later would then reflect import of structure followed by re-targeting onto a visual
+  prefix, rather than formation from scratch.
+
+Each of these is a hypothesis about mechanism. Testing them needs interventions we did not
+run: gate-scale sweeps that separate gating from the half-scale confound of §2, sigmoid runs
+at matched effective attention temperature, and text-initialized runs with the sink
+machinery ablated before alignment.
+
+## F. Notes on metric hygiene
 
 We record two corrections that we made during the audit of the numbers in this paper.
 First, an earlier internal consolidation mixed two metrics in one column, mean and max
