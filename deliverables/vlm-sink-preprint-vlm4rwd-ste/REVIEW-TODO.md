@@ -51,13 +51,13 @@ Concrete consequences to handle:
 
 | section | now | target | main action |
 |---|---:|---:|---|
-| 01-abstract | 406 → **296** | ~200 | ✅ reframed on three signatures; caveats and closing disclaimer removed |
-| 02-intro | 1031 → **870** | ~700 | ✅ hallucination 5 → 1; new which-signature-you-measure frame |
+| 01-abstract | 406 → **288** | ~200 | ✅ reframed on three signatures; caveats and closing disclaimer removed |
+| 02-intro | 1031 → **838** | ~700 | ✅ hallucination 5 → 1; new which-signature-you-measure frame |
 | 03-method | 1630 → **1314** | ~1100 | ✅ notation block kept; reporting details → App. F |
-| 04-results | 3341 → **2193** | ~1900 | ✅ per-seed table → App. B; sigmoid raw/normalized → App. D; hypotheses → App. E |
-| 05-related-work | 1211 → **916** | ~650 | ✅ hallucination ¶ → 1 sentence; [9]/[10] ¶ and Luo [11] clause kept |
-| 06-limitations | 1075 → **926** | ~900 | ✅ deduped against §2; every item kept |
-| 07-conclusion | 435 → **341** | ~250 | ✅ shortened |
+| 04-results | 3341 → **1924** | ~1900 | ✅ target met. Per-seed table → App. B; sigmoid raw/normalized → App. D; hypotheses → App. E |
+| 05-related-work | 1211 → **835** | ~650 | ✅ hallucination ¶ → 1 sentence; [9]/[10] ¶ and Luo [11] clause kept |
+| 06-limitations | 1075 → **941** | ~900 | ✅ deduped against §2, absorbed 4 migrated caveats; every item kept |
+| 07-conclusion | 435 → **312** | ~250 | ✅ shortened |
 | 09-appendix | 1051 → **2179** | ~1500 | ✅ grew: B per-seed, D measurement, E hypotheses, F reporting |
 
 ---
@@ -116,3 +116,54 @@ All figures/tables must match `deliverables/session4_n3_audit.md` and
 - [x] Rebuild **both** PDFs (`build.py` and `build.py --arxiv`)
 - [x] Confirm named build has author + working repro links; anonymous build leaks neither
 - [ ] Clean-room read of the arXiv build before upload
+
+
+---
+
+## Caveat vs inline-qualifier audit (pass 3)
+
+Hedge-phrase density did not fall in the earlier pass because the hits are overwhelmingly
+**inline qualifiers**, which must stay. Classification of every flagged phrase:
+
+| section | hits | caveats → migrated to §5 | inline qualifiers (stay) | not hedges |
+|---|---:|---:|---:|---:|
+| 03-method | 13 | 4 | 7 | 2 |
+| 04-results | 15 | 1 | 13 | 1 |
+
+**Migrated to §5** (main text keeps a cross-reference only): the domain-matched control we
+did not run; the repetition-vs-domain-shift trade; the justification for calling h-ratio a
+proxy; and the RF `val_seen`/`val_unseen` statement, which had been said three times (§2,
+§3.2, §5) and is now said once, in §5's new "What cannot be checked on RF".
+
+**Stayed in place** because each scopes a specific number where it appears: `n = 1`,
+`n = 2–3 seeds`, "massive-activation proxy", "low-repetition (2.39 effective visual
+epochs)", "randomly initialized decoders", "not a factorial design", "descriptive
+statistics, no p-values", "understate", "supporting context", "positive long-horizon
+trend", the interval-censoring note, and the MMStar line.
+
+## Structural cut — MEASURED AND PROPOSED, NOT APPLIED
+
+Line-level tightening took the body 12pp → 11pp (−462 words). The limit is 8pp, so ~3pp
+must come out structurally. Measured options:
+
+| option | body pages | body words |
+|---|---:|---:|
+| current | 11 | 6,368 |
+| move Fig 3 to appendix | 11 | 6,368 |
+| move Figs 2 + 3 | 10 | 6,368 |
+| move all three figures | 9 | 6,368 |
+| **move §3.4 (ordering, with Figs 2 and 3)** | **9** | **5,561** |
+| move §5 Limitations | 10 | 5,427 |
+| **move §3.4 *and* §5** | **8** | **4,620** |
+
+Shrinking the figures does not help: at 78% and at 62% of text width the body still renders
+at 11pp.
+
+**Recommended:** move §3.4 into the appendix (9pp), then cut roughly 700 further words from
+§2, §4 and §5 to reach 8pp. §3.4 is the most self-contained unit in the body, it carries two
+of the three figures with it, and its claim survives in §3.1 and the conclusion.
+
+**Not recommended, though it is the only combination measured at exactly 8pp:** moving §5
+Limitations out of the body. It hits the number, but it directly contradicts the reviewer's
+main ask that the caveats live in one visible section, and it weakens the NeurIPS
+limitations checklist answer.

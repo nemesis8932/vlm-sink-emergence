@@ -6,7 +6,7 @@
 
 Abstract. The attention sink is usually described as one phenomenon, but it is measured through three separate signatures: attention concentration on the sink position (Sink^ε_1, per query head), a near-zero value-norm there (v-ratio, per KV head), and an outsized residual-stream norm there (h-ratio, per layer, which we read as a massive-activation proxy). In text language models the three co-occur so reliably that a study can report whichever one it measures and generalise to the sink. If they move apart, that inference fails, and whether a lever removed the sink depends on which signature was tracked.
 
-We test this where the signatures can be watched forming: multimodal pretraining with a randomly initialized decoder. We train a 222M-parameter vision–language model, a SigLIP-B/16 encoder feeding a randomly initialized SmolLM2-135M-architecture decoder in which position 0 is the first image token and there is no BOS, under four levers — standard softmax attention, output-gated softmax, unnormalized sigmoid attention, and decoder initialization from a pretrained text LM — logging all three signatures separately throughout training.
+We test this where the signatures can be watched forming: multimodal pretraining with a randomly initialized decoder. We train a 222M-parameter vision–language model, a SigLIP-B/16 encoder feeding a randomly initialized SmolLM2-135M-architecture decoder in which position 0 is the first image token and there is no BOS, under four levers — standard softmax attention, output-gated softmax, unnormalized sigmoid attention, and decoder initialization from a pretrained text LM.
 
 They come apart. Across n = 2–3 seeds per arm the four levers land in four distinct corners of the three-signature space, and no two arms share a signature triple. The value-norm axis alone is strongly drained, mildly drained, or amplified, and which occurs differs by lever. On a low-repetition run over one billion fresh tokens (2.39 effective visual epochs), the massive-activation proxy more than doubles while attention concentration stays at exactly zero. The per-head relationship between concentration and value-norm flips sign from one arm to the next. Prior text-only work separates massive activations from attention sinks. We add dense, joint tracking of all three under randomly initialized decoders in the multimodal setting, and show that all three, value-norm drain included, respond separately to ordinary training-time choices.
 
@@ -23,11 +23,11 @@ organizes a subfield around how to interpret it and how to remove it [3].
 
 In text language models the sink does not arrive alone. Three measurements move together.
 Attention concentrates on the sink token. The value vector there drops to a near-zero norm,
-which the literature calls value-state drain [4]. The residual stream there grows an
-abnormally large norm, which the literature calls a massive activation [2, 5]. Gu et al. [6]
-report that these effects settle on the same few tokens, and Queipo-de-Llano, Arroyo et al.
-[7] that they appear early in training, near step 1000. This regular co-occurrence has led
-the field to treat the three signatures as facets of one attention-sink phenomenon.
+called value-state drain [4]. The residual stream there grows an abnormally large norm,
+called a massive activation [2, 5]. Gu et al. [6] report that these effects settle on the
+same few tokens, and Queipo-de-Llano, Arroyo et al. [7] that they appear near step 1000.
+This co-occurrence has led the field to treat the three signatures as facets of one
+attention-sink phenomenon.
 
 The field disputes whether they really are one phenomenon. One line argues for causal unity:
 massive activations mathematically require representational compression, and ablating them
@@ -52,32 +52,30 @@ changes what position 0 *is*: our sequence starts with 49 image tokens and has n
 so the candidate sink token is a visual token, without the special-token machinery that
 text-LM sink accounts use. The multimodal sink studies we know also analyze mostly frozen,
 already-trained backbones at inference time [11, 12], and where one tracks alignment
-checkpoints [11] it follows sink-dimension magnitude, with a frozen vision transformer and a
-pretrained language model (§4). A reader still cannot see there whether the three signatures
-arrive together, in sequence, or independently while they form in a decoder that starts from
-random weights. That requires pretraining with a randomly initialized decoder and all three
-logged separately from step 0.
+checkpoints [11] it follows sink-dimension magnitude rather than the three signatures (§4).
+A reader still cannot see there whether the signatures arrive together, in sequence, or
+independently while they form in a decoder that starts from random weights. That requires
+pretraining with a randomly initialized decoder and all three logged separately from
+step 0.
 
 We work at deliberately small scale. The model is a 222M-parameter nanoVLM [17], where a
 pretrained SigLIP-B/16 encoder [18] feeds a randomly initialized decoder with the
 SmolLM2-135M architecture [19]. Four levers each target one sink-relevant mechanism (§2):
-standard softmax attention (*baseline*); a Qiu-style G1 output gate in our zero-initialized
-variant, which removes sink and massive activations in text models (*g1gate*) [20];
-unnormalized sigmoid attention, which removes the normalization from which sinks are argued
-to come (*sigmoid*) [6]; and initialization from the pretrained SmolLM2 text model, which
-imports whatever sink structure text pretraining built (*textinit*). A validated probe logs
-all three signatures every 100 steps. The four-arm comparison reuses a small image pool, so
-we re-test the central negative result under low repetition, on a fresh stream of one
-billion tokens (*RF*, 2.39 effective visual epochs).
+standard softmax attention (*baseline*), a Qiu-style G1 output gate in our zero-initialized
+variant [20] (*g1gate*), unnormalized sigmoid attention, which removes the normalization
+from which sinks are argued to come [6] (*sigmoid*), and initialization from the pretrained
+SmolLM2 text model, which imports whatever sink structure text pretraining built
+(*textinit*). A validated probe logs all three signatures every 100 steps. The four-arm
+comparison reuses a small image pool, so we re-test the central negative result under low
+repetition, on a fresh stream of one billion tokens (*RF*, 2.39 effective visual epochs).
 
 **Contributions.**
 
 1. **Four levers, four corners (n = 2–3 seeds/arm).** The four arms reach four different
    corners of the three-signature space, and no two share a signature triple. The value-norm
-   ratio alone moves in three qualitatively different directions, strongly drained or mildly
-   drained or amplified, and which one occurs differs by lever (Fig. 1, Table 1). The arms
-   are not a factorial design, so we report distinct intervention-associated profiles, not
-   isolated causal effects.
+   ratio alone is strongly drained, mildly drained, or amplified, and which occurs differs by
+   lever (Fig. 1, Table 1). The arms are not a factorial design, so we report distinct
+   intervention-associated profiles, not isolated causal effects.
 2. **Low-repetition decoupling at 1B tokens (n = 1).** On a fresh stream at 2.39 effective
    visual epochs, with a held-out loss that never turns upward, the massive-activation proxy
    rises from an h-ratio of 1.43 to 3.22, about 2.3×. Attention concentration stays at
@@ -126,25 +124,21 @@ The *textinit* lever has no precedent in the sink literature. It works as an inh
 control, importing whatever sink structure text pretraining already built into SmolLM2.
 
 **A scale confound in our gate variant.** Qiu et al. [20] use ordinary initialization for
-the G1 gate. We initialize the gate parameters at exactly zero, so the sigmoid opens at
-σ(0) = 0.5 at step 0. Our gated arm therefore begins as a half-scale attention-output
-intervention as well as a gating one, and the two effects are not separated here. We call
-the arm **Qiu-style G1 in our zero-initialized variant** throughout, and any comparison to
-the published G1 result carries that caveat (§5).
+the G1 gate. We initialize at exactly zero, so the sigmoid opens at σ(0) = 0.5 and the arm
+begins as a half-scale attention-output intervention as well as a gating one. We call it
+**Qiu-style G1 in our zero-initialized variant** throughout (§5).
 
 **Data and the two training regimes.** The four-arm comparison trains on four curated
 subsets of `the_cauldron` [21], about 146K images, matched at about 100M tokens per arm.
 *textinit* stops at 60M tokens, where its signatures have plateaued (§3.1). Reuse of that
 pool gives high visual-epoch counts, so a reader could treat a "no sink emerges" result as
-an overfitting artifact. The **RF** arm (random-fresh) answers that objection. It re-trains
-the *baseline* recipe on a fresh FineVision stream [22] to 1B tokens, over about 4.6M
+an overfitting artifact. The **RF** arm (random-fresh) answers that objection: the
+*baseline* recipe re-trained on a fresh FineVision stream [22] to 1B tokens, over about 4.6M
 natural images, at **2.39 effective visual epochs**. RF is therefore a **low-repetition**
-run, not a repetition-free one: examples do repeat, about 2.4 times on average. A change of
-dataset also trades the repetition confound for a domain-shift confound. We accept that
-trade and document it. We estimate the overlap between the fresh pool and the repeated
-subsets at under 3%, from the config-level composition of the two pools. We did not run
-image-level deduplication, so that number is an estimate and not measured evidence. We did
-not run a third, domain-matched control (§5).
+run, not a repetition-free one, since examples do repeat about 2.4 times on average. We
+estimate the overlap between the fresh pool and the repeated subsets at under 3%, from the
+config-level composition of the two pools rather than image-level deduplication. Swapping
+datasets trades the repetition confound for a domain-shift confound, which §5 takes up.
 
 **Three signatures, tracked separately.** We log the three sink symptoms that the text-LM
 literature reports together, each at its own granularity, following Gu et al. [6] at a
@@ -159,36 +153,34 @@ harder to pass.
 
 *Value-norm ratio* (v-ratio) is the value norm at position 0 divided by the mean value norm
 over the other valid positions, computed per layer and then averaged over the 30 layers.
-Below 1 is value-drain [4]; above 1 is amplification. Under grouped-query attention a value
+Below 1 is value-drain [4]. Above 1 is amplification. Under grouped-query attention a value
 vector belongs to a KV group and repeats across 3 query heads, so the ratio rests on
 *L·G* = 90 independent value projections, not 270. This matters for §3.3.
 
 *Residual-norm ratio* (h-ratio) is the residual-stream norm at position 0 divided by the
-mean norm over the other positions, again per layer and then averaged over the 30 layers.
-We call it a **massive-activation proxy**. Massive activations are normally defined by
-channel-level outliers [2, 5], which we never measured; the h-ratio captures a
-position-specific residual-norm asymmetry, necessary but not sufficient for that definition.
+mean norm over the other positions, again per layer and then averaged over the 30 layers. We
+call it a **massive-activation proxy**, because massive activations are normally defined by
+channel-level outliers [2, 5], which we never measured (§5).
 
 All three metrics **anchor on position 0 by construction**. We state this as a measurement
-choice, and we check it: at seed 0, per-position attention mass makes position 0 the
-maximum-mass token in every arm (Appendix C). Section 5 handles the remaining seed-level
-caveat. The *sigmoid* arm reports the row-normalized attention view, which keeps
-concentration comparable across arms, and we also log the raw sigmoid mass (Appendix D).
+choice and check it: at seed 0, per-position attention mass makes position 0 the
+maximum-mass token in every arm (Appendix C). §5 handles the remaining seed-level caveat.
+The *sigmoid* arm reports the row-normalized attention view, which keeps concentration
+comparable across arms, and we also log the raw sigmoid mass (Appendix D).
 
-**Why a sink is expected at all.** Softmax forces every attention row to sum to one. A head
-with nothing informative to retrieve must still place its mass somewhere. Gu et al. [6]
-argue that the sink token absorbs that surplus and acts "more like key biases." That
-sum-to-one constraint is the standing mechanism against which our *sigmoid* arm, which
-removes normalization, is the direct test.
+**Why a sink is expected at all.** Softmax forces every attention row to sum to one, so a
+head with nothing informative to retrieve must still place its mass somewhere. Gu et al. [6]
+argue that the sink token absorbs that surplus and acts "more like key biases." Our
+*sigmoid* arm, which removes normalization, is the direct test of that constraint.
 
 **Probe.** The function `probe_sinks()` re-walks the decoder from the live module weights in
 eager mode, in fp32, with no gradients, independent of the training path, which uses fused
-SDPA kernels, autocast, and `torch.compile`. Every call validates its hidden states against
-the real forward pass, to a relative error below 10<sup>−2</sup>, so the probe cannot drift
-from what the trained model computes. The probe batch stays fixed across all runs and seeds,
-so every number here is comparable from run to run, and probes fire every 100 optimizer
-steps, dense enough to timestamp each signature's first threshold crossing (§3.4). Appendix
-F gives the probe-batch composition, the token accounting, and the validation protocol.
+SDPA kernels, autocast and `torch.compile`. Every call validates its hidden states against
+the real forward pass to a relative error below 10<sup>−2</sup>, so the probe cannot drift
+from what the trained model computes. The probe batch is fixed across all runs and seeds, so
+every number here is comparable run to run, and probes fire every 100 optimizer steps, dense
+enough to timestamp each signature's first threshold crossing (§3.4). Appendix F gives the
+probe-batch composition, token accounting and validation protocol.
 
 **Recipe.** We use AdamW with weight decay 0.1, following [6], and a gradient clip of 1.0.
 The schedule is cosine with 3% warmup. The learning rates are 4 × 10<sup>−4</sup> for the
@@ -199,16 +191,15 @@ comparison differ only in the lever under test. We use two seeds for *baseline* 
 
 **Validation losses, and what they do and do not license.** Training stays healthy in all
 reported runs. At the matched 100M-token checkpoint the held-out losses are 1.182 for
-*baseline*, 1.133 for *g1gate*, 1.206 for *sigmoid*, and 0.877 for *textinit*, and RF
-reaches 0.638 at 1B tokens (Appendix F). Two cautions. *textinit* starts from a pretrained
-text decoder, so its lower loss reflects unequal competence rather than a lever effect, and
-only *baseline*, *g1gate*, and *sigmoid* are equal-token, equal-initialization comparisons.
-The repeated-data arms also show a large train–validation asymmetry (`val_seen` near 0.44
-against `val_unseen` near 1.18), which is the overfitting signal that motivates RF. RF has
-no distinct seen split and cannot be checked the same way, so the weaker statement its data
-supports is that its held-out loss falls throughout and never turns upward. **We did not run
-MMStar or any other downstream benchmark on any arm**, so this paper makes no capability
-claim (§5).
+*baseline*, 1.133 for *g1gate*, 1.206 for *sigmoid* and 0.877 for *textinit*, and RF reaches
+0.638 at 1B tokens (Appendix F). Two cautions. *textinit* starts from a pretrained text
+decoder, so its lower loss reflects unequal competence rather than a lever effect, and only
+*baseline*, *g1gate* and *sigmoid* are equal-token, equal-initialization comparisons. The
+repeated-data arms also show a large train–validation asymmetry (`val_seen` near 0.44
+against `val_unseen` near 1.18), the overfitting signal that motivates RF. RF has no distinct
+seen split, so the weaker statement its data supports is that its held-out loss falls
+throughout and never turns upward (§5). **We did not run MMStar or any other downstream
+benchmark on any arm**, so this paper makes no capability claim (§5).
 
 
 ---
@@ -217,28 +208,24 @@ claim (§5).
 
 <figure id="fig1">
 <img src="figures/fig2_phase_portrait.svg" alt="Decoupling phase portrait">
-<figcaption><b>Figure 1: Decoupling phase-portrait.</b> Training trajectories of every arm
-in concentration-against-value-norm space, at left, and concentration against the
-residual-norm ratio, at right, on a log scale. Circles mark initialization. Diamonds mark
-the final checkpoint, at about 100M tokens for <em>baseline</em>, <em>g1gate</em> and
-<em>sigmoid</em>, 60M for <em>textinit</em>, and 1B for <em>RF</em>; seed 0 unless a seed is
-labelled. <b>Note the metric difference from the tables:</b> the horizontal axis is the
-<em>maximum</em> attention→pos0 over heads, a continuous quantity that keeps a trajectory
-visible, whereas Table 1 reports Sink<sup>ε</sup><sub>1</sub>, the <em>fraction of query
-heads above a threshold</em>. An arm can therefore sit at a non-zero position on this axis
-while its Sink<sup>ε</sup> stays 0.000. Paths are smoothed (Appendix D); faint dots are the
-unsmoothed per-probe values, and the end markers use raw values. Each lever drives the
-signatures to a different corner, and every combination of directions occurs. If the three
-signatures were one phenomenon, these trajectories would move together along one
+<figcaption><b>Figure 1: Decoupling phase-portrait.</b> Trajectories of every arm in
+concentration-against-value-norm space (left) and concentration against the residual-norm
+ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint, at
+about 100M tokens for <em>baseline</em>, <em>g1gate</em> and <em>sigmoid</em>, 60M for
+<em>textinit</em>, and 1B for <em>RF</em>. Seed 0 unless labelled. <b>Note the metric
+difference from the tables:</b> the horizontal axis is the <em>maximum</em> attention→pos0
+over heads, whereas Table 1 reports Sink<sup>ε</sup><sub>1</sub>, the <em>fraction of query
+heads above a threshold</em>, so an arm can sit off zero here while its Sink<sup>ε</sup>
+stays 0.000. Paths are smoothed and the end markers use raw values (Appendix D). Were the
+three signatures one phenomenon, these trajectories would move along one
 direction.</figcaption>
 </figure>
 
 ## 3.1 Four training levers reach four different signature corners
 
-Table 1 collapses the seeds into per-arm ranges, over two seeds for *baseline* and
-*sigmoid* and three for *g1gate* and *textinit*. Appendix B gives the full per-seed table.
-Each arm is read at its final matched checkpoint: about 100M tokens for baseline, g1gate,
-and sigmoid, and 60M tokens for *textinit*, whose signatures have plateaued by then.
+Table 1 collapses the seeds into per-arm ranges, each arm read at its final matched
+checkpoint: about 100M tokens for baseline, g1gate and sigmoid, and 60M for *textinit*,
+whose signatures have plateaued by then. Appendix B gives the per-seed table.
 **No two arms share a signature triple.**
 
 **Table 1 — the four corners (n = 2–3 seeds per arm).** Concentration is Sink^0.2, the
@@ -252,28 +239,26 @@ v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 lay
 | sigmoid | strong (0.76–0.83) | **amplified** (1.48–1.60) | no strong asymmetry (1.1–1.3) |
 | textinit | strong (0.56–0.85) | strong drain (0.38–0.63) | extreme (5.5–42.5) |
 
-The value-norm axis alone takes three qualitatively different directions. The lever drains
-it hard, drains it only mildly, or amplifies it above 1. No arm leaves it unchanged.
+The value-norm axis alone takes three qualitatively different directions: drained hard,
+drained mildly, or amplified above 1. No arm leaves it unchanged.
 
 The corners separate pairwise on single axes. *g1gate* differs from *baseline* on the
-value-norm axis alone: concentration is absent or near-absent and the residual-norm ratio
-moderate in both, while the gate makes the baseline's mild value-drain milder still, from
-0.69–0.72 to 0.81–0.85, a 15–19% drain rather than none. *sigmoid* and *textinit* both reach
-strong concentration and then part on two axes, the *direction* of the value-norm move and
-the residual-norm ratio. Each arm shows a distinct intervention-associated profile. The four
-arms are not a factorial design, so we do not attribute these profiles to isolated causal
-effects of single levers. Figure 1 shows the trajectories separating early and ending in
-four corners. They do not share one origin: *textinit* starts from a pretrained text decoder
-and therefore begins with an inherited sink in place.
+value-norm axis alone, since concentration is absent or near-absent and the residual-norm
+ratio moderate in both, while the gate makes the baseline's mild drain milder still, a
+15–19% drain rather than none. *sigmoid* and *textinit* both reach strong concentration and
+then part on the *direction* of the value-norm move and on the residual-norm ratio. Each arm
+shows a distinct intervention-associated profile. The arms are not a factorial design, so we
+do not attribute these profiles to isolated causal effects of single levers. The
+trajectories in Figure 1 separate early and do not share one origin: *textinit* starts from
+a pretrained text decoder, with an inherited sink already in place.
 
-Reproducibility differs by arm. *g1gate* is the tightest, at Sink^0.2 of 0.004, 0.011, and
-0.0037 across three seeds. The corner of *textinit* repeats across seeds, and its
-magnitudes do not: seed 0 sits far above the other two on every signature at once, at
-h-ratio 42.5 against 5.5–12.2 (Appendix B). Part of that spread is positional, because at
-seeds 1 and 2 the arm's peak signatures move off position 0, where our metrics anchor
-(§3.4). We therefore report the massive-activation proxy of textinit as a **range
-(5.5–42.5×) with a median near 12×** everywhere in this paper, and we treat the corner as
-the reproducible claim rather than any particular magnitude.
+Reproducibility differs by arm. *g1gate* is tightest, at Sink^0.2 of 0.004, 0.011 and 0.0037
+across three seeds. The corner of *textinit* repeats across seeds and its magnitudes do not:
+seed 0 sits far above the other two on every signature at once, at h-ratio 42.5 against
+5.5–12.2, partly because at seeds 1 and 2 its peak signatures move off position 0, where our
+metrics anchor (§3.4, Appendix B). We therefore report the massive-activation proxy of
+textinit as a **range (5.5–42.5×) with a median near 12×** throughout, and treat the corner
+as the reproducible claim rather than any magnitude.
 
 ## 3.2 The massive-activation proxy grows across 1B low-repetition tokens while concentration stays at zero
 
@@ -282,12 +267,10 @@ never emerges" result as an overfitting artifact. The RF arm addresses that: the
 *baseline* recipe on a fresh FineVision stream to one billion tokens, at **2.39 effective
 visual epochs**. Examples still repeat, about 2.4 times on average, so this is a
 **low-repetition** run rather than a repetition-free one. Its held-out loss falls through
-the full billion tokens and never turns upward, so nothing in the run indicates overfitting.
-RF has no distinct seen split, so we cannot repeat for it the `val_seen` / `val_unseen`
-comparison that exposes memorization in the repeated arms (§2, §5).
+the full billion tokens and never turns upward (§2, §5).
 
-Concentration never arrives. **Sink^0.3 = 0.000 across the entire 0 → 1B run.** No head of
-the 270 crosses the sink threshold, at any of about 700 probes. The massive-activation
+Concentration never arrives. **Sink^0.3 = 0.000 across the entire 0 → 1B run**, with no
+head of the 270 crossing the threshold at any of about 700 probes. The massive-activation
 proxy, in the same run, keeps growing far past warmup.
 
 **Table 2 — RF (fresh stream, 2.39 visual epochs, n = 1 seed), init → 1B tokens.**
@@ -305,19 +288,18 @@ so we report it as a positive long-horizon trend. In Figure 1, at right, the vio
 trajectory climbs and never moves rightward. The v-ratio ends below its initialization
 value, but about 75% of that drop happens in the first 57M tokens and it then recovers part
 of it, so we report it as supporting context rather than ongoing emergence. **The massive-activation proxy grows about 2.3× across a full billion tokens of
-multimodal training while attention concentration never leaves zero (n = 1 seed; §5).**
+multimodal training while attention concentration never leaves zero (n = 1 seed, §5).**
 
 ## 3.3 No consistent-sign head-level relationship between concentration and value-norm
 
 A tight coupling between concentration and value-drain should at minimum hold the sign of
-their per-head correlation constant across training regimes. It does not. Table 3 reports
-the Pearson r between attention→pos0 and value-norm ratio at the final checkpoint of each
-arm, over the 90 (layer, KV-group) observations: under grouped-query attention a value
-vector is shared by 3 query heads, so we average the attention of a group's query heads
-rather than triplicate its value observation (§2). Appendix Fig. A2 plots the scatter.
+their per-head correlation constant across regimes. It does not. Table 3 reports the Pearson
+r between attention→pos0 and value-norm ratio at each arm's final checkpoint, over the 90
+(layer, KV-group) observations: a value vector is shared by 3 query heads, so we average a
+group's query-head attention rather than triplicate its value observation (§2). Appendix
+Fig. A2 plots the scatter.
 
-**Table 3 — r(attn→pos0, v-ratio), final checkpoint. Descriptive only; we report no
-p-values, for the reason given below.**
+**Table 3 — r(attn→pos0, v-ratio), final checkpoint. Descriptive only, no p-values.**
 
 | baseline | g1gate | sigmoid | textinit | RF | pooled |
 |---|---|---|---|---|---|
@@ -325,102 +307,92 @@ p-values, for the reason given below.**
 
 These correlations are **descriptive statistics, not inferential ones**, and we deliberately
 report no significance tests: heads within a layer are not independent, and each arm rests
-on a single seed at this checkpoint, so a p-value would mislead. Collapsing to the 90 KV
-groups removes the pseudoreplication a per-query-head reading would introduce and leaves the
-picture unchanged (Appendix D).
+on a single seed here, so a p-value would mislead. Collapsing to the 90 KV groups removes
+the pseudoreplication a per-query-head reading would introduce and leaves the picture
+unchanged (Appendix D).
 
-The pattern is about **sign**, which the pseudoreplication does not manufacture. Heads that
+The pattern is about **sign**, which pseudoreplication does not manufacture. Heads that
 attend more to position 0 have *larger* value norms in the baseline regime and *smaller*
-value norms under text initialization. The pooled correlation is weak only because arms of
-opposite sign cancel, and it is not an uncorrelated cloud. We therefore claim no
-consistent-sign relationship across arms. We do not claim the absence of a coupling law: a
-fixed coupling would have to show one sign everywhere, and it does not.
+ones under text initialization, and the pooled correlation is weak only because arms of
+opposite sign cancel. We therefore claim no consistent-sign relationship across arms. We do
+not claim the absence of a coupling law: a fixed coupling would show one sign everywhere,
+and it does not.
 
 ## 3.4 Ordering: norm signatures lead, and concentration is late, mirrored, or absent
 
 <figure id="fig2">
 <img src="figures/fig4_birth_leadlag.svg" alt="Sink birth and lead-lag ordering">
 <figcaption><b>Figure 2: Sink birth and ordering.</b> Seed 0 throughout. <em>Top:</em> a
-time-to-event view. Each shaded track spans the tokens for which we observed that arm, from
-60M to 1B. A filled marker shows the first probe at which a signature crossed its per-head
-threshold: residual-norm ratio h&gt;2, value-drain v&lt;0.8, concentration
-attn→pos0&gt;0.3. A hollow marker at the end of a track means that the signature never
-crossed inside the observed run. <b>All crossing times are interval-censored</b> at the
-100-step probe cadence: a reported birth step means "the first probe at which the threshold
-had already been crossed". Two signatures that cross within one interval of each other
-should not be read as ordered. <em>Bottom:</em> birth-maps, which show the step at which
-each (layer, query-head) pair first crosses the concentration threshold. No baseline head
-and no RF head ever crosses. 1% of g1gate heads cross, against 89% for sigmoid and 87% for
+time-to-event view. Each shaded track spans the tokens for which we observed that arm (60M
+to 1B). A filled marker is the first probe at which a signature crossed its per-head
+threshold (h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it
+never crossed within the observed run. <b>All crossing times are interval-censored</b> at
+the 100-step probe cadence, so two signatures crossing within one interval of each other
+should not be read as ordered. <em>Bottom:</em> birth-maps, the step at which each (layer,
+query-head) pair first crosses the concentration threshold. No baseline and no RF head ever
+crosses. 1% of g1gate heads do, against 89% for sigmoid and 87% for
 textinit.</figcaption>
 </figure>
 
-Dense probing lets us timestamp the arrival of each signature (Figure 2), and the ordering
-stays consistent inside each arm family. In the softmax arms with randomly initialized
-decoders, *baseline* and *g1gate* and *RF*, the norm signatures come early. The
-residual-norm ratio crosses its per-head threshold within the first few to about 15M
-tokens, and value-drain follows within about 50M tokens. Concentration never comes. No
-baseline head and no RF head crosses the concentration threshold at any point in training,
-and g1gate reaches 1% of heads, a single-layer blip late in training. *sigmoid* mirrors that
-pattern: its concentration crosses early, at about 6M tokens, and 89% of its heads cross
-eventually, while neither norm signature ever crosses. *textinit* inherits its norm
-signatures rather than grows them. Value-drain and an elevated residual-norm ratio are both
-present at 0 tokens, imported with the pretrained text-LM weights. Concentration is *not*
-inherited the same way: Sink^0.3 is 0.000 at step 0 and crosses before 1M tokens. Even in
-the arm that imports the most sink structure, the norm signatures precede concentration.
+Dense probing lets us timestamp each signature's arrival (Figure 2), and the ordering stays
+consistent inside each arm family. In the softmax arms with randomly initialized decoders,
+*baseline* and *g1gate* and *RF*, the norm signatures come early: the residual-norm ratio
+crosses within the first few to about 15M tokens and value-drain follows within about 50M.
+Concentration never comes. No baseline or RF head ever crosses it, and g1gate reaches 1% of
+heads, a single-layer blip late in training. *sigmoid* mirrors that pattern, with
+concentration crossing at about 6M tokens and 89% of heads eventually, while neither norm
+signature ever crosses. *textinit* inherits its norm signatures rather than growing them:
+value-drain and an elevated residual-norm ratio are both present at 0 tokens, imported with
+the pretrained text-LM weights. Concentration is *not* inherited the same way, since
+Sink^0.3 is 0.000 at step 0 and crosses before 1M tokens. Even in the arm that imports the
+most sink structure, the norm signatures precede concentration.
 
 <figure id="fig3">
 <img src="figures/fig6_sink_stripe.svg" alt="Query-by-key attention maps, top sink head per arm">
-<figcaption><b>Figure 3: The sink stripe.</b> Query &times; key attention of the top sink
-head of each arm, row-normalized, at seed 0; every panel is labelled with its seed, step and
-token count. The top row is early in training (step 250, about 2.4M tokens). The bottom row
-is the final checkpoint. The cyan line marks key = pos0 and the dotted line the
-image-to-text boundary. The pos0 stripe is <em>absent</em> in baseline throughout, and
-strong in textinit, which reaches attn→pos0 = 0.62 at its final checkpoint. The rightmost
-panel shows the stripe <em>already present at step 0</em> in textinit, inherited from the
-text language model. The <em>sigmoid</em> column uses head <b>L7H3</b> (0-indexed), the
-arm's top sink head on the fixed probe batch at 0.87 row-normalized attention to pos0; its
-heat maps are re-rendered from an auxiliary streaming batch, while every printed sigmoid
-number comes from the fixed probe batch (Appendix D).</figcaption>
+<figcaption><b>Figure 3: The sink stripe.</b> Query &times; key attention of each arm's top
+sink head, row-normalized, seed 0. Panels are labelled with seed, step and token count. Top
+row early in training (step 250, about 2.4M tokens), bottom row the final checkpoint. The
+cyan line marks key = pos0, the dotted line the image-to-text boundary. The pos0 stripe is
+<em>absent</em> in baseline throughout and strong in textinit (attn→pos0 = 0.62 at its final
+checkpoint), and the rightmost panel shows it <em>already present at step 0</em> in
+textinit, inherited from the text language model. The <em>sigmoid</em> column uses head
+<b>L7H3</b>, the arm's top sink head on the fixed probe batch. Its heat maps are re-rendered
+from an auxiliary streaming batch, while every printed sigmoid number comes from the fixed
+probe batch (Appendix D).</figcaption>
 </figure>
 
-Figure 3 shows the same result at the level of a single head, through the query × key
-attention map of the top sink head of each arm. The vertical stripe at key = pos0 marks
-every query attending to the first image token. That stripe is absent in *baseline* at both
-checkpoints and strong in *textinit*. The rightmost panel carries the most weight. **The
-stripe is already there at step 0 in textinit**, imported with the text-LM weights before
-the model has seen one image.
+Figure 3 shows the same result at the level of a single head. The vertical stripe at
+key = pos0 marks every query attending to the first image token. It is absent in *baseline*
+at both checkpoints and strong in *textinit*, and the rightmost panel carries the most
+weight: **the stripe is already there at step 0 in textinit**, imported with the text-LM
+weights before the model has seen one image.
 
 The *sigmoid* arm needs one measurement note, because row-normalization changes the object
 being measured and Gu et al. [6] state their result for *unnormalized* sigmoid attention.
 The concentration this arm develops is a **relative** reallocation of a shrinking gate
-budget onto position 0, not the growth of a large absolute mass there. Appendix D gives the
-raw and row-normalized values behind that reading. We report the row-normalized view in the
-tables so the arms stay comparable.
+budget onto position 0, not the growth of a large absolute mass there (Appendix D). We
+report the row-normalized view in the tables so the arms stay comparable.
 
-Attention-entropy collapse, which the text-LM literature uses as the usual correlate of
-concentration, separates the same way. Only *sigmoid* and *textinit* collapse (Appendix
-Fig. A3). Entropy collapse tracks the concentration axis, not the norm axes.
+Attention-entropy collapse, the text-LM literature's usual correlate of concentration,
+separates the same way: only *sigmoid* and *textinit* collapse (Appendix Fig. A3). It tracks
+the concentration axis, not the norm axes.
 
 **The signatures also dissociate in position.** A per-position scan across all three
-*textinit* seeds shows that the three signatures need not share a token. They coincide at
-position 0 at seed 0; at seed 1 the attention maximum stays at position 0 while the residual
-peak moves to pos1 and the value minimum to pos5; at seed 2 they separate furthest, with
-attention at **pos1** and both norm extrema at **pos13** (Appendix C). The arms with
-randomly initialized decoders behave differently. Position 0 remains the maximum-mass token
-in *baseline*, *g1gate*, and *sigmoid* at every seed we scanned, and in *RF* the attention
-argmax sits at pos1 with mass 0.100 against 0.083 at position 0, a diffuse profile rather
-than a concentration sink.
+*textinit* seeds shows they need not share a token. At seed 0 they coincide at position 0.
+At seed 1 the attention maximum stays there while the residual peak moves to pos1 and the
+value minimum to pos5. At seed 2 they separate furthest, attention at **pos1** and both norm
+extrema at **pos13**. The arms with randomly initialized decoders behave differently:
+position 0 stays the maximum-mass token in *baseline*, *g1gate* and *sigmoid* at every seed
+scanned, and in *RF* the attention argmax sits at pos1 with mass 0.100 against 0.083 at
+position 0, a diffuse profile rather than a sink (Appendix C).
 
-We report this as a supporting observation, not a second headline. It carries one
-consequence for measurement: because all three metrics anchor on position 0, the *textinit*
-magnitudes at seeds 1 and 2 are read at a token that is no longer the peak and therefore
-**understate** the arm's true peaks. That is a further reason to report *textinit* as a
-range and a median (§3.1, §5). The anchoring holds for the arms with randomly initialized
-decoders, which carry the central negative result.
-
-Appendix E sets out, as untested hypotheses, how each lever might touch the sum-to-one
-mechanism of Gu et al. [6] and thereby move a different axis. Nothing in this paper tests
-them.
+We report this as a supporting observation, not a second headline. It has one consequence
+for measurement: because all three metrics anchor on position 0, the *textinit* magnitudes
+at seeds 1 and 2 are read at a token that is no longer the peak and therefore **understate**
+the arm's true peaks, a further reason to report that arm as a range and a median (§3.1,
+§5). The anchoring holds for the randomly initialized decoders, which carry the central
+negative result. Appendix E sets out, as untested hypotheses, how each lever might move a
+different axis.
 
 
 ---
@@ -428,41 +400,39 @@ them.
 # 4. Related Work
 
 **Attention sinks and their companions in text language models.** Gu et al. [6] give the
-canonical empirical account. The sink token acts "more like key biases, storing extra
+canonical empirical account: the sink token acts "more like key biases, storing extra
 attention scores, which could be non-informative and not contribute to the value
 computation." They report small key and value norms at the sink as part of the same
 phenomenon, connect it to massive residual-stream activations [2, 5], and show that
 unnormalized sigmoid attention prevents sink formation in text models up to 1B parameters,
 the result our *sigmoid* arm builds on. Guo et al. [4] describe the concentration and
-value-drain coupling as "active-dormant" heads, where the model actively drives the sink
-head's value state toward zero. Queipo-de-Llano, Arroyo et al. [7] make the strongest unity
-claim, and the only genuinely *causal* one: massive activations mathematically require
-representational compression, and ablating a model's layer-0 massive activation removes both
-compression valleys and sink formation. Across Pythia checkpoints they find the three
-appearing together near step 1000 and staying synchronized. We reserve the term "causally
-unified" for that result alone. Peng et al. [24] trace a first-position sink circuit that
-emerges early in from-scratch text pretraining, in text only, without separating the
-signatures.
+value-drain coupling as "active-dormant" heads. Queipo-de-Llano, Arroyo et al. [7] make the
+strongest unity claim, and the only genuinely *causal* one: massive activations
+mathematically require representational compression, and ablating a model's layer-0 massive
+activation removes both compression valleys and sink formation. Across Pythia checkpoints
+they find the three appearing together near step 1000 and staying synchronized. We reserve
+the term "causally unified" for that result alone. Peng et al. [24] trace a first-position
+sink circuit emerging early in from-scratch text pretraining, in text only, without
+separating the signatures.
 
 **Prior decoupling results: text-only, two axes.** Two recent papers already separate pairs
-of these signatures in text models, and we scope our claim around them. Sun, Canziani,
-LeCun and Zhu [9] show that massive activations and attention sinks are dissociable
-architectural artifacts: a change of normalization scheme crushes the massive-activation
-spike while the sink ratio survives. That is a two-way dissociation, in text only, through a
-normalization lever, on trained checkpoints. Chen and Yao [10] decouple the same pair from
-the opposite direction and from scratch: in text models of 0.1–0.3B parameters, probed at
-dense checkpoints, a value-scale intervention keeps the sinks and suppresses massive
-activations. Neither treats value-norm drain as a third axis that moves on its own, and
-neither is multimodal. Fesser et al. [23] give the closest external support for tracking the
-value norm separately. One sink pattern can hide two algorithms, an "adaptive nop" (a no-op,
-where the head suppresses its own update by routing to a null token) and a "broadcast" that
-redistributes global information, and the two leave different traces, since nop sinks show
-negligible value norms and broadcast sinks produce low-rank outputs. That work diagnoses
-trained vision transformers rather than tracking emergence in vision–language models, but it
-independently motivates treating the value norm as diagnostic rather than decorative. On the
-opposite side, Qiu et al. [8] hold that outlier-driven rescaling by attention and residual
-sinks is essential to stable training. The field is unsettled both on whether these
-signatures separate and on whether anyone should remove them at all.
+of these signatures in text models, and we scope our claim around them. Sun, Canziani, LeCun
+and Zhu [9] show that massive activations and attention sinks are dissociable architectural
+artifacts: a change of normalization scheme crushes the massive-activation spike while the
+sink ratio survives, a two-way dissociation in text only, through a normalization lever, on
+trained checkpoints. Chen and Yao [10] decouple the same pair from the opposite direction
+and from scratch, where a value-scale intervention in 0.1–0.3B text models keeps the sinks
+and suppresses massive activations. Neither treats value-norm drain as a third axis that
+moves on its own, and neither is multimodal. Fesser et al. [23] give the closest external
+support for tracking the value norm separately: one sink pattern can hide two algorithms, an
+"adaptive nop" (a no-op, where the head suppresses its own update by routing to a null
+token) and a "broadcast" that redistributes global information, and nop sinks show
+negligible value norms where broadcast sinks produce low-rank outputs. That work diagnoses
+trained vision transformers rather than tracking emergence, but it independently motivates
+treating the value norm as diagnostic rather than decorative. On the opposite side, Qiu et
+al. [8] hold that outlier-driven rescaling by attention and residual sinks is essential to
+stable training. The field is unsettled both on whether these signatures separate and on
+whether anyone should remove them.
 
 **Multimodal sinks: mostly frozen backbones, inference time.** Luo et al. [11] identify
 high-norm attention-sink tokens that originate in the vision transformer, and separate
@@ -473,35 +443,32 @@ model, and follows sink-dimension magnitude rather than the three signatures sep
 Choi et al. [12] likewise distinguish vision-sinks from language-sinks in a frozen model and
 gate them by layer. Both establish that multimodal sinks have distinct vision-side and
 language-side origins, which our *textinit* inheritance result fits. What is not yet
-available in that literature is dense, joint tracking of concentration, value-norm and
-residual-norm as separate quantities in a decoder that starts from random weights. Vision
-transformers also grow high-norm "register" tokens of their own [25], which is why the
-pretrained encoder gets its own limitation in §5. A separate line ties these signatures to
-hallucination and grounding failure in deployed models and intervenes on them at inference
-time [13–16], which is the main reason it matters in practice which signature a mitigation
-moves. That work too operates on trained models.
+available there is dense, joint tracking of concentration, value-norm and residual-norm as
+separate quantities in a decoder that starts from random weights. Vision transformers also
+grow high-norm "register" tokens of their own [25], which is why the pretrained encoder gets
+its own limitation in §5. A separate line ties these signatures to hallucination and
+grounding failure in deployed models and intervenes at inference time [13–16], which is the
+main practical reason it matters which signature a mitigation moves.
 
 **The gating lever.** Qiu et al. [20] introduce the head-specific elementwise sigmoid gate
-on attention output that our *g1gate* arm adapts. In text models the gate "largely reduces
-the attention score allocated to the first token and decreases massive activations" while it
-improves quality. Our variant differs in one way that matters: Qiu et al. use ordinary
-initialization, and we initialize the gate at exactly zero, so it opens at σ(0) = 0.5 and
-applies a half-scale factor to attention output at step 0 (§2). Our arm is therefore
-**Qiu-style G1 in a zero-initialized variant**, with gating and initial scaling confounded in
-it. With that caveat, concentration is already absent in our baseline, so the axis on which
-the gated arm differs is the value-norm axis: the drain becomes milder, from a v-ratio of
-0.69–0.72 to 0.81–0.85, rather than being removed. That difference stays invisible unless
-the three signatures are logged separately.
+on attention output that our *g1gate* arm adapts. In text models it "largely reduces the
+attention score allocated to the first token and decreases massive activations" while
+improving quality. Our variant differs in one way that matters: Qiu et al. use ordinary
+initialization, and we initialize at exactly zero, so the gate opens at σ(0) = 0.5 and
+applies a half-scale factor at step 0 (§2), leaving gating and initial scaling confounded.
+With that caveat, concentration is already absent in our baseline, so the axis on which the
+gated arm differs is the value-norm axis: the drain becomes milder, from 0.69–0.72 to
+0.81–0.85, rather than being removed. That stays invisible unless the three signatures are
+logged separately.
 
 **Positioning.** The closest prior work separates at most two of the three axes, in
-text-only models. The multimodal studies work mostly on frozen models, and where one tracks
-alignment checkpoints [11] it follows sink-dimension magnitude rather than the three
-signatures separately. Our claim is therefore the conjunction: **dense, joint tracking of
-concentration, value-norm drain, and the residual-norm ratio as separately measured
-quantities, in multimodal pretraining with a randomly initialized decoder**, adding
-value-norm drain as a third axis beyond the massive-activation-vs-sink dissociations shown
-in text models [9, 10]. We do not claim priority on decoupling itself, and we do not claim
-that prior multimodal work cannot study emergence.
+text-only models, and the multimodal studies work mostly on frozen models. Our claim is
+therefore the conjunction: **dense, joint tracking of concentration, value-norm drain, and
+the residual-norm ratio as separately measured quantities, in multimodal pretraining with a
+randomly initialized decoder**, adding value-norm drain as a third axis beyond the
+massive-activation-vs-sink dissociations shown in text models [9, 10]. We do not claim
+priority on decoupling itself, and we do not claim that prior multimodal work cannot study
+emergence.
 
 
 ---
@@ -509,16 +476,16 @@ that prior multimodal work cannot study emergence.
 # 5. Limitations
 
 **Metrics anchored on position 0.** We measure all three signatures at the first image
-token, and we verified that anchoring by per-position attention *mass* rather than argmax
-alone. Position 0 is the maximum-mass token in every arm at seed 0, and it stays so for
-*baseline*, *g1gate* and *sigmoid* at every seed we scanned. It does **not** in *textinit*:
-at seed 1 the residual peak moves to pos1 and the value minimum to pos5, and at seed 2 the
-attention maximum sits at pos1 while both norm extrema sit at pos13 (Appendix C). Our
-pos0-anchored magnitudes for textinit at those seeds therefore *understate* the arm's peak
-values, which is a further reason we report textinit as a range and a median and treat its
-corner rather than its magnitudes as the claim. In *RF* the attention argmax sits at pos1,
-but with mass 0.100 against 0.083 at pos0, a diffuse profile rather than a displaced sink.
-The RF negative result does not depend on the anchor.
+token, verified by per-position attention *mass* rather than argmax alone. Position 0 is the
+maximum-mass token in every arm at seed 0, and stays so for *baseline*, *g1gate* and
+*sigmoid* at every seed scanned. It does **not** in *textinit*, where at seed 1 the residual
+peak moves to pos1 and the value minimum to pos5, and at seed 2 the attention maximum sits
+at pos1 while both norm extrema sit at pos13 (Appendix C). Our pos0-anchored magnitudes for
+textinit at those seeds therefore *understate* its peaks, a further reason we report that
+arm as a range and a median and treat its corner rather than its magnitudes as the claim. In
+*RF* the attention argmax sits at pos1, but with mass 0.100 against 0.083 at pos0, a diffuse
+profile rather than a displaced sink, so the RF negative result does not depend on the
+anchor.
 
 **The gate arm carries a scale confound.** We initialize the G1 gate at exactly zero, so it
 opens at σ(0) = 0.5 and halves attention output at step 0, where Qiu et al. [20] use
@@ -527,16 +494,15 @@ our *g1gate* arm, and its differences from baseline cannot be attributed to gati
 scale-matched control is future work.
 
 **Pretrained vision encoder: no arm is fully from scratch.** The SigLIP encoder is
-pretrained and trainable in every arm, and *textinit* additionally uses a pretrained
-decoder. What we study is therefore vision–language pretraining with randomly initialized
-decoders, not from-scratch training of the whole model, and we word it that way throughout.
-Vision transformers grow high-norm register tokens of their own [25], and sinks can
-propagate from a vision transformer into a large vision–language model [11], so part of our
-residual-norm signal could be inherited rather than decoder-formed. Our defense is the
-trajectory: the h-ratio starts at 1.0–1.4 at initialization and *rises* through training,
-from 1.43 to 3.22 across 1B tokens in RF, where pure inheritance from a static encoder
-predicts a high, flat h-ratio from step 0. A control with a randomly initialized vision
-transformer, which would isolate the decoder entirely, is future work.
+pretrained and trainable in every arm, and *textinit* additionally uses a pretrained decoder.
+What we study is therefore vision–language pretraining with randomly initialized decoders,
+not from-scratch training of the whole model, and we word it that way throughout. Vision
+transformers grow high-norm register tokens of their own [25], and sinks can propagate from
+a vision transformer into a large vision–language model [11], so part of our residual-norm
+signal could be inherited rather than decoder-formed. Our defense is the trajectory: the
+h-ratio starts at 1.0–1.4 and *rises* to 3.22 across 1B tokens in RF, where pure inheritance
+from a static encoder predicts a high, flat h-ratio from step 0. A randomly initialized
+vision transformer, which would isolate the decoder entirely, is future work.
 
 **The h-ratio is a proxy, not a measurement of massive activations.** Massive activations
 are normally defined by channel-level outliers [2, 5]. We measured a position-specific
@@ -558,33 +524,34 @@ is.
 **Provenance and seed count.** We trust the seed-0 raw probes for the four-arm comparison
 from a checksummed archive summary rather than re-derive them first-hand. We *did*
 independently re-derive seeds 1 and 2, and that audit caught a metric-labeling error in an
-earlier internal consolidation, which is why we report the metrics like-for-like here
-(Appendix G). *baseline* and *sigmoid* have two seeds, *g1gate* and *textinit* three, and
-the RF arm a **single seed**. RF also contains one **weights-only optimizer restart at about
-57M tokens** that an out-of-memory error forced: the weights were reloaded and the AdamW
-moment estimates discarded, so RF is not a single uninterrupted optimizer trajectory. The
-audit verified signature continuity across that seam. The v-ratio and h-ratio are identical
-at the shared checkpoint, a double-covered 600-step overlap diverges only within probe
-noise, concentration reads 0.000 on both sides, and the decoupling movement completes before
-the seam. Concentration was reproducibly zero across both seeds of the repeated-data
-baseline, which we take as adequate support for the negative claim. A second fresh-data seed
-would strengthen it.
+earlier internal consolidation (Appendix G). *baseline* and *sigmoid* have two seeds,
+*g1gate* and *textinit* three, and the RF arm a **single seed**. RF also contains one
+**weights-only optimizer restart at about 57M tokens** that an out-of-memory error forced:
+the weights were reloaded and the AdamW moment estimates discarded, so RF is not a single
+uninterrupted optimizer trajectory. The audit verified continuity across that seam, where
+the v-ratio and h-ratio are identical at the shared checkpoint, a double-covered 600-step
+overlap diverges only within probe noise, and concentration reads 0.000 on both sides.
+Concentration was reproducibly zero across both seeds of the repeated-data baseline, which
+we take as adequate support for the negative claim. A second fresh-data seed would
+strengthen it.
 
-**Stream-order and probe-batch caveats on RF.** The streaming shuffle buffer was reduced
-from 1500 to 500 examples partway through, again for memory reasons, so stream ordering is
-not homogeneous across the run. The Sink^0.3 = 0.000 result and the h-ratio rise both hold
-within each regime separately. The RF probe batch is also still the **fixed
-repeated-`the_cauldron` tail** used by the other arms, not a sample of the FineVision
-stream. That choice keeps RF's signatures comparable to the repeated arms, which is what the
-negative result needs, but it means RF's signatures are measured on data from the other
+**What cannot be checked on RF.** RF has no distinct seen split, so we cannot run for it the
+`val_seen` / `val_unseen` comparison that exposes memorization in the repeated arms, and the
+weaker statement its data supports is that its held-out loss falls throughout and never
+turns upward (§2). Its streaming shuffle buffer was also reduced from 1500 to 500 examples
+partway through, again for memory reasons, so stream ordering is not homogeneous across the
+run, though the Sink^0.3 = 0.000 result and the h-ratio rise both hold within each regime
+separately. The RF probe batch is also still the **fixed repeated-`the_cauldron` tail** used
+by the other arms. That keeps RF's signatures comparable to the repeated arms, which is what
+the negative result needs, but it means they are measured on data from the other
 distribution.
 
 **Domain shift in the fresh-data control.** RF reduces repetition by a change of dataset,
 which introduces a domain-shift confound in its place. We accepted the trade deliberately,
-because repetition is the dominant confound, and we chose the fresh pool to minimize shift.
-The under-3% overlap figure is an estimate from config-level composition, not image-level
-deduplication (§2). A domain-matched control that compares fresh and repeated data is the
-known follow-up.
+because repetition is the dominant confound, and chose the fresh pool to minimize shift. The
+under-3% overlap figure is an estimate from config-level composition, not image-level
+deduplication (§2), and we did not run a third, domain-matched control. That control, which
+would compare fresh and repeated data at matched domain, is the known follow-up.
 
 **We report no benchmark accuracy.** We measure sink signatures with the probe of §2. We did
 not run downstream benchmark evaluation, such as MMStar, on any arm. We make no claim about
@@ -606,13 +573,12 @@ The signatures even arrived in different orders, and under text initialization t
 separated in position as well.
 
 Text-LM work documents real interactions among these signatures, including a causal route
-from massive activations to sinks and compression valleys [7]. Our results show that the
-coupling is not obligatory: each axis moved separately under ordinary training-time levers,
-which extends the two-way text-only dissociations [9, 10] to a third axis and a new setting.
-For interpretability and mitigation work the practical result is blunt. One signature is not
-a proxy for the others. A model with no attention sink can still carry a growing
-residual-norm asymmetry, and a gate that changes value-drain can leave the other axes where
-they were.
+from massive activations to sinks and compression valleys [7]. Our results show the coupling
+is not obligatory: each axis moved separately under ordinary levers, extending the two-way
+text-only dissociations [9, 10] to a third axis and a new setting. For interpretability and
+mitigation work the practical result is blunt. One signature is not a proxy for the others.
+A model with no attention sink can still carry a growing residual-norm asymmetry, and a gate
+that changes value-drain can leave the other axes where they were.
 
 **Next steps.** Train a randomly initialized vision encoder, to isolate the decoder's
 contribution to the residual-norm signal. Extend the fresh-data run past 1B tokens, to match
