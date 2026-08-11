@@ -21,11 +21,9 @@ they were.
 
 **Next steps.** Train a randomly initialized vision encoder, to isolate the decoder's
 contribution to the residual-norm signal. Extend the fresh-data run past 1B tokens, to match
-text-LM budgets. Test whether the signature corner of an arm predicts hallucination or
-grounding behavior, on the benchmarks the sink-intervention literature already uses, such as
-POPE, CHAIR, and AMBER [13–15]. This paper does not test that last link. It establishes when
-the signatures form, and in what combinations, which is the measurement that has to exist
-first.
+text-LM budgets. Run a scale-matched gate control, to separate gating from the half-scale
+confound of §2. Each would sharpen what this paper measures: when the signatures form, and
+in what combinations.
 
 **Reproducibility.** A self-validating probe (§2) computes all signatures on a fixed probe
 batch, from dense logs taken every 100 steps. The Appendix holds the per-seed tables. We
