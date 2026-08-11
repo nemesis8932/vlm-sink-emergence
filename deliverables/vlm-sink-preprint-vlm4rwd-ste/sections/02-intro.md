@@ -76,7 +76,7 @@ epochs).
    share a signature triple. The value-norm ratio alone moves in three qualitatively
    different directions, strongly drained or mildly drained or amplified, and which one
    occurs differs by
-   lever (Fig. 1, Table 2). The four arms are not a factorial design, so we report distinct
+   lever (Fig. 1, Table 1). The four arms are not a factorial design, so we report distinct
    intervention-associated profiles, not isolated causal effects.
 2. **Low-repetition decoupling at 1B tokens (n = 1).** On a fresh stream at 2.39 effective
    visual epochs, with a held-out loss that never turns upward, the massive-activation

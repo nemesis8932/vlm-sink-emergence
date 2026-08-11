@@ -3,7 +3,8 @@
 Source: researcher review, 2026-08-10. Process: **user edits by hand; Director reviews for
 validity before push.** Nothing is edited without proposing first.
 
-Target: body (§1–7) **9,129 → ~5,500 words** (≈8pp NeurIPS format; +refs +appendix ≈ 12pp total).
+Target: body (§1–7) **9,129 → ~5,500 words** (now **7,422**; the remaining gap sits almost
+entirely in the three blocked sections, 01/02/05 = 2,648 words against ~1,550 target) (≈8pp NeurIPS format; +refs +appendix ≈ 12pp total).
 One pass serves both arXiv v1 and the eventual VLM4RWD ≤8pp cut.
 
 ---
@@ -40,29 +41,31 @@ Concrete consequences to handle:
 
 | section | now | target | main action |
 |---|---:|---:|---|
-| 01-abstract | 406 | ~200 | shorten; **remove caveats entirely**; reframe opening to three-signature motivation |
-| 02-intro | 1031 | ~700 | tighten; hallucination 5 → ≤1 |
-| 03-method | 1630 | ~1100 | keep notation block; move detail → appendix |
-| 04-results | 3341 | ~1900 | **per-seed results → appendix**; biggest single cut |
-| 05-related-work | 1211 | ~650 | halve; keep cite-and-distinguish ¶ intact |
-| 06-limitations | 1075 | ~900 | **absorbs** migrated caveats, deduped |
-| 07-conclusion | 435 | ~250 | shorten |
-| 09-appendix | 1051 | ~1500 | grows: per-seed tables land here |
+| 01-abstract | 406 | ~200 | ⏸ blocked — shorten; **remove caveats entirely**; reframe opening to three-signature motivation |
+| 02-intro | 1031 | ~700 | ⏸ blocked — tighten; hallucination 5 → ≤1 |
+| 03-method | 1630 → **1314** | ~1100 | ✅ notation block kept; reporting details → App. F |
+| 04-results | 3341 → **2193** | ~1900 | ✅ per-seed table → App. B; sigmoid raw/normalized → App. D; hypotheses → App. E |
+| 05-related-work | 1211 | ~650 | ⏸ blocked — halve; keep cite-and-distinguish ¶ intact |
+| 06-limitations | 1075 → **926** | ~900 | ✅ deduped against §2; every item kept |
+| 07-conclusion | 435 → **341** | ~250 | ✅ shortened |
+| 09-appendix | 1051 → **2179** | ~1500 | ✅ grew: B per-seed, D measurement, E hypotheses, F reporting |
 
 ---
 
 ## Items
 
-- [ ] **Consolidate repeated caveats → Limitations.** Currently scattered: results 11, method 6,
-      abstract 4. See "must survive" below — migration ≠ deletion.
-- [ ] **Abstract**: shorter, no caveats, keep the audited novelty sentence.
-- [ ] **Per-seed results → appendix**; main text keeps the collapsed four-corner view.
-- [ ] **Related work**: shorten. Keep the [3]/[4] cite-and-distinguish passage and the Luo [7]
-      narrowing clause — those are review-critical, not padding.
-- [ ] **Figure captions**: shorten. Keep seed + checkpoint/token labels (added last round).
-- [ ] **Sentence-level**: shorter, concise; drop repetitive and unsubstantiated lines.
-- [ ] **Conclusion**: shorter.
-- [ ] **Hallucination framing**: cut 12 → 1–2 mentions; reframe motivation around the three
+- [x] **Consolidate repeated caveats → Limitations** (unblocked sections). Results/method now
+      cross-reference §5 instead of restating. Abstract still blocked.
+- [ ] ⏸ **Abstract**: shorter, no caveats, keep the audited novelty sentence. BLOCKED.
+- [x] **Per-seed results → appendix**; main text keeps the collapsed four-corner view.
+      Tables renumbered 1–3; old Table 1 is now Appendix B.
+- [ ] ⏸ **Related work**: shorten. Keep the [3]/[4] cite-and-distinguish passage and the Luo [7]
+      narrowing clause — those are review-critical, not padding. BLOCKED.
+- [x] **Figure captions**: shortened (Figs 1–3). Seed, checkpoint and token labels kept;
+      smoothing and sigmoid-provenance detail moved to Appendix D.
+- [x] **Sentence-level**: done in the unblocked sections.
+- [x] **Conclusion**: shorter.
+- [ ] ⏸ **Hallucination framing** (BLOCKED): cut 12 → 1–2 mentions; reframe motivation around the three
       signatures (see RESOLVED section above).
 - [ ] **Citation integrity sweep**: after the hallucination cut, remove any now-orphaned
       references ([21]/[22]/[24] are the candidates).
@@ -97,6 +100,6 @@ All figures/tables must match `deliverables/session4_n3_audit.md` and
 
 ## Close-out
 
-- [ ] Rebuild **both** PDFs (`build.py` and `build.py --arxiv`)
-- [ ] Confirm named build has author + working repro links; anonymous build leaks neither
+- [x] Rebuild **both** PDFs (`build.py` and `build.py --arxiv`)
+- [x] Confirm named build has author + working repro links; anonymous build leaks neither
 - [ ] Clean-room read of the arXiv build before upload

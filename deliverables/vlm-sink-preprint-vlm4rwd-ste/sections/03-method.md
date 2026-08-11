@@ -3,16 +3,16 @@
 **Model and token layout.** All runs use a 222M-parameter nanoVLM [17]. A pretrained,
 trainable SigLIP-B/16 vision encoder [18] feeds a decoder with the SmolLM2-135M
 architecture [19] through a learned modality projector. The decoder has 30 layers of
-grouped-query attention, with 9 query heads per layer sharing 3 KV heads. It therefore has
-270 (layer, query-head) pairs but only 90 (layer, KV-group) value projections, a
-distinction that matters in §3.3. The decoder trains **from random initialization** in every
-arm except *textinit*, because the point is to watch the signatures form. Each sequence
-holds 49 image tokens as a causal prefix, then 79 left-padded text tokens, for 128 tokens in
-all. **Position 0 is the first image token, and there is no BOS token.** What happens at
-position 0 is therefore a property of the visual prefix, and not of inherited BOS machinery,
-in the arms with a randomly initialized decoder. *textinit* is the exception by design: it
-imports first-position structure from text pretraining, and it shows a sink before any
-multimodal step (§3.1).
+grouped-query attention, with 9 query heads per layer sharing 3 KV heads, so it has 270
+(layer, query-head) pairs but only 90 (layer, KV-group) value projections, a distinction
+that matters in §3.3. The decoder trains **from random initialization** in every arm except
+*textinit*, because the point is to watch the signatures form. Each sequence holds 49 image
+tokens as a causal prefix, then 79 left-padded text tokens, for 128 tokens in all.
+**Position 0 is the first image token, and there is no BOS token.** What happens at position
+0 is therefore a property of the visual prefix in the arms with a randomly initialized
+decoder, not of inherited BOS machinery. *textinit* is the exception by design: it imports
+first-position structure from text pretraining, and shows a sink before any multimodal step
+(§3.1).
 
 **Arms.** We use four training levers. Each lever targets one sink-relevant mechanism.
 Everything else stays byte-identical across arms.
@@ -87,12 +87,11 @@ removes normalization, is the direct test.
 **Probe.** The function `probe_sinks()` re-walks the decoder from the live module weights in
 eager mode, in fp32, with no gradients, independent of the training path, which uses fused
 SDPA kernels, autocast, and `torch.compile`. Every call validates its hidden states against
-the real forward pass of the model, to a relative error below 10<sup>−2</sup>, so the probe
-cannot drift from what the trained model computes. The probe batch stays fixed across all
-runs and all seeds, so every number in this paper is comparable from run to run. Probes fire
-every 100 optimizer steps, which is dense enough to timestamp the first threshold crossing
-of each signature (§3.4). Appendix F gives the probe-batch composition, the token
-accounting, and the validation protocol.
+the real forward pass, to a relative error below 10<sup>−2</sup>, so the probe cannot drift
+from what the trained model computes. The probe batch stays fixed across all runs and seeds,
+so every number here is comparable from run to run, and probes fire every 100 optimizer
+steps, dense enough to timestamp each signature's first threshold crossing (§3.4). Appendix
+F gives the probe-batch composition, the token accounting, and the validation protocol.
 
 **Recipe.** We use AdamW with weight decay 0.1, following [6], and a gradient clip of 1.0.
 The schedule is cosine with 3% warmup. The learning rates are 4 × 10<sup>−4</sup> for the
@@ -104,12 +103,12 @@ comparison differ only in the lever under test. We use two seeds for *baseline* 
 **Validation losses, and what they do and do not license.** Training stays healthy in all
 reported runs. At the matched 100M-token checkpoint the held-out losses are 1.182 for
 *baseline*, 1.133 for *g1gate*, 1.206 for *sigmoid*, and 0.877 for *textinit*, and RF
-reaches 0.638 at 1B tokens (Appendix F). Two cautions. First, *textinit* starts from a
-pretrained text decoder, so its lower loss reflects unequal competence rather than a lever
-effect; only *baseline*, *g1gate*, and *sigmoid* are equal-token, equal-initialization
-comparisons. Second, the repeated-data arms show a large train–validation asymmetry
-(`val_seen` near 0.44 against `val_unseen` near 1.18), which is the overfitting signal that
-motivates RF. RF cannot be checked the same way, because it has no distinct seen split. The
-weaker statement its data supports is that its held-out loss falls throughout and never
-turns upward. **We did not run MMStar or any other downstream benchmark on any arm**, so
-this paper makes no capability claim (§5).
+reaches 0.638 at 1B tokens (Appendix F). Two cautions. *textinit* starts from a pretrained
+text decoder, so its lower loss reflects unequal competence rather than a lever effect, and
+only *baseline*, *g1gate*, and *sigmoid* are equal-token, equal-initialization comparisons.
+The repeated-data arms also show a large train–validation asymmetry (`val_seen` near 0.44
+against `val_unseen` near 1.18), which is the overfitting signal that motivates RF. RF has
+no distinct seen split and cannot be checked the same way, so the weaker statement its data
+supports is that its held-out loss falls throughout and never turns upward. **We did not run
+MMStar or any other downstream benchmark on any arm**, so this paper makes no capability
+claim (§5).
