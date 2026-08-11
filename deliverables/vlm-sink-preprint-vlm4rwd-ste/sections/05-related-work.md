@@ -56,5 +56,6 @@ disappearing. That stays invisible unless the three signatures are logged separa
 text-only models, and the multimodal studies work mostly on frozen ones. Our claim is the
 conjunction: **dense, joint tracking of concentration, value-norm drain, and the
 residual-norm ratio as separately measured quantities, in multimodal pretraining with a
-randomly initialized decoder**. Decoupling itself is not ours, and prior multimodal work
+randomly initialized decoder**, which adds value-norm drain as a third axis beyond the
+text-only dissociations [9, 10]. Decoupling itself is not ours, and prior multimodal work
 could study emergence if it chose to.

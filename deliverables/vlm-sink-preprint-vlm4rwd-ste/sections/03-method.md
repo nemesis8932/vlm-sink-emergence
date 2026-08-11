@@ -99,5 +99,5 @@ decoder, so its lower loss reflects unequal competence rather than a lever effec
 repeated-data arms also show a large train–validation asymmetry (`val_seen` near 0.44
 against `val_unseen` near 1.18), the overfitting signal that motivates RF. RF has no seen
 split, so the weaker statement its data supports is that its held-out loss falls throughout
-and never turns upward (§5). **We ran no downstream benchmark on any arm**, so this paper
-makes no capability claim (§5).
+and never turns upward (§5). **We did not run MMStar or any other downstream benchmark
+on any arm**, so this paper makes no capability claim (§5).
