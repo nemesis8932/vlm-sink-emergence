@@ -6,6 +6,12 @@ Vision-Language Models for Real-World Deployment." Non-archival; NeurIPS 2026 te
 excl. refs/appendix, double-blind/OpenReview. **Deadline Aug 30, 2026 — treat as Aug 30, notify
 Sep 29.** (Site says Aug 30 / notify Sep 29; OpenReview showed Aug 31 09:30. Sources disagree by
 one day — plan to the EARLIER date. Re-confirm on OpenReview before submitting.)
+
+**Concurrent arXiv preprint: PERMITTED — confirmed in writing by organizer (Yimu Wang, email,
+2026-07-29):** "As long as the submitted PDF itself is properly anonymized according to the
+workshop guidelines, posting a non-anonymized version on arXiv concurrently is fine." → the
+dual-build setup (anonymous OpenReview PDF + named arXiv PDF from one `sections/`) is compliant.
+Standing courtesy constraint: no aggressive promotion of the preprint until notification.
 (Source: https://vlm4rwd.github.io/, fetched by Director 2026-07-14 — not elsewhere in-repo.)
 
 This is a **reframing fork, not new research.** Science/figures/tables are locked and audited
