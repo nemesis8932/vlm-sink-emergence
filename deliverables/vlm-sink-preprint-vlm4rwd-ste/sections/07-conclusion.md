@@ -11,13 +11,12 @@ The signatures even arrived in different orders, and under text initialization t
 separated in position as well.
 
 Text-LM work documents real interactions among these signatures, including a causal route
-from massive activations to sinks and compression valleys [7]. Our results show that the
-coupling is not obligatory: each axis moved separately under ordinary training-time levers,
-which extends the two-way text-only dissociations [9, 10] to a third axis and a new setting.
-For interpretability and mitigation work the practical result is blunt. One signature is not
-a proxy for the others. A model with no attention sink can still carry a growing
-residual-norm asymmetry, and a gate that changes value-drain can leave the other axes where
-they were.
+from massive activations to sinks and compression valleys [7]. Our results show the coupling
+is not obligatory: each axis moved separately under ordinary levers, extending the two-way
+text-only dissociations [9, 10] to a third axis and a new setting. For interpretability and
+mitigation work the practical result is blunt. One signature is not a proxy for the others.
+A model with no attention sink can still carry a growing residual-norm asymmetry, and a gate
+that changes value-drain can leave the other axes where they were.
 
 **Next steps.** Train a randomly initialized vision encoder, to isolate the decoder's
 contribution to the residual-norm signal. Extend the fresh-data run past 1B tokens, to match
