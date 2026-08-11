@@ -13,14 +13,12 @@ Text-LM work documents real interactions among these signatures, including a cau
 from massive activations to sinks and compression valleys [7]. What our results add is that
 the coupling is optional. Each axis moved on its own under ordinary levers, which extends
 the two-way text-only dissociations [9, 10] to a third axis and a new setting. The practical
-consequence for interpretability and mitigation work is blunt. One signature is not a proxy
-for the others. A model with no attention sink can still carry a growing residual-norm
-asymmetry, and a gate that changes value-drain can leave the other two axes untouched.
+consequence is blunt. One signature is not a proxy for the others. A model with no attention
+sink can still carry a growing residual-norm asymmetry.
 
 **Next steps.** A randomly initialized vision encoder, to isolate what the decoder
-contributes to the residual-norm signal. A fresh-data run past 1B tokens, to match text-LM
-budgets. A scale-matched gate control, to separate gating from the half-scale confound of
-§2.
+contributes to the residual-norm signal. A fresh-data run past 1B tokens. A scale-matched
+gate control, to separate gating from the half-scale confound of §2.
 
 **Reproducibility.** A self-validating probe (§2) computes all signatures on a fixed probe
 batch, from logs taken every 100 steps, and the Appendix holds the per-seed tables. We will

@@ -2,45 +2,41 @@
 
 Decoder-only transformers pick up a habit early in training. They send a large share of
 attention to the first token or tokens of a sequence, whatever those tokens contain. The
-habit carries practical weight: streaming inference methods depend on it [1], the extreme
+habit carries practical weight: streaming inference depends on it [1], the extreme
 activation outliers that ride along with it make quantization harder [2], and a survey now
 organizes a subfield around interpreting and removing it [3].
 
 The sink does not arrive alone. Three measurements move together in text language models.
 Attention concentrates on the sink token. The value vector there drops to a near-zero norm,
 called value-state drain [4]. The residual stream there grows an abnormally large norm,
-called a massive activation [2, 5]. Gu et al. [6] report that these effects settle on the
-same few tokens, and Queipo-de-Llano, Arroyo et al. [7] that they appear near step 1000. The
-field has taken the co-occurrence as licence to treat all three as facets of one
-attention-sink phenomenon.
+called a massive activation [2, 5]. Prior work reports that these effects settle on the same
+few tokens [6] and appear near step 1000 [7]. The field has taken the co-occurrence as
+licence to treat all three as facets of one attention-sink phenomenon.
 
 Whether they really are one phenomenon is contested. One line argues for causal unity:
 massive activations mathematically require representational compression, and ablating them
 removes both compression valleys and sink formation [7]. A related view holds that
 outlier-driven rescaling by attention and residual sinks is *essential* to stable training
 [8]. Two recent studies pull the other way, each separating a pair of the signatures by
-intervention. A change of normalization scheme crushes the massive-activation spike while
-the sink ratio survives [9]. A value-scale intervention keeps the sink while suppressing
-massive activations [10]. Both are text-only, and each separates at most two of the three.
+intervention, one through the normalization scheme [9] and one through value scale [10].
+Both are text-only, and each separates at most two of the three.
 
 Which signature a study measures therefore decides what it can conclude. If the three move
 independently, a lever that clears concentration while leaving the value path alone reads as
 a fix under one metric and a failure under the next, and two papers can disagree about
-whether the sink was removed while both are right about what they measured. The stakes reach
-past bookkeeping. Sink-like attention has been tied to hallucination and weak visual
-grounding in deployed vision–language models [13–16], so which signature a mitigation
-actually moves has practical weight. We measure all three at once, throughout training, and
-test no downstream behavior here.
+whether the sink was removed while both are right. The stakes reach past bookkeeping:
+sink-like attention has been tied to hallucination and weak visual grounding in deployed
+vision–language models [13–16]. We measure all three at once, throughout training, and test
+no downstream behavior here.
 
 Vision–language models make a sharp instrument for the question. The multimodal setting
 changes what position 0 *is*: our sequence starts with 49 image tokens and has no BOS token,
 so the candidate sink token is a visual token, without the special-token machinery that
 text-LM sink accounts lean on. The multimodal sink studies we know analyze mostly frozen,
-already-trained backbones at inference time [11, 12], and where one tracks alignment
-checkpoints [11] it follows a single magnitude rather than the three signatures (§4). A
-reader still cannot see there whether the signatures arrive together, in sequence, or
-independently while they form in a decoder that starts from random weights. That takes
-pretraining with a randomly initialized decoder and all three logged separately from step 0.
+already-trained backbones at inference time [11, 12], and the one training-time view follows
+a single magnitude rather than the three signatures (§4). Seeing whether the signatures
+arrive together, in sequence, or independently takes pretraining with a randomly initialized
+decoder and all three logged separately from step 0.
 
 We work at deliberately small scale. The model is a 222M-parameter nanoVLM [17], where a
 pretrained SigLIP-B/16 encoder [18] feeds a randomly initialized decoder with the
@@ -48,18 +44,18 @@ SmolLM2-135M architecture [19]. Four levers each target one sink-relevant mechan
 standard softmax attention (*baseline*), a Qiu-style G1 output gate in our zero-initialized
 variant [20] (*g1gate*), unnormalized sigmoid attention, which removes the normalization
 sinks are argued to come from [6] (*sigmoid*), and initialization from the pretrained
-SmolLM2 text model, which imports whatever sink structure text pretraining built
-(*textinit*). A validated probe logs all three signatures every 100 steps. The four-arm
-comparison reuses a small image pool, so we re-test the central negative result under low
-repetition, on a fresh stream of one billion tokens (*RF*, 2.39 effective visual epochs).
+SmolLM2 text model (*textinit*). A validated probe logs all three signatures every 100
+steps. The four-arm comparison reuses a small image pool, so we re-test the central negative
+result under low repetition, on a fresh stream of one billion tokens (*RF*, 2.39 effective
+visual epochs).
 
 **Contributions.**
 
 1. **Four levers, four corners (n = 2–3 seeds/arm).** The four arms reach four different
    corners of the three-signature space, and no two share a triple. The value-norm ratio
-   alone is strongly drained, mildly drained, or amplified, and which one depends on the
-   lever (Fig. 1, Table 1). The arms are not a factorial design, so we report distinct
-   intervention-associated profiles, not isolated causal effects.
+   alone is strongly drained, mildly drained, or amplified, depending on the lever (Fig. 1,
+   Table 1). The arms are not a factorial design, so we report distinct intervention-associated
+   profiles, not isolated causal effects.
 2. **Low-repetition decoupling at 1B tokens (n = 1).** On a fresh stream at 2.39 effective
    visual epochs, with a held-out loss that never turns upward, the massive-activation proxy
    rises from an h-ratio of 1.43 to 3.22, about 2.3×. Concentration stays at exactly zero

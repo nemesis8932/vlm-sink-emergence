@@ -9,3 +9,6 @@ wandb/
 runs/keepers/
 ideas/
 .DS_Store
+# measure_pages.py scratch output
+deliverables/*/_bodycount.*
+deliverables/*/_d.*
