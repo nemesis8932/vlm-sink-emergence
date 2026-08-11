@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 396 198.4252">
+  <!-- Generator: Adobe Illustrator 30.8.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 1)  -->
+  <g id="background">
+    <rect width="396" height="198.4252" style="fill: #fff;"/>
+  </g>
+  <g id="a-pipeline">
+    <text id="l:1:4:9" transform="translate(2.8347 12.5985)" style="fill: #222; font-family: HelveticaNeue-Bold, &apos;Helvetica Neue&apos;; font-size: 9px; font-weight: 700;"><tspan x="0" y="0">(a)</tspan></text>
+    <text id="l:7:4:7" transform="translate(19.8425 12.3186)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 7px;"><tspan x="0" y="0">model and token sequence</tspan></text>
+    <rect x="2.8346" y="18.4252" width="31.1811" height="17.0079" rx="1.7008" ry="1.7008" style="fill: #fff; stroke: #444; stroke-miterlimit: 10; stroke-width: .7px;"/>
+    <text id="c:6.5:10:7" transform="translate(8.8949 29.3265)" style="fill: #222; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 7px;"><tspan x="0" y="0">image</tspan></text>
+    <rect x="2.8346" y="46.7717" width="31.1811" height="17.0079" rx="1.7008" ry="1.7008" style="fill: #fff; stroke: #444; stroke-miterlimit: 10; stroke-width: .7px;"/>
+    <text id="c:6.5:20:7" transform="translate(12.528 57.6729)" style="fill: #222; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 7px;"><tspan x="0" y="0">text</tspan></text>
+    <rect x="45.3543" y="15.5906" width="68.0315" height="22.6772" rx="1.7008" ry="1.7008" style="fill: #fff; stroke: #444; stroke-miterlimit: 10; stroke-width: .7px;"/>
+    <text id="c:28:8.6:7.5" transform="translate(58.5278 25.4277)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7.5px; font-weight: 500;"><tspan x="0" y="0">SigLIP-B/16</tspan></text>
+    <text id="c:28:11.6:6" transform="translate(52.5327 33.722)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">pretrained, trainable</tspan></text>
+    <rect x="45.3543" y="46.7717" width="68.0315" height="17.0079" rx="1.7008" ry="1.7008" style="fill: #fff; stroke: #444; stroke-miterlimit: 10; stroke-width: .7px;"/>
+    <text id="c:28:20:7.5" transform="translate(63.4213 57.7427)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7.5px; font-weight: 500;"><tspan x="0" y="0">tokenizer</tspan></text>
+    <rect x="124.7244" y="17.0079" width="45.3543" height="19.8425" rx="1.7008" ry="1.7008" style="fill: #fff; stroke: #444; stroke-miterlimit: 10; stroke-width: .7px;"/>
+    <text id="c:52:9.1:7.5" transform="translate(131.7267 26.845)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7.5px; font-weight: 500;"><tspan x="0" y="0">projector</tspan></text>
+    <text id="c:52:11.9:6" transform="translate(137.4028 34.5724)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">learned</tspan></text>
+    <line x1="34.0157" y1="26.9291" x2="45.3543" y2="26.9291" style="fill: none; stroke: #444; stroke-linejoin: round; stroke-width: .6px;"/>
+    <polygon points="45.3543 26.9291 41.1024 24.9449 41.1024 28.9134 45.3543 26.9291" style="fill: #444;"/>
+    <line x1="34.0157" y1="55.2756" x2="45.3543" y2="55.2756" style="fill: none; stroke: #444; stroke-linejoin: round; stroke-width: .6px;"/>
+    <polygon points="45.3543 55.2756 41.1024 53.2913 41.1024 57.2598 45.3543 55.2756" style="fill: #444;"/>
+    <line x1="113.3858" y1="26.9291" x2="124.7244" y2="26.9291" style="fill: none; stroke: #444; stroke-linejoin: round; stroke-width: .6px;"/>
+    <polygon points="124.7244 26.9291 120.4724 24.9449 120.4724 28.9134 124.7244 26.9291" style="fill: #444;"/>
+    <polyline points="170.0787 26.9291 175.1811 26.9291 175.1811 39.685 179.7165 39.685" style="fill: none; stroke: #444; stroke-linejoin: round; stroke-width: .6px;"/>
+    <polygon points="179.7165 39.685 175.4646 37.7008 175.4646 41.6693 179.7165 39.685" style="fill: #444;"/>
+    <polyline points="113.3858 55.2756 121.8898 55.2756 121.8898 68.0315 260.7874 68.0315 260.7874 46.4882" style="fill: none; stroke: #444; stroke-linejoin: round; stroke-width: .6px;"/>
+    <polygon points="260.7874 46.4882 258.8031 50.7402 262.7717 50.7402 260.7874 46.4882" style="fill: #444;"/>
+    <rect x="181.4173" y="35.1496" width="9.0709" height="9.0709" style="fill: #d0d0d0;"/>
+    <rect x="192.7559" y="35.1496" width="9.0709" height="9.0709" style="fill: #d0d0d0;"/>
+    <rect x="204.0945" y="35.1496" width="9.0709" height="9.0709" style="fill: #d0d0d0;"/>
+    <rect x="226.7717" y="35.1496" width="9.0709" height="9.0709" style="fill: #d0d0d0;"/>
+    <text id="c:77.6:14.7:7.5" transform="translate(216.2185 42.719)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 7.5px;"><tspan x="0" y="0">…</tspan></text>
+    <rect x="246.6142" y="35.1496" width="9.0709" height="9.0709" style="fill: #eaeaea;"/>
+    <rect x="257.9528" y="35.1496" width="9.0709" height="9.0709" style="fill: #eaeaea;"/>
+    <rect x="269.2913" y="35.1496" width="9.0709" height="9.0709" style="fill: #eaeaea;"/>
+    <rect x="291.9685" y="35.1496" width="9.0709" height="9.0709" style="fill: #eaeaea;"/>
+    <text id="c:100.6:14.7:7.5" transform="translate(281.4153 42.719)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 7.5px;"><tspan x="0" y="0">…</tspan></text>
+    <rect x="181.4173" y="35.1496" width="9.0709" height="9.0709" style="fill: none; stroke: #222; stroke-miterlimit: 10; stroke-width: .9px;"/>
+    <line x1="241.2283" y1="32.8819" x2="241.2283" y2="46.4882" style="fill: none; stroke: #777; stroke-linejoin: round; stroke-width: .4px;"/>
+    <text id="c:73.6:9.4:6.5" transform="translate(184.6063 27.5555)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6.5px;"><tspan x="0" y="0">49 image tokens</tspan></text>
+    <text id="c:73.6:11.6:6.5" transform="translate(187.4986 33.7917)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6.5px;"><tspan x="0" y="0">positions 0–48</tspan></text>
+    <text id="c:96.6:9.4:6.5" transform="translate(249.7479 27.5555)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6.5px;"><tspan x="0" y="0">79 text positions</tspan></text>
+    <text id="c:96.6:11.6:6.5" transform="translate(244.444 33.7917)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6.5px;"><tspan x="0" y="0">left-padded, 49–127</tspan></text>
+    <line x1="185.9528" y1="45.0709" x2="185.9528" y2="47.9055" style="fill: none; stroke: #222; stroke-linejoin: round; stroke-width: .5px;"/>
+    <text id="c:65.6:18.8:6.3" transform="translate(171.6552 54.1732)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 6.3px; font-weight: 500;"><tspan x="0" y="0">position 0</tspan></text>
+    <text id="c:65.6:21.2:6" transform="translate(151.4442 60.9346)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">first image token; no BOS</tspan></text>
+    <rect x="308.9764" y="18.4252" width="84.189" height="42.5197" rx="1.7008" ry="1.7008" style="fill: #fff; stroke: #444; stroke-miterlimit: 10; stroke-width: .7px;"/>
+    <text id="c:123.85:10:8" transform="translate(335.6871 29.4664)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 8px; font-weight: 500;"><tspan x="0" y="0">decoder</tspan></text>
+    <text id="c:123.85:12.8:6" transform="translate(312.7764 37.1235)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">SmolLM2-135M architecture</tspan></text>
+    <text id="c:123.85:15.2:6" transform="translate(318.2842 43.9267)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">30 layers, 9 query heads</tspan></text>
+    <text id="c:123.85:17.6:6" transform="translate(334.565 50.7298)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">3 KV groups</tspan></text>
+    <text id="c:123.85:20:5.8" transform="translate(317.3387 57.505)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 5.8px;"><tspan x="0" y="0">random init except textinit</tspan></text>
+    <line x1="301.0394" y1="39.685" x2="308.9764" y2="39.685" style="fill: none; stroke: #444; stroke-linejoin: round; stroke-width: .6px;"/>
+    <polygon points="308.9764 39.685 304.7244 37.7008 304.7244 41.6693 308.9764 39.685" style="fill: #444;"/>
+    <polyline points="351.0709 60.9449 351.0709 76.5354 39.685 76.5354 39.685 102.0472" style="fill: none; stroke: #777; stroke-dasharray: 2 1.6; stroke-linejoin: round; stroke-width: .6px;"/>
+    <polygon points="39.685 102.0472 37.7008 97.7953 41.6693 97.7953 39.685 102.0472" style="fill: #777;"/>
+    <text id="c:100:26.1:6" transform="translate(262.1259 74.8244)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">read-only probe</tspan></text>
+  </g>
+  <g id="b-probe">
+    <text id="l:1:38.5:9" transform="translate(2.8347 110.3938)" style="fill: #222; font-family: HelveticaNeue-Bold, &apos;Helvetica Neue&apos;; font-size: 9px; font-weight: 700;"><tspan x="0" y="0">(b)</tspan></text>
+    <text id="l:7:38.5:7.5" transform="translate(19.8425 110.1836)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7.5px; font-weight: 500;"><tspan x="0" y="0">measurement</tspan></text>
+    <text id="l:7:41.4:6.3" transform="translate(19.8425 118.2362)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6.3px;"><tspan x="0" y="0">fixed 32-example probe, every 100 training steps</tspan></text>
+    <rect x="18.7087" y="122.5984" width="3.685" height="3.685" style="fill: #777;"/>
+    <text id="l:9.5:45:7" transform="translate(26.9291 128.5391)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7px; font-weight: 500;"><tspan x="0" y="0">attention concentration</tspan></text>
+    <text id="l:9.5:47.4:6" transform="translate(26.9291 135.2023)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">fraction of 270 layer/query-head pairs above threshold</tspan></text>
+    <text id="l:9.5:49.8:6" transform="translate(26.9291 142.0054)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">padding queries and query 0 excluded; sigmoid weights row-normalized</tspan></text>
+    <rect x="18.7087" y="145.2756" width="3.685" height="3.685" style="fill: #777;"/>
+    <text id="l:9.5:53:7" transform="translate(26.9291 151.2162)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7px; font-weight: 500;"><tspan x="0" y="0">value-norm ratio</tspan></text>
+    <text id="l:9.5:55.4:6" transform="translate(26.9291 157.8795)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">position 0 vs. all other valid positions, after value projection</tspan></text>
+    <text id="l:9.5:57.8:6" transform="translate(26.9291 164.6826)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">3 KV-group norms pooled within a layer, then 30 layer ratios averaged</tspan></text>
+    <rect x="18.7087" y="167.9528" width="3.685" height="3.685" style="fill: #777;"/>
+    <text id="l:9.5:61:7" transform="translate(26.9291 173.8934)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7px; font-weight: 500;"><tspan x="0" y="0">residual-norm ratio</tspan></text>
+    <text id="l:9.5:63.4:6" transform="translate(26.9291 180.5566)" style="fill: #444; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">position 0 vs. all other valid positions, at each block input</tspan></text>
+    <text id="l:9.5:65.8:6" transform="translate(26.9291 187.3598)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">averaged across the 30 layers</tspan></text>
+  </g>
+  <g id="c-conditions">
+    <text id="l:89:38.5:9" transform="translate(252.2834 110.3938)" style="fill: #222; font-family: HelveticaNeue-Bold, &apos;Helvetica Neue&apos;; font-size: 9px; font-weight: 700;"><tspan x="0" y="0">(c)</tspan></text>
+    <text id="l:95:38.5:7.5" transform="translate(269.2913 110.1836)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7.5px; font-weight: 500;"><tspan x="0" y="0">conditions</tspan></text>
+    <rect x="252.2835" y="113.9528" width="6.2362" height="6.2362" style="fill: #3272ae;"/>
+    <text id="l:92.5:42.3:7" transform="translate(262.2047 120.8855)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7px; font-weight: 500;"><tspan x="0" y="0">baseline</tspan></text>
+    <text id="l:92.5:44.7:6" transform="translate(262.2047 127.5487)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">softmax; random decoder</tspan></text>
+    <rect x="252.2835" y="128.126" width="6.2362" height="6.2362" style="fill: #2e9459;"/>
+    <text id="l:92.5:47.3:7" transform="translate(262.2047 135.0588)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7px; font-weight: 500;"><tspan x="0" y="0">g1gate</tspan></text>
+    <text id="l:92.5:49.7:6" transform="translate(262.2047 141.722)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">softmax + zero-init gate (starts at 0.5)</tspan></text>
+    <rect x="252.2835" y="142.2992" width="6.2362" height="6.2362" style="fill: #c23b2c;"/>
+    <text id="l:92.5:52.3:7" transform="translate(262.2047 149.232)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7px; font-weight: 500;"><tspan x="0" y="0">sigmoid</tspan></text>
+    <text id="l:92.5:54.7:6" transform="translate(262.2047 155.8952)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">unnormalized sigmoid attention</tspan></text>
+    <rect x="252.2835" y="156.4724" width="6.2362" height="6.2362" style="fill: #d2790d;"/>
+    <text id="l:92.5:57.3:7" transform="translate(262.2047 163.4052)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7px; font-weight: 500;"><tspan x="0" y="0">textinit</tspan></text>
+    <text id="l:92.5:59.7:6" transform="translate(262.2047 170.0684)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">softmax; pretrained text decoder</tspan></text>
+    <rect x="252.2835" y="170.6457" width="6.2362" height="6.2362" style="fill: #7e63ac;"/>
+    <text id="l:92.5:62.3:7" transform="translate(262.2047 177.5784)" style="fill: #222; font-family: HelveticaNeue-Medium, &apos;Helvetica Neue&apos;; font-size: 7px; font-weight: 500;"><tspan x="0" y="0">RF</tspan></text>
+    <text id="l:92.5:64.7:6" transform="translate(262.2047 184.2417)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 6px;"><tspan x="0" y="0">baseline arch.; fresh 1B-token stream</tspan></text>
+    <text id="l:89:67.5:5.8" transform="translate(252.2834 192.1507)" style="fill: #777; font-family: HelveticaNeue, &apos;Helvetica Neue&apos;; font-size: 5.8px;"><tspan x="0" y="0">g1gate and RF change more than one factor</tspan></text>
+  </g>
+</svg>

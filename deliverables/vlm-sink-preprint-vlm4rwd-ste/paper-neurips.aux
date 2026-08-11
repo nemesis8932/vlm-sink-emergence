@@ -1,0 +1,159 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{ref1}
+\citation{ref3}
+\citation{ref4,ref6}
+\citation{ref2,ref5}
+\citation{ref7,ref8}
+\citation{ref9,ref10}
+\citation{ref12,ref13,ref14,ref15}
+\citation{ref11,ref12}
+\citation{ref11}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\citation{ref17}
+\citation{ref9,ref10}
+\citation{ref6}
+\citation{ref4}
+\citation{ref7}
+\citation{ref8}
+\citation{ref24}
+\citation{ref9}
+\citation{ref10}
+\citation{ref23}
+\citation{ref6}
+\citation{ref20}
+\citation{ref11}
+\citation{ref12}
+\citation{ref25}
+\citation{ref13,ref14,ref15}
+\citation{ref16}
+\citation{ref17}
+\citation{ref18}
+\citation{ref19}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related work}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Coupled signatures in text models}{2}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Dissociations and interventions}{2}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Multimodal sinks and grounding}{2}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Setup}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Model and training conditions}{2}{subsection.3.1}\protected@file@percent }
+\citation{ref20}
+\citation{ref6}
+\citation{ref21}
+\citation{ref22}
+\citation{ref6}
+\citation{ref6}
+\def\@LN@column{1}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Model, measurements and training conditions.} (a) A pretrained SigLIP encoder and a learned projector produce a 49-token visual prefix, followed by 79 left-padded text positions. Position 0 is the first image token and there is no BOS token. (b) A read-only probe on a fixed 32-example batch records the three signatures every 100 optimizer steps (Section 3.3). (c) The four training conditions and the fresh-data run RF. Decoder initialization is random except in textinit. The gate also halves the initial attention output and RF also changes the data stream, so neither isolates a single factor.}}{3}{figure.1}\protected@file@percent }
+\newlabel{fig:fig0}{{1}{3}{\textbf {Model, measurements and training conditions.} (a) A pretrained SigLIP encoder and a learned projector produce a 49-token visual prefix, followed by 79 left-padded text positions. Position 0 is the first image token and there is no BOS token. (b) A read-only probe on a fixed 32-example batch records the three signatures every 100 optimizer steps (Section 3.3). (c) The four training conditions and the fresh-data run RF. Decoder initialization is random except in textinit. The gate also halves the initial attention output and RF also changes the data stream, so neither isolates a single factor}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Data and training}{3}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Signature definitions}{3}{subsection.3.3}\protected@file@percent }
+\citation{ref6}
+\citation{ref2,ref5}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{4}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Each training condition lands in a different corner of signature space}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces \textbf  {The four corners, ranges over 2-3 seeds per condition.} Concentration uses $\mathrm  {Sink}^{0.2}_{1}$. The v-ratio and h-ratio are the layer-averaged quantities defined in Section 3.3.}}{4}{table.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Signature trajectories during pretraining.} (a) Value-norm ratio and (b) residual-norm ratio, on a logarithmic vertical scale, against maximum attention $a_{\max }$ (Section 3.3). Open circles mark initialization and diamonds the final recorded checkpoints: 174M tokens for baseline, 103M for g1gate, 102M for sigmoid, 60M for textinit, and 1B for RF. All paths use seed 0. Faint points are raw probes. Lines are smoothed (Appendix F). The dashed horizontal reference is a norm ratio of 1.}}{5}{figure.2}\protected@file@percent }
+\newlabel{fig:fig1}{{2}{5}{\textbf {Signature trajectories during pretraining.} (a) Value-norm ratio and (b) residual-norm ratio, on a logarithmic vertical scale, against maximum attention $a_{\max }$ (Section 3.3). Open circles mark initialization and diamonds the final recorded checkpoints: 174M tokens for baseline, 103M for g1gate, 102M for sigmoid, 60M for textinit, and 1B for RF. All paths use seed 0. Faint points are raw probes. Lines are smoothed (Appendix F). The dashed horizontal reference is a norm ratio of 1}{figure.2}{}}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Residual-norm growth without concentration over 1B tokens}{5}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {First-position attention across training conditions.} Selected-head query-by-key maps at early and final checkpoints, plus textinit at initialization, all seed 0. Each map is a batch-mean attention matrix normalized by row. The color scale saturates at 0.5. Cyan marks key position 0, dotted lines the image/text boundary. Heads are selected separately by condition. These qualitative maps use the batches and selection procedure documented in Appendix F.}}{6}{figure.3}\protected@file@percent }
+\newlabel{fig:fig2}{{3}{6}{\textbf {First-position attention across training conditions.} Selected-head query-by-key maps at early and final checkpoints, plus textinit at initialization, all seed 0. Each map is a batch-mean attention matrix normalized by row. The color scale saturates at 0.5. Cyan marks key position 0, dotted lines the image/text boundary. Heads are selected separately by condition. These qualitative maps use the batches and selection procedure documented in Appendix F}{figure.3}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces \textbf  {RF, one seed, initialization to 1B tokens.}}}{6}{table.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Concentration--value-norm correlations change sign across conditions}{6}{subsection.4.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces \textbf  {Pearson r across 90 layer/KV-group pairs at the final available reprobe, seed 0.}}}{6}{table.3}\protected@file@percent }
+\citation{ref2,ref5}
+\citation{ref9,ref10}
+\citation{ref7}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Limitations}{7}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Measurement scope}{7}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Training controls}{7}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{RF and generalization}{7}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{7}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Practical implications}{7}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Status and next steps}{7}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reproducibility}{7}{section*.9}\protected@file@percent }
+\bibcite{ref1}{{1}{}{{}}{{}}}
+\bibcite{ref2}{{2}{}{{}}{{}}}
+\bibcite{ref3}{{3}{}{{}}{{}}}
+\bibcite{ref4}{{4}{}{{}}{{}}}
+\bibcite{ref5}{{5}{}{{}}{{}}}
+\bibcite{ref6}{{6}{}{{}}{{}}}
+\bibcite{ref7}{{7}{}{{}}{{}}}
+\bibcite{ref8}{{8}{}{{}}{{}}}
+\bibcite{ref9}{{9}{}{{}}{{}}}
+\bibcite{ref10}{{10}{}{{}}{{}}}
+\bibcite{ref11}{{11}{}{{}}{{}}}
+\bibcite{ref12}{{12}{}{{}}{{}}}
+\bibcite{ref13}{{13}{}{{}}{{}}}
+\bibcite{ref14}{{14}{}{{}}{{}}}
+\bibcite{ref15}{{15}{}{{}}{{}}}
+\bibcite{ref16}{{16}{}{{}}{{}}}
+\bibcite{ref17}{{17}{}{{}}{{}}}
+\bibcite{ref18}{{18}{}{{}}{{}}}
+\bibcite{ref19}{{19}{}{{}}{{}}}
+\bibcite{ref20}{{20}{}{{}}{{}}}
+\bibcite{ref21}{{21}{}{{}}{{}}}
+\bibcite{ref22}{{22}{}{{}}{{}}}
+\bibcite{ref23}{{23}{}{{}}{{}}}
+\bibcite{ref24}{{24}{}{{}}{{}}}
+\bibcite{ref25}{{25}{}{{}}{{}}}
+\def\@LN@column{1}
+\def\@LN@column{1}
+\citation{ref25}
+\citation{ref11}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Extended methodology}{10}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Extended limitations}{10}{appendix.B}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Position and norm aggregation}{10}{subsection.B.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Gating and initialization}{10}{subsection.B.2}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Pretrained encoder}{11}{subsection.B.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Seed variation}{11}{subsection.B.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.5}RF restart and provenance}{11}{subsection.B.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.6}Data and evaluation scope}{11}{subsection.B.6}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Supporting figures}{12}{appendix.C}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {First-position attention by layer and query head.} Initialization, an intermediate checkpoint near one quarter of each run's steps, and the final probe, seed 0. Rows within each panel are layers and columns query heads. Inset numbers are optimizer steps. Attention is row-normalized for sigmoid. All panels share a scale saturated at 0.6. Run endpoints are those of Figure 2.}}{12}{figure.4}\protected@file@percent }
+\newlabel{fig:figA1}{{4}{12}{\textbf {First-position attention by layer and query head.} Initialization, an intermediate checkpoint near one quarter of each run's steps, and the final probe, seed 0. Rows within each panel are layers and columns query heads. Inset numbers are optimizer steps. Attention is row-normalized for sigmoid. All panels share a scale saturated at 0.6. Run endpoints are those of Figure 2}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Concentration--value-norm associations by condition.} Each point is one layer/KV-group pair, 90 per condition, at the final available seed-0 reprobe. Attention averages the group's three query heads. Its value ratio is counted once. Pearson correlations match Table 3. The observations are descriptive and retain dependence between groups within a layer.}}{13}{figure.5}\protected@file@percent }
+\newlabel{fig:figA2}{{5}{13}{\textbf {Concentration--value-norm associations by condition.} Each point is one layer/KV-group pair, 90 per condition, at the final available seed-0 reprobe. Attention averages the group's three query heads. Its value ratio is counted once. Pearson correlations match Table 3. The observations are descriptive and retain dependence between groups within a layer}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {Entropy of attention over key positions.} Shannon entropy of the query-averaged key distribution, normalized by log(128), then averaged over heads and layers, seed 0. This is marginal entropy, not the average entropy of individual attention rows. Checkpoints are joined by lines. Initialization is placed at 0.02M tokens for the logarithmic axis.}}{13}{figure.6}\protected@file@percent }
+\newlabel{fig:figA3}{{6}{13}{\textbf {Entropy of attention over key positions.} Shannon entropy of the query-averaged key distribution, normalized by log(128), then averaged over heads and layers, seed 0. This is marginal entropy, not the average entropy of individual attention rows. Checkpoints are joined by lines. Initialization is placed at 0.02M tokens for the logarithmic axis}{figure.6}{}}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Full per-seed signature table}{14}{appendix.D}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces \textbf  {Per-seed signatures at the comparison checkpoints.}}}{14}{table.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {E}Per-position attention and norm profiles}{14}{appendix.E}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces \textbf  {Raw first-position attention in checkpoint reprobes, seed 0.}}}{14}{table.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {E.1}Spatial checks and image-only norm comparison}{14}{subsection.E.1}\protected@file@percent }
+\citation{ref6}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces \textbf  {Positions of attention maxima and norm extrema in supplementary scans.}}}{15}{table.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {F}Measurement and rendering details}{15}{appendix.F}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Figure 2 trajectories}{15}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Group correlations}{15}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Raw and normalized sigmoid weights}{15}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Figure 3 batches and selection}{15}{section*.14}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {G}Mechanistic hypotheses}{16}{appendix.G}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {H}Metric provenance}{16}{appendix.H}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {I}Threshold ordering and spatial dissociation}{16}{appendix.I}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {First threshold crossings during training.} Filled markers indicate the first recorded crossing of h-ratio $>$ 2, v-ratio $<$ 0.8, or maximum attention $>$ 0.3. Hollow markers mark conditions with no observed crossing by the end of the track. Initialization is placed at 0.04M tokens on the log axis. Crossing times are interval-censored by the 100-step probe cadence. All runs use seed 0.}}{16}{figure.7}\protected@file@percent }
+\newlabel{fig:figA4}{{7}{16}{\textbf {First threshold crossings during training.} Filled markers indicate the first recorded crossing of h-ratio $>$ 2, v-ratio $<$ 0.8, or maximum attention $>$ 0.3. Hollow markers mark conditions with no observed crossing by the end of the track. Initialization is placed at 0.04M tokens on the log axis. Crossing times are interval-censored by the 100-step probe cadence. All runs use seed 0}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {First concentration crossing by layer and query head.} Colors show the first step with mean attention to position 0 above 0.3. White cells never cross during the recorded trajectory. The fractions crossing at least once are 1\% for g1gate, 89\% for sigmoid and 87\% for textinit. Baseline and RF have no crossing heads. Layers increase downward and query-head indices increase to the right.}}{17}{figure.8}\protected@file@percent }
+\newlabel{fig:figA5}{{8}{17}{\textbf {First concentration crossing by layer and query head.} Colors show the first step with mean attention to position 0 above 0.3. White cells never cross during the recorded trajectory. The fractions crossing at least once are 1\% for g1gate, 89\% for sigmoid and 87\% for textinit. Baseline and RF have no crossing heads. Layers increase downward and query-head indices increase to the right}{figure.8}{}}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {paragraph}{Ordering}{17}{section*.15}\protected@file@percent }
+\def\@LN@column{1}
+\def\@LN@column{1}
+\def\@LN@column{1}
+\def\@LN@column{1}
+\def\@LN@column{1}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\def\@LN@column{1}
+\gdef \@abspage@last{23}
