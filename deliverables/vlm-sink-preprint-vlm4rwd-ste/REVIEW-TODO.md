@@ -8,16 +8,31 @@ One pass serves both arXiv v1 and the eventual VLM4RWD ≤8pp cut.
 
 ---
 
-## ⏸ ON STANDBY — blocks §1/§2/§5 rewrites
+## ✅ RESOLVED — motivation reframed (user + reviewer, 2026-08-10)
 
-**Motivation framing.** Awaiting reviewer's answer to:
-1. For a preprint v1, can the hallucination bridging experiment stay as *future work*, or does
-   that read as overclaiming?
-2. If not → trim to 1–2 mentions as downstream stakes, focus on sinks + three signatures.
-3. Target ~12 pages for the preprint (eventually <8 for VLM4RWD)?
+**Decision: drop the hallucination bridging experiment as "future work"; cut hallucination to
+1–2 mentions total, as downstream stakes only.** §1/§2/§5 are now UNBLOCKED.
 
-Current state: **12 hallucination mentions** — intro 5, related work 4, abstract 2, conclusion 1.
-Do not start abstract/intro/related-work rewrites until this resolves; everything else can proceed.
+New framing: the attention sink has **three signatures**; prior work focuses on one or another,
+and conclusions vary depending on which you measure. That is the motivation — not hallucination.
+
+From **12 mentions** (intro 5, related work 4, abstract 2, conclusion 1) → **1–2 total**.
+
+Concrete consequences to handle:
+- **Abstract**: replace the hallucination opening hook with the three-signature framing. The
+  closing "we do not test grounding/hallucination" line can go too — with the motivation removed
+  there is nothing left to disclaim.
+- **Intro**: 5 → at most 1, as stakes, not as the frame.
+- **Related work**: 4 → 0–1. Keep the [3]/[4] cite-and-distinguish ¶ and the Luo [7] narrowing
+  clause; those are unrelated to hallucination and stay.
+- **Conclusion**: 1 → 0.
+- **⚠ Citation integrity**: refs **[21], [22], [24]** were added solely for the grounding bridge.
+  After the cut, check each is still cited somewhere; **delete any that are now orphaned.** An
+  uncited reference is a review flag. (This also supersedes the pending "[21,22] → [22] only"
+  abstract fix — moot if that sentence is gone.)
+- **Note for August**: this weakens venue fit for VLM4RWD ("Grounded and Faithful VLMs"). If a
+  grounding paragraph is wanted for the workshop build only, treat it as a separate
+  build-conditional decision then — do not fork the prose now.
 
 ---
 
@@ -25,8 +40,8 @@ Do not start abstract/intro/related-work rewrites until this resolves; everythin
 
 | section | now | target | main action |
 |---|---:|---:|---|
-| 01-abstract | 406 | ~200 | shorten; **remove caveats entirely** |
-| 02-intro | 1031 | ~700 | tighten; hallucination pending standby |
+| 01-abstract | 406 | ~200 | shorten; **remove caveats entirely**; reframe opening to three-signature motivation |
+| 02-intro | 1031 | ~700 | tighten; hallucination 5 → ≤1 |
 | 03-method | 1630 | ~1100 | keep notation block; move detail → appendix |
 | 04-results | 3341 | ~1900 | **per-seed results → appendix**; biggest single cut |
 | 05-related-work | 1211 | ~650 | halve; keep cite-and-distinguish ¶ intact |
@@ -47,7 +62,10 @@ Do not start abstract/intro/related-work rewrites until this resolves; everythin
 - [ ] **Figure captions**: shorten. Keep seed + checkpoint/token labels (added last round).
 - [ ] **Sentence-level**: shorter, concise; drop repetitive and unsubstantiated lines.
 - [ ] **Conclusion**: shorter.
-- [ ] **Hallucination framing**: pending standby above.
+- [ ] **Hallucination framing**: cut 12 → 1–2 mentions; reframe motivation around the three
+      signatures (see RESOLVED section above).
+- [ ] **Citation integrity sweep**: after the hallucination cut, remove any now-orphaned
+      references ([21]/[22]/[24] are the candidates).
 
 ---
 
