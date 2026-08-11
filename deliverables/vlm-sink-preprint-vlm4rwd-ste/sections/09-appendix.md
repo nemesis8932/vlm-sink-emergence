@@ -167,7 +167,33 @@ run: gate-scale sweeps that separate gating from the half-scale confound of §2,
 at matched effective attention temperature, and text-initialized runs with the sink
 machinery ablated before alignment.
 
-## F. Notes on metric hygiene
+## F. Reporting details
+
+*Token accounting:* one token is one image token or one non-padding text token. A full
+sequence contributes 49 image tokens plus its non-padding text tokens, so a step of batch
+128 contributes at most 16,384 tokens and about 9.5K on average. All "M tokens" figures in
+this paper use that definition.
+
+*Probe batch:* the fixed probe batch holds n = 32 samples, drawn with `random.seed(0)` from
+the repeated `the_cauldron` tail. We label this probe version `v1-repeatedtail-32`. RF uses
+the same probe batch as the repeated arms, so its signatures stay comparable to theirs even
+though its training stream differs (§5).
+
+*Validation:* a 1,024-example held-out pool, evaluated every 500 steps. Each estimate is the
+mean over the first 512 examples of that pool, in four batches of 128 in fixed order. We
+report `val_unseen`, which holds out images. For the repeated arms we also log `val_seen`,
+which re-uses training images with fresh question–answer text. The RF run has no distinct
+seen split: at 2.39 visual epochs its `val_seen` loader re-uses the held-out pool, so we
+report only `val_unseen` for RF. The seed-0 archive values for the matched 100M-token
+checkpoint are 1.161 for *baseline*, 1.138 for *g1gate*, 1.108 for *sigmoid*, and 0.832 for
+*textinit*; the main-text values are seed 1 or 2. For RF the held-out loss goes from 1.35
+over the first ten evaluations to 0.68 over the last ten, and the fitted slope over the
+second half of the run stays negative.
+
+*Aggregation:* each per-layer or per-head quantity is first averaged over the probe batch
+and over valid query positions, then aggregated by the formulas of §2.
+
+## G. Notes on metric hygiene
 
 We record two corrections that we made during the audit of the numbers in this paper.
 First, an earlier internal consolidation mixed two metrics in one column, mean and max
