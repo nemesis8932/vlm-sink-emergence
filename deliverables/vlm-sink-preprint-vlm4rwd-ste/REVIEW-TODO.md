@@ -3,9 +3,19 @@
 Source: researcher review, 2026-08-10. Process: **user edits by hand; Director reviews for
 validity before push.** Nothing is edited without proposing first.
 
-Target: body (§1–7) **9,129 → ~5,500 words** (now **7,422**; the remaining gap sits almost
-entirely in the three blocked sections, 01/02/05 = 2,648 words against ~1,550 target) (≈8pp NeurIPS format; +refs +appendix ≈ 12pp total).
-One pass serves both arXiv v1 and the eventual VLM4RWD ≤8pp cut.
+**ONE PAPER, ONE TRIM (decided 2026-08-10).** Separate arXiv and workshop versions are not worth
+maintaining. There is one paper, and it must land **under 8 pages of body** (excl. refs/appendix)
+— which satisfies VLM4RWD, so compaction is never revisited before Aug 30. **≤8pp is a hard
+constraint, not a target.** The binding test is the rendered page count in the NeurIPS 2026
+template; word budgets below are only a proxy — measure real pages.
+
+Target: body (§1–7) **9,129 → ~5,500 words**. Now **7,329**.
+
+⚠ **Pass two will not close the gap on its own.** The three remaining sections total **2,538**
+(abstract 406, intro 921, related work 1,211); trimming them to ~1,550 removes ~988 → **~6,341**,
+still ~840 over. The already-trimmed sections sit ~640 above their own targets (method 1,309 vs
+~1,100; results 2,215 vs ~1,900; conclusion 341 vs ~250). Expect a **second-round cut across
+already-trimmed sections** — to be proposed and reviewed, not applied unilaterally.
 
 ---
 
@@ -31,9 +41,9 @@ Concrete consequences to handle:
   After the cut, check each is still cited somewhere; **delete any that are now orphaned.** An
   uncited reference is a review flag. (This also supersedes the pending "[21,22] → [22] only"
   abstract fix — moot if that sentence is gone.)
-- **Note for August**: this weakens venue fit for VLM4RWD ("Grounded and Faithful VLMs"). If a
-  grounding paragraph is wanted for the workshop build only, treat it as a separate
-  build-conditional decision then — do not fork the prose now.
+- **Venue-fit note**: this weakens fit for VLM4RWD ("Grounded and Faithful VLMs"). Accepted —
+  under the one-paper decision there is no workshop-only variant, so the grounding framing stays
+  cut. Do not fork the prose.
 
 ---
 
@@ -41,11 +51,11 @@ Concrete consequences to handle:
 
 | section | now | target | main action |
 |---|---:|---:|---|
-| 01-abstract | 406 | ~200 | ⏸ blocked — shorten; **remove caveats entirely**; reframe opening to three-signature motivation |
-| 02-intro | 1031 | ~700 | ⏸ blocked — tighten; hallucination 5 → ≤1 |
+| 01-abstract | 406 → **296** | ~200 | ✅ reframed on three signatures; caveats and closing disclaimer removed |
+| 02-intro | 1031 → **870** | ~700 | ✅ hallucination 5 → 1; new which-signature-you-measure frame |
 | 03-method | 1630 → **1314** | ~1100 | ✅ notation block kept; reporting details → App. F |
 | 04-results | 3341 → **2193** | ~1900 | ✅ per-seed table → App. B; sigmoid raw/normalized → App. D; hypotheses → App. E |
-| 05-related-work | 1211 | ~650 | ⏸ blocked — halve; keep cite-and-distinguish ¶ intact |
+| 05-related-work | 1211 → **916** | ~650 | ✅ hallucination ¶ → 1 sentence; [9]/[10] ¶ and Luo [11] clause kept |
 | 06-limitations | 1075 → **926** | ~900 | ✅ deduped against §2; every item kept |
 | 07-conclusion | 435 → **341** | ~250 | ✅ shortened |
 | 09-appendix | 1051 → **2179** | ~1500 | ✅ grew: B per-seed, D measurement, E hypotheses, F reporting |
@@ -56,16 +66,19 @@ Concrete consequences to handle:
 
 - [x] **Consolidate repeated caveats → Limitations** (unblocked sections). Results/method now
       cross-reference §5 instead of restating. Abstract still blocked.
-- [ ] ⏸ **Abstract**: shorter, no caveats, keep the audited novelty sentence. BLOCKED.
+- [x] **Abstract**: shorter, no caveats, novelty sentence kept. Opens on the three signatures
+      and on why which-one-you-measure changes the conclusion. Closing grounding disclaimer
+      removed with the motivation it disclaimed.
 - [x] **Per-seed results → appendix**; main text keeps the collapsed four-corner view.
       Tables renumbered 1–3; old Table 1 is now Appendix B.
-- [ ] ⏸ **Related work**: shorten. Keep the [3]/[4] cite-and-distinguish passage and the Luo [7]
-      narrowing clause — those are review-critical, not padding. BLOCKED.
+- [x] **Related work**: shortened. The [9]/[10] cite-and-distinguish passage and the Luo [11]
+      Appendix-A.4 narrowing clause are intact (renumbered from [3]/[4] and [7]).
 - [x] **Figure captions**: shortened (Figs 1–3). Seed, checkpoint and token labels kept;
       smoothing and sigmoid-provenance detail moved to Appendix D.
 - [x] **Sentence-level**: done in the unblocked sections.
 - [x] **Conclusion**: shorter.
-- [ ] ⏸ **Hallucination framing** (BLOCKED): cut 12 → 1–2 mentions; reframe motivation around the three
+- [x] **Hallucination framing**: 12 → **2** body mentions (intro 1, related work 1), both as
+      downstream stakes only. Conclusion's hallucination next-step removed. Motivation reframed around the three
       signatures (see RESOLVED section above).
 - [ ] **Citation integrity sweep**: after the hallucination cut, remove any now-orphaned
       references ([21]/[22]/[24] are the candidates).
