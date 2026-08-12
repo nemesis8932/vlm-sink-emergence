@@ -33,8 +33,10 @@ The value-norm axis alone takes three directions — drained hard, drained mildl
 the corners separate pairwise on single axes. *g1gate* differs from *baseline* on the
 value-norm axis alone: concentration absent or near-absent and the residual-norm ratio
 moderate in both, while the gate makes the baseline's mild drain milder still, a 15–19%
-drain rather than none. *sigmoid* and *textinit* both reach strong concentration and then
-part on the *direction* of the value-norm move and on the residual-norm ratio. The arms are
+drain rather than none. *sigmoid* and *textinit* both reach strong concentration and then part on the *direction* of the
+value-norm move and on the residual-norm ratio. The *sigmoid* corner is relative: its concentration
+is row-normalized over a shrinking raw gate budget, with top-head raw pos0 mass 0.065 at the final
+checkpoint (Appendix D). The arms are
 not a factorial design, so we report distinct intervention-associated profiles rather than
 isolated causal effects of single levers. The trajectories in Figure 1 separate early and do
 not share one origin: *textinit* starts from a pretrained text decoder that already carries

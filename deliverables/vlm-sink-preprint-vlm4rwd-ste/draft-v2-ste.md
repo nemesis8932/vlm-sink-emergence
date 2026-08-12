@@ -4,7 +4,7 @@
 
 ---
 
-Abstract. Attention sinks, token positions that draw heavy attention while contributing little, are a widely studied target of interventions in language models and are often linked, though not causally, to hallucinations in vision-language models. A sink is defined by attention concentration (Sink^ε_1), but in text LMs it reliably arrives with two companions: a drained value norm (v-ratio) and massive activations (h-ratio) at the same position. We measure these three signatures during multimodal pretraining: a 222M vision-language model with a randomly initialized decoder, position 0 being an image token, no BOS, trained under four levers: softmax attention, output-gated softmax, unnormalized sigmoid attention, and initialization from a pretrained text LM. We find that the signatures come apart, across 2-3 seeds, depending on which train-time lever was applied. Most notably: on a 1B fresh-token run (2.39 effective visual epochs), the massive activations more than double while attention concentration stays at exactly zero at every threshold we test. Value-norm drain emerges as a third independent axis, apart from the massive-activation vs. sink dissociations known from text-only models.
+Abstract. Attention sinks, token positions that draw heavy attention while contributing little, are a widely studied target of interventions in language models and are often linked, though not causally, to hallucinations in vision-language models. A sink is defined by attention concentration (Sink^ε_1), but in text LMs it reliably arrives with two companions: a drained value norm (v-ratio) and massive activations (h-ratio) at the same position. We measure these three signatures during multimodal pretraining: a 222M vision-language model with a randomly initialized decoder, position 0 being an image token, no BOS, trained under four levers: softmax attention, output-gated softmax, unnormalized sigmoid attention, and initialization from a pretrained text LM. We find that the signatures come apart, across 2-3 seeds, depending on which train-time lever was applied. Most notably: on a 1B fresh-token run (2.39 effective visual epochs, single seed), the massive-activation proxy more than doubles while attention concentration stays at exactly zero at every threshold we test. Value-norm drain emerges as a third axis, apart from the massive-activation vs. sink dissociations known from text-only models.
 
 
 ---
@@ -204,8 +204,10 @@ The value-norm axis alone takes three directions — drained hard, drained mildl
 the corners separate pairwise on single axes. *g1gate* differs from *baseline* on the
 value-norm axis alone: concentration absent or near-absent and the residual-norm ratio
 moderate in both, while the gate makes the baseline's mild drain milder still, a 15–19%
-drain rather than none. *sigmoid* and *textinit* both reach strong concentration and then
-part on the *direction* of the value-norm move and on the residual-norm ratio. The arms are
+drain rather than none. *sigmoid* and *textinit* both reach strong concentration and then part on the *direction* of the
+value-norm move and on the residual-norm ratio. The *sigmoid* corner is relative: its concentration
+is row-normalized over a shrinking raw gate budget, with top-head raw pos0 mass 0.065 at the final
+checkpoint (Appendix D). The arms are
 not a factorial design, so we report distinct intervention-associated profiles rather than
 isolated causal effects of single levers. The trajectories in Figure 1 separate early and do
 not share one origin: *textinit* starts from a pretrained text decoder that already carries
@@ -428,9 +430,9 @@ downstream capability.
 
 # 6. Conclusion
 
-The coupling is lever-dependent. Across four training levers, the three signatures land in four distinct corners: value norms are strongly drained, mildly drained, or amplified, and on a billion fresh tokens massive activations more than double while concentration stays at zero. This extends two-way dissociations in text-only models [9, 10] to a third, separately measured axis in multimodal pretraining. In text LMs, massive activations can causally produce sinks [7]; our results show the coupling can also fail to form.
+The coupling is lever-dependent. Across four training levers, the three signatures land in four distinct corners: value norms are strongly drained, mildly drained, or amplified, and on a billion fresh tokens the massive-activation proxy more than doubles while concentration stays at zero. This extends two-way dissociations in text-only models [9, 10] to a third, separately measured axis in multimodal pretraining. In text LMs, massive activations can causally produce sinks [7]; our results show the coupling can also fail to form.
 
-The practical implication is simple: no one signature is a proxy for the others. A model without a concentration sink can still develop a growing residual-norm asymmetry, and an intervention judged on one signature may leave the others unchanged.
+The practical implication is simple: across our arms, no one signature was a proxy for the others. A model without a concentration sink can still develop a growing residual-norm asymmetry, and an intervention judged on one signature may leave the others unchanged.
 
 **Next steps.** A randomly initialized vision encoder, to isolate what the decoder
 contributes to the residual-norm signal. A fresh-data run past 1B tokens. A scale-matched
