@@ -123,7 +123,7 @@ relative reallocation of a shrinking gate budget onto position 0, not the growth
 absolute mass there (Appendix H). Raw and row-normalized values here come from the same fixed
 probe batch as every other number in this paper, masked to valid query positions.
 
-**Sigmoid heat-map provenance.** The sigmoid column of Figure 3 uses head L7H3 (0-indexed),
+**Sigmoid heat-map provenance.** The sigmoid column of Figure 2 uses head L7H3 (0-indexed),
 the arm's top sink head on the fixed probe batch. An earlier dump selected heads by raw,
 unnormalized gate score, picked different heads, and understated the arm. The sigmoid heat
 maps are re-rendered from an auxiliary streaming batch, because the saved matrices covered
@@ -216,15 +216,24 @@ profiles already sum to one over the full sequence.
 
 ## H. Ordering, the sigmoid measurement note, and positional dissociation
 
-This appendix holds the detail behind the ordering paragraph of §3.1 and Figure 2.
+This appendix holds the detail behind the ordering paragraph of §3.1.
 
 <figure id="figA4">
+<img src="figures/fig4_leadlag_top.svg" alt="Sink lead-lag ordering">
+<figcaption><b>Figure A4: When each signature first crosses threshold.</b> Seed 0 throughout.
+Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A
+filled marker is the first probe at which a signature crossed its threshold
+(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never crossed. <b>Crossing times are interval-
+censored</b> at the 100-step probe cadence (head-level map in Fig. A5).</figcaption>
+</figure>
+
+<figure id="figA5">
 <img src="figures/figA4_birthmap.svg" alt="Birth-maps: step of first concentration crossing per head">
-<figcaption><b>Figure A4: Birth-maps.</b> The step at which each (layer, query-head) pair
+<figcaption><b>Figure A5: Birth-maps.</b> The step at which each (layer, query-head) pair
 first crosses the concentration threshold (attn&rarr;pos0 &gt; 0.3), seed 0, for the three
 arms in which any head crosses. No <em>baseline</em> and no <em>RF</em> head ever crosses.
 1% of <em>g1gate</em> heads do, against 89% for <em>sigmoid</em> and 87% for
-<em>textinit</em>. This is the head-level view behind Figure 2.</figcaption>
+<em>textinit</em>. This is the head-level view behind Fig. A4.</figcaption>
 </figure>
 
 **Timings.** In the softmax arms with randomly initialized decoders, *baseline* and *g1gate*
@@ -233,7 +242,7 @@ tokens and value-drain follows within about 50M. Concentration never comes. No b
 RF head ever crosses it, and g1gate reaches 1% of heads, a single-layer blip late in
 training. *sigmoid* mirrors that pattern, with concentration crossing at about 6M tokens and
 89% of heads eventually, against 87% for *textinit*, while neither *sigmoid* norm signature
-ever crosses (Fig. A4). *textinit* inherits its
+ever crosses (Fig. A5). *textinit* inherits its
 norm signatures rather than growing them: value-drain and an elevated residual-norm ratio
 are both present at 0 tokens, imported with the pretrained text-LM weights. Concentration is
 *not* inherited the same way, since Sink^0.3 is 0.000 at step 0 and crosses before 1M

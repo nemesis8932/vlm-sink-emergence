@@ -41,7 +41,8 @@ p.eq { text-align: center; hyphens: none; }
 ol, ul { margin: 0.15em 0 0.55em; padding-left: 1.5em; }
 li { text-align: justify; margin-bottom: 0.25em; }
 figure { margin: 0.9em 0 1em; break-inside: avoid; text-align: center; }
-figure img { width: 100%; }
+/* 80%: the body fits 8pp at this width (measured); 100% spills to 9 */
+figure img { width: 80%; }
 figcaption { font-size: 9pt; text-align: justify; color: #000; margin-top: 0.35em;
              line-height: 1.15; hyphens: auto; }
 .table-caption { font-size: 9pt; margin: 0.7em 0 0.25em; }

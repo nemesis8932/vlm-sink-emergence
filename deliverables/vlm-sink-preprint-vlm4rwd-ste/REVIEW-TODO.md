@@ -3,11 +3,27 @@
 Source: researcher review, 2026-08-10. Process: **user edits by hand; Director reviews for
 validity before push.** Nothing is edited without proposing first.
 
-**ONE PAPER, ONE TRIM (decided 2026-08-10).** Separate arXiv and workshop versions are not worth
-maintaining. There is one paper, and it must land **under 8 pages of body** (excl. refs/appendix)
-— which satisfies VLM4RWD, so compaction is never revisited before Aug 30. **≤8pp is a hard
-constraint, not a target.** The binding test is the rendered page count in the NeurIPS 2026
-template; word budgets below are only a proxy — measure real pages.
+**⚠ SUPERSEDED 2026-08-12 — TRIM IS DONE. DO NOT CUT FURTHER.**
+
+The ≤8pp work stops here. Two findings killed the premise:
+1. **The build is not the NeurIPS 2026 LaTeX template** — it is a custom HTML→PDF pipeline, and
+   `measure_pages.py` is a geometric proxy for `neurips_2026.sty`. VLM4RWD requires the official
+   format, so every page number in this project is a proxy against a format we cannot submit.
+2. **arXiv has no page limit.** The 8pp constraint only ever bound the workshop.
+
+Decision: **post arXiv v1 at its current length; fight 8pp during the LaTeX conversion** for
+VLM4RWD (deadline Aug 30). The "one paper, one trim" rationale — avoid a second compaction pass —
+is void, because the LaTeX conversion forces one regardless and will change the page count.
+
+Also decisive: **compaction has started injecting defects.** Pass 5 generalised a *textinit*-scoped
+sentence to all arms (sigmoid contradicts it), and two "must survive" qualifiers were cut and
+restored. Further trimming costs correctness, not bloat.
+
+**Figure 3 stays in the body** (user, 2026-08-12). Revisit all figure placement during the LaTeX
+pass, against real measurements.
+
+~~ONE PAPER, ONE TRIM (decided 2026-08-10): one paper, under 8pp body, compaction never revisited
+before Aug 30.~~
 
 Target: body (§1–7) **9,129 → ~5,500 words**. Now **5,473** — target met. The binding number is pages, and the body renders at **10pp**.
 

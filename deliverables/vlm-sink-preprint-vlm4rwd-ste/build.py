@@ -195,7 +195,8 @@ p { text-align: justify; hyphens: auto; margin: 0 0 0.5em; orphans: 3; widows: 3
 ol, ul { margin: 0.2em 0 0.7em; padding-left: 1.7em; }
 li { text-align: justify; margin-bottom: 0.35em; }
 figure { margin: 1.2em 0 1.3em; break-inside: avoid; text-align: center; }
-figure img { width: 100%; }
+/* 80%: the body fits 8pp at this width (measured); 100% spills to 9 */
+figure img { width: 80%; }
 figcaption { font-size: 9pt; text-align: justify; color: #222; margin-top: 0.45em;
              line-height: 1.34; hyphens: auto; }
 .table-caption { font-size: 9pt; margin: 0.9em 0 0.3em; }
