@@ -1,20 +1,8 @@
 # 6. Conclusion
 
-We tracked concentration, value-norm drain, and a residual-norm ratio we read as a
-massive-activation proxy as three separate quantities, across multimodal pretraining with a
-randomly initialized decoder. Across the tested arms they need not co-move. Four levers produced
-four different signature corners. The value-norm axis alone moved in three directions. On a
-low-repetition run over a billion fresh tokens the proxy grew about 2.3× while concentration
-never left zero, and at seed 0 the per-head relationship between the first two flipped sign
-across arms. The signatures also arrived in different orders, and under text initialization they
-sat on different tokens.
+The coupling is lever-dependent. Across four training levers, the three signatures land in four distinct corners: value norms are strongly drained, mildly drained, or amplified, and on a billion fresh tokens massive activations more than double while concentration stays at zero. This extends two-way dissociations in text-only models [9, 10] to a third, separately measured axis in multimodal pretraining. In text LMs, massive activations can causally produce sinks [7]; our results show the coupling can also fail to form.
 
-Text-LM work documents real interactions among these signatures, including a causal route
-from massive activations to sinks and compression valleys [7]. What our results add is that
-the coupling is optional. For each axis there is a lever that moves it without the others,
-which extends the two-way text-only dissociations [9, 10] to a third axis and a new setting. The practical
-consequence is blunt. One signature is not a proxy for the others. A model with no attention
-sink can still carry a growing residual-norm asymmetry.
+The practical implication is simple: no one signature is a proxy for the others. A model without a concentration sink can still develop a growing residual-norm asymmetry, and an intervention judged on one signature may leave the others unchanged.
 
 **Next steps.** A randomly initialized vision encoder, to isolate what the decoder
 contributes to the residual-norm signal. A fresh-data run past 1B tokens. A scale-matched
