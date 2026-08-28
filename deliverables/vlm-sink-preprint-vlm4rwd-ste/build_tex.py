@@ -152,6 +152,8 @@ def figure_block(b, width):
     fid, src, cap = m.group(1), m.group(2), m.group(3)
     src = src.replace(".svg", ".pdf")            # pdflatex needs the vector PDF
     cap = " ".join(cap.split())
+    # \caption already prints "Figure N:", so strip the number we carry in the source
+    cap = re.sub(r"^<b>\s*Figure\s+[A-Z]?\d+:\s*", "<b>", cap)
     return ("\\begin{figure}[t]\n  \\centering\n"
             f"  \\includegraphics[width={width}\\linewidth]{{{src}}}\n"
             f"  \\caption{{{inline(cap)}}}\n  \\label{{fig:{fid}}}\n"
@@ -214,7 +216,15 @@ def convert(text, fig_width, top="section"):
         if first.startswith("|"):
             out.append(table_block(lines, pending_caption)); pending_caption = None; continue
         if TABCAP.match(first):
-            pending_caption = re.sub(r"^\*\*|\*\*$", "", " ".join(l.strip() for l in lines))
+            raw = " ".join(l.strip() for l in lines)
+            # "**Table 1 - short title.** rest of the caption"; \caption supplies "Table N:"
+            m = re.match(r"^\*\*Table\s+\d+\s*[\u2014\u2013-]?\s*(.*?)\*\*\s*(.*)$", raw, re.S)
+            if m:
+                title = m.group(1).strip()
+                title = title[:1].upper() + title[1:]      # CFP: first word capitalised
+                pending_caption = f"**{title}** {m.group(2).strip()}".strip()
+            else:
+                pending_caption = re.sub(r"\*\*", "", raw)
             continue
         for marks, lvl in (("### ", 2), ("## ", 1), ("# ", 0)):
             if first.startswith(marks):
@@ -256,6 +266,12 @@ def _items(lines, pat):
 # ---------------------------------------------------------------- document assembly
 
 PREAMBLE = r"""\documentclass{article}
+
+%% The style file loads natbib for us, defaulting to author-year. Our bibliography is a
+%% hand-built numeric list, so ask natbib for numeric citations first. The call for papers
+%% documents exactly this route: "If you wish to load the natbib package with options, you
+%% may add the following before loading the neurips_2026 package."
+\PassOptionsToPackage{numbers}{natbib}
 
 %% NeurIPS 2026. Submission build takes no option: the style file anonymises the paper and
 %% adds line numbers, as the call for papers requires. --preprint passes [preprint] for the
@@ -308,7 +324,9 @@ def references(text):
 
 
 def main():
-    fig_width = "0.8"
+    # 0.68 is the measured ceiling: the body lands on exactly 8 pages, the VLM4RWD limit.
+    # 0.72 and above spill the conclusion onto a 9th page. Override with --figwidth=.
+    fig_width = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--figwidth=")), "0.68")
     opt = "[preprint]" if PREPRINT else ""
     tex = [PREAMBLE % dict(opt=opt, title=TITLE,
                            author=AUTHOR_NAMED if PREPRINT else AUTHOR_ANON)]

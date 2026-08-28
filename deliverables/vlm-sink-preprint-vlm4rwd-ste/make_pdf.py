@@ -85,8 +85,18 @@ def main():
     pdf = HERE / f"{SLUG}.pdf"
     txt = subprocess.run(["pdftotext", str(pdf), "-"], capture_output=True, text=True).stdout
     pages = txt.split("\f")
-    body = next((i for i, p in enumerate(pages)
-                 if p.lstrip().startswith("References") or "\nReferences\n" in p), len(pages))
+    # Content pages run through the conclusion. Find the page carrying the References
+    # heading: if body text precedes it on that page, that page still counts as content.
+    body = len(pages)
+    for i, pg in enumerate(pages):
+        lines = [l.strip() for l in pg.splitlines()]
+        try:
+            k = next(j for j, l in enumerate(lines) if l == "References")
+        except StopIteration:
+            continue
+        before = [l for l in lines[:k] if l and not l.isdigit()]
+        body = (i + 1) if before else i        # 1-based; refs at top of page -> previous page
+        break
 
     fonts = subprocess.run(["pdffonts", str(pdf)], capture_output=True, text=True).stdout
     kinds = sorted({" ".join(l.split()[1:3]) for l in fonts.splitlines()[2:] if l.split()})

@@ -1,5 +1,11 @@
 \documentclass{article}
 
+% The style file loads natbib for us, defaulting to author-year. Our bibliography is a
+% hand-built numeric list, so ask natbib for numeric citations first. The call for papers
+% documents exactly this route: "If you wish to load the natbib package with options, you
+% may add the following before loading the neurips_2026 package."
+\PassOptionsToPackage{numbers}{natbib}
+
 % NeurIPS 2026. Submission build takes no option: the style file anonymises the paper and
 % adds line numbers, as the call for papers requires. --preprint passes [preprint] for the
 % arXiv copy. [final] is only for accepted papers and is never emitted here.
@@ -108,8 +114,8 @@ All three metrics \textbf{anchor on position 0 by construction}, a measurement c
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\linewidth]{figures/fig2_phase_portrait.pdf}
-  \caption{\textbf{Figure 1: Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (left) and against the residual-norm ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}). Seed 0 unless labelled. \textbf{The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction above threshold}, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Paths smoothed, end markers raw (Appendix D). Were the three signatures one phenomenon, these trajectories would move along one direction.}
+  \includegraphics[width=0.68\linewidth]{figures/fig2_phase_portrait.pdf}
+  \caption{\textbf{Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (left) and against the residual-norm ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}). Seed 0 unless labelled. \textbf{The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction above threshold}, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Paths smoothed, end markers raw (Appendix D). Were the three signatures one phenomenon, these trajectories would move along one direction.}
   \label{fig:fig1}
 \end{figure}
 
@@ -120,7 +126,7 @@ Table 1 collapses the seeds into per-arm ranges, each arm at its final matched c
 \begin{table}[t]
   \centering
   \small
-  \caption{Table 1 --- the four corners (n = 2--3 seeds per arm).** Concentration is $\mathrm{Sink}^{0.2}_{1}$, the fraction of the 270 (layer, query-head) pairs whose mean attention$\rightarrow$pos0 exceeds 0.2. The v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 layers (\S2).}
+  \caption{\textbf{The four corners (n = 2--3 seeds per arm).} Concentration is $\mathrm{Sink}^{0.2}_{1}$, the fraction of the 270 (layer, query-head) pairs whose mean attention$\rightarrow$pos0 exceeds 0.2. The v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 layers (\S2).}
   \begin{tabularx}{\linewidth}{lXXX}
     \toprule
     arm & concentration & value-norm & massive-activation proxy \\
@@ -143,8 +149,8 @@ Figure 2 shows the separation inside a single head. Its rightmost panel carries 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\linewidth]{figures/fig6_sink_stripe.pdf}
-  \caption{\textbf{Figure 2: The sink stripe.} Query $\times$ key attention of each arm's top sink head, row-normalized, seed 0. Top row is early training (step 250, about 2.4M tokens), bottom row the final checkpoint. The cyan line marks key = pos0, the dotted line the image-to-text boundary. The stripe is \textit{absent} in baseline throughout, strong in textinit (attn$\rightarrow$pos0 = 0.62 at its final checkpoint), and \textit{already present at step 0} in textinit (rightmost panel), inherited from the text LM. The sigmoid column's heat maps come from an auxiliary streaming batch, while every printed sigmoid number comes from the fixed probe batch (Appendix D).}
+  \includegraphics[width=0.68\linewidth]{figures/fig6_sink_stripe.pdf}
+  \caption{\textbf{The sink stripe.} Query $\times$ key attention of each arm's top sink head, row-normalized, seed 0. Top row is early training (step 250, about 2.4M tokens), bottom row the final checkpoint. The cyan line marks key = pos0, the dotted line the image-to-text boundary. The stripe is \textit{absent} in baseline throughout, strong in textinit (attn$\rightarrow$pos0 = 0.62 at its final checkpoint), and \textit{already present at step 0} in textinit (rightmost panel), inherited from the text LM. The sigmoid column's heat maps come from an auxiliary streaming batch, while every printed sigmoid number comes from the fixed probe batch (Appendix D).}
   \label{fig:fig2}
 \end{figure}
 
@@ -157,7 +163,7 @@ Concentration never arrives: \textbf{$\mathrm{Sink}^{0.3}_{1}$ = 0.000 across th
 \begin{table}[t]
   \centering
   \small
-  \caption{Table 2 --- RF (fresh stream, n = 1 seed), init $\rightarrow$ 1B tokens.}
+  \caption{\textbf{RF (fresh stream, n = 1 seed), init $\rightarrow$ 1B tokens.}}
   \begin{tabularx}{\linewidth}{XccX}
     \toprule
     signature & @ init & @ 1B & net \\
@@ -179,7 +185,7 @@ A tight coupling between concentration and value-drain should at minimum hold th
 \begin{table}[t]
   \centering
   \small
-  \caption{Table 3 --- r(attn$\rightarrow$pos0, v-ratio), final checkpoint, seed 0.}
+  \caption{\textbf{R(attn$\rightarrow$pos0, v-ratio), final checkpoint, seed 0.}}
   \begin{tabular}{lccccc}
     \toprule
     baseline & g1gate & sigmoid & textinit & RF & pooled \\
@@ -324,22 +330,22 @@ T. Darcet, M. Oquab, J. Mairal, P. Bojanowski. \textit{Vision Transformers Need 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\linewidth]{figures/fig1_layerhead_grid.pdf}
-  \caption{\textbf{Figure A1: Where concentration lives in the network.} Mean attention to pos0 for each of the 270 (layer, query-head) pairs through training, row-normalized, seed 0 for every arm, run to each arm's final checkpoint (174M tokens baseline, 103M g1gate, 102M sigmoid, 60M textinit, 1B RF). baseline and RF stay cold throughout. textinit is hot from initialization. sigmoid lights up a band of mid-network layers.}
+  \includegraphics[width=0.68\linewidth]{figures/fig1_layerhead_grid.pdf}
+  \caption{\textbf{Where concentration lives in the network.} Mean attention to pos0 for each of the 270 (layer, query-head) pairs through training, row-normalized, seed 0 for every arm, run to each arm's final checkpoint (174M tokens baseline, 103M g1gate, 102M sigmoid, 60M textinit, 1B RF). baseline and RF stay cold throughout. textinit is hot from initialization. sigmoid lights up a band of mid-network layers.}
   \label{fig:figA1}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\linewidth]{figures/fig3_perhead_scatter.pdf}
-  \caption{\textbf{Figure A2: No consistent-sign head-level relationship.} Concentration against value-norm ratio for each (layer, KV-group) pair at each arm's final checkpoint, seed 0, at n = 90 pairs per arm. Grouping this way avoids triplicating each value-norm observation across the 3 query heads that share it, so these correlations are descriptive and we report no p-values (\S3.3). The sign of the correlation flips by arm, from +0.76 in baseline to $-$0.79 in textinit (Table 3). The pooled cloud is weak, at $-$0.20, only because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most individual arms show a strong |r|.}
+  \includegraphics[width=0.68\linewidth]{figures/fig3_perhead_scatter.pdf}
+  \caption{\textbf{No consistent-sign head-level relationship.} Concentration against value-norm ratio for each (layer, KV-group) pair at each arm's final checkpoint, seed 0, at n = 90 pairs per arm. Grouping this way avoids triplicating each value-norm observation across the 3 query heads that share it, so these correlations are descriptive and we report no p-values (\S3.3). The sign of the correlation flips by arm, from +0.76 in baseline to $-$0.79 in textinit (Table 3). The pooled cloud is weak, at $-$0.20, only because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most individual arms show a strong |r|.}
   \label{fig:figA2}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\linewidth]{figures/fig5_entropy.pdf}
-  \caption{\textbf{Figure A3: Entropy collapse tracks concentration only.} Mean attention entropy through training, seed 0, to each arm's final checkpoint. Only sigmoid and textinit collapse. baseline, g1gate, and RF stay flat. The entropy-collapse correlate from the text-LM literature therefore follows the concentration axis, not the norm axes.}
+  \includegraphics[width=0.68\linewidth]{figures/fig5_entropy.pdf}
+  \caption{\textbf{Entropy collapse tracks concentration only.} Mean attention entropy through training, seed 0, to each arm's final checkpoint. Only sigmoid and textinit collapse. baseline, g1gate, and RF stay flat. The entropy-collapse correlate from the text-LM literature therefore follows the concentration axis, not the norm axes.}
   \label{fig:figA3}
 \end{figure}
 
@@ -461,15 +467,15 @@ This appendix holds the detail behind the ordering paragraph of \S3.1.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\linewidth]{figures/fig4_leadlag_top.pdf}
-  \caption{\textbf{Figure A4: When each signature first crosses threshold.} Seed 0 throughout. Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A filled marker is the first probe at which a signature crossed its threshold (h$>$2, v$<$0.8, attn$\rightarrow$pos0$>$0.3). A hollow marker at a track's end means it never crossed. \textbf{Crossing times are interval-censored} at the 100-step probe cadence (head-level map in Fig. A5).}
+  \includegraphics[width=0.68\linewidth]{figures/fig4_leadlag_top.pdf}
+  \caption{\textbf{When each signature first crosses threshold.} Seed 0 throughout. Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A filled marker is the first probe at which a signature crossed its threshold (h$>$2, v$<$0.8, attn$\rightarrow$pos0$>$0.3). A hollow marker at a track's end means it never crossed. \textbf{Crossing times are interval-censored} at the 100-step probe cadence (head-level map in Fig. A5).}
   \label{fig:figA4}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\linewidth]{figures/figA4_birthmap.pdf}
-  \caption{\textbf{Figure A5: Birth-maps.} The step at which each (layer, query-head) pair first crosses the concentration threshold (attn$\rightarrow$pos0 $>$ 0.3), seed 0, for the three arms in which any head crosses. No \textit{baseline} and no \textit{RF} head ever crosses. 1\% of \textit{g1gate} heads do, against 89\% for \textit{sigmoid} and 87\% for \textit{textinit}. This is the head-level view behind Fig. A4.}
+  \includegraphics[width=0.68\linewidth]{figures/figA4_birthmap.pdf}
+  \caption{\textbf{Birth-maps.} The step at which each (layer, query-head) pair first crosses the concentration threshold (attn$\rightarrow$pos0 $>$ 0.3), seed 0, for the three arms in which any head crosses. No \textit{baseline} and no \textit{RF} head ever crosses. 1\% of \textit{g1gate} heads do, against 89\% for \textit{sigmoid} and 87\% for \textit{textinit}. This is the head-level view behind Fig. A4.}
   \label{fig:figA5}
 \end{figure}
 

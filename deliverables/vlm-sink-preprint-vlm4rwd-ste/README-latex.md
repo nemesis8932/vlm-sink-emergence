@@ -9,9 +9,13 @@ The markdown in `sections/` stays the single source. Two backends read it:
 
 Edit prose only in `sections/*.md`. Never hand-edit the generated `.tex`.
 
-## Two steps I could not do for you
+## Status
 
-Both are blocked inside the agent sandbox (no sudo, no network egress).
+Built and verified against the real `neurips_2026.sty` (revision 2026-01-29):
+**body = 8 pages**, 21 pages total, 0 overfull boxes, no Type 3 fonts. The submission build is
+anonymous with line numbers; the preprint build is named with the "Preprint." footer.
+
+## Setup, if starting from a clean machine
 
 **1. Install pdflatex.** The call for papers says to generate the PDF with `pdflatex`.
 
@@ -26,18 +30,18 @@ Then open a new terminal window, and:
 
 ```
 sudo tlmgr update --self
-sudo tlmgr install type1cm cm-super
+sudo tlmgr install type1cm cm-super environ trimspaces helvetic courier
 ```
 
-`booktabs`, `microtype`, `natbib` and `tabularx` already ship with BasicTeX. `nicefrac` is
+`booktabs`, `microtype`, `natbib`, `tabularx`, `geometry`, `lineno` and `times` already ship
+with BasicTeX. `environ` is required by the style file itself; `helvetic` and `courier` supply
+the Helvetica and Courier metrics the style file loads. `nicefrac` is
 not a package of its own (it lives in `units`) and the paper never uses it, so it was dropped
 from the preamble.
 
-**2. Get the official style file.** `neurips_2026.sty` must sit in this directory, and must
-be the unmodified file from the conference — "Tweaking the style files may be grounds for
-desk rejection." The 2026 Styles archive was not resolvable from here
-(`media.neurips.cc/Conferences/NeurIPS2026/Styles.zip` returns 404), so fetch it from the
-Paper Information pages at <https://neurips.cc>, or from the official Overleaf template.
+**2. The style file.** `neurips_2026.sty` is committed here, unmodified
+(`2026-01-29 NeurIPS 2026 submission/camera-ready style file`). Do not edit it — "Tweaking
+the style files may be grounds for desk rejection."
 
 Then:
 
@@ -92,3 +96,19 @@ references, checklist and appendix. `make_pdf.py` prints the body count against 
 
 Both were left as honest `No` answers rather than being written into the paper, because the
 conversion was scoped to not change content.
+
+## Figure width is the page-limit lever
+
+`build_tex.py` defaults to `--figwidth=0.68`. That is the measured ceiling: the body lands on
+exactly 8 pages. Measured against the real template:
+
+| figwidth | body pages | conclusion lines spilling past page 8 |
+|---:|---:|---:|
+| 0.62 | 8 | 0 |
+| **0.68** | **8** | **0** |
+| 0.72 | 9 | 2 |
+| 0.78 | 9 | 4 |
+| 0.85 | 9 | 7 |
+
+Going above 0.68 needs roughly 30 words out of the body per extra spilling line. Nine pages
+would be fine for the NeurIPS main track but not for the workshop.
