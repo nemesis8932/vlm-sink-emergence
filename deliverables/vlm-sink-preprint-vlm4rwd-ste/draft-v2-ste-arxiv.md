@@ -18,11 +18,9 @@ quantization harder [2], and a survey now organizes a subfield around interpreti
 [3].
 
 The sink does not arrive alone. In text language models three measurements move together: attention
-concentrates on the sink token, the value vector there drops to a near-zero norm, called value-
-state drain [4], and the residual stream there grows an abnormally large norm, called a massive
+concentrates on the sink token, the value vector there drops to a near-zero norm, called value-state drain [4], and the residual stream there grows an abnormally large norm, called a massive
 activation [2, 5]. These effects settle on the same few tokens [6] and appear near step 1000 [7],
-and the field has taken the co-occurrence as licence to treat all three as facets of one attention-
-sink phenomenon.
+and the field has taken the co-occurrence as licence to treat all three as facets of one attention-sink phenomenon.
 
 Whether they really are one phenomenon is contested. One line argues for causal unity: massive
 activations mathematically require representational compression, and ablating them removes both
@@ -160,8 +158,7 @@ precision and batch size.
 matched 100M-token checkpoint the held-out losses are 1.182 for *baseline*, 1.133 for *g1gate*,
 1.206 for *sigmoid* and 0.877 for *textinit*, and RF reaches 0.638 at 1B tokens (Appendix F). Two
 cautions. *textinit* starts from a pretrained text decoder, so its lower loss reflects unequal
-competence, not a lever effect: only *baseline*, *g1gate* and *sigmoid* are equal-token, equal-
-initialization comparisons. And the repeated-data arms show a large train–validation asymmetry
+competence, not a lever effect: only *baseline*, *g1gate* and *sigmoid* are equal-token, equal-initialization comparisons. And the repeated-data arms show a large train–validation asymmetry
 (`val_seen` near 0.44 against `val_unseen` near 1.18), the overfitting signal that motivates RF. RF has no seen split, so the weaker statement its data supports is a held-out loss with a negative
 fitted slope over the second half, ending at 0.638, with individual evaluations fluctuating (§5). **We did not run MMStar or any other downstream benchmark
 on any arm**, so this paper makes no capability claim (§5).
@@ -276,8 +273,7 @@ ongoing emergence.
 
 A tight coupling between concentration and value-drain should at minimum hold the sign of their
 per-head correlation constant across regimes. It does not. Table 3 gives the Pearson r between
-attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the 90 (layer, KV-
-group) observations, averaging a group's query-head attention rather than triplicating its value
+attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the 90 (layer, KV-group) observations, averaging a group's query-head attention rather than triplicating its value
 observation (§2, scatter in Fig. A2).
 
 **Table 3 — r(attn→pos0, v-ratio), final checkpoint, seed 0.**
@@ -336,8 +332,7 @@ vision transformer with a pretrained language model, following one magnitude rat
 three signatures. Choi et al. [12] likewise distinguish vision-sinks from language-sinks in
 a frozen model and gate them by layer. Both establish distinct vision-side and language-side
 origins, which our *textinit* inheritance result fits. What is missing is dense, joint
-tracking of the three quantities in a decoder that starts from random weights. Vision transformers also grow high-norm "register" tokens of their own [25], hence the pretrained-
-encoder limitation in §5. A separate line ties these signatures to
+tracking of the three quantities in a decoder that starts from random weights. Vision transformers also grow high-norm "register" tokens of their own [25], hence the pretrained-encoder limitation in §5. A separate line ties these signatures to
 hallucination and grounding failure in deployed models and intervenes at inference time
 [13–16], the practical reason it matters which signature a mitigation moves.
 
@@ -364,8 +359,7 @@ multimodal work could study emergence if it chose to.
 **Metrics anchored on position 0.** We measure all three signatures at the first image token,
 checked by per-position attention *mass* rather than argmax alone: position 0 is the maximum-mass
 token in every arm at seed 0, and stays so for *baseline*, *g1gate* and *sigmoid* at every seed we
-scanned. It does **not** in *textinit*, where at seeds 1 and 2 the peaks move to other positions (per-
-position table in Appendix C). The pos0-anchored textinit magnitudes at those seeds therefore
+scanned. It does **not** in *textinit*, where at seeds 1 and 2 the peaks move to other positions (per-position table in Appendix C). The pos0-anchored textinit magnitudes at those seeds therefore
 *understate* its peaks, one more reason to treat that arm's corner rather than its magnitudes as
 the claim. In *RF* the attention argmax sits at pos1, but with
 mass 0.053 against 0.044 at pos0, a diffuse profile rather than a displaced sink, so the RF
@@ -403,8 +397,7 @@ the reproducible claim. No specific magnitude is.
 **Provenance and seed count.** The seed-0 raw probes for the four-arm comparison come from a checksummed archive summary rather
 than first-hand re-derivation. Seeds 1 and 2 we *did* re-derive independently, an audit that caught
 a metric-labeling error in an earlier internal consolidation (Appendix G). *baseline* and *sigmoid* have two seeds, *g1gate* and *textinit* three, RF a **single seed**. RF
-also contains one **weights-only optimizer restart at about 57M tokens**, forced by an out-of-
-memory error: weights reloaded, AdamW moment estimates discarded, so RF is not one uninterrupted
+also contains one **weights-only optimizer restart at about 57M tokens**, forced by an out-of-memory error: weights reloaded, AdamW moment estimates discarded, so RF is not one uninterrupted
 optimizer trajectory. The audit verified continuity across that seam: v-ratio and h-ratio identical at the shared
 checkpoint, a double-covered 600-step overlap diverging only within probe noise, concentration
 0.000 on both sides. Concentration was reproducibly zero across both repeated-data baseline seeds,
@@ -756,8 +749,7 @@ This appendix holds the detail behind the ordering paragraph of §3.1.
 <figcaption><b>Figure A4: When each signature first crosses threshold.</b> Seed 0 throughout.
 Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A
 filled marker is the first probe at which a signature crossed its threshold
-(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never crossed. <b>Crossing times are interval-
-censored</b> at the 100-step probe cadence (head-level map in Fig. A5).</figcaption>
+(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never crossed. <b>Crossing times are interval-censored</b> at the 100-step probe cadence (head-level map in Fig. A5).</figcaption>
 </figure>
 
 <figure id="figA5">

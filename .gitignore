@@ -13,3 +13,11 @@ ideas/
 deliverables/*/_bodycount.*
 deliverables/*/_d.*
 deliverables/*/_v.*
+
+# pdflatex build artefacts
+deliverables/*/*.aux
+deliverables/*/*.log
+deliverables/*/*.out
+deliverables/*/*.bbl
+deliverables/*/*.blg
+deliverables/*/*.synctex.gz

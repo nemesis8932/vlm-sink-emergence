@@ -3,8 +3,7 @@
 **Metrics anchored on position 0.** We measure all three signatures at the first image token,
 checked by per-position attention *mass* rather than argmax alone: position 0 is the maximum-mass
 token in every arm at seed 0, and stays so for *baseline*, *g1gate* and *sigmoid* at every seed we
-scanned. It does **not** in *textinit*, where at seeds 1 and 2 the peaks move to other positions (per-
-position table in Appendix C). The pos0-anchored textinit magnitudes at those seeds therefore
+scanned. It does **not** in *textinit*, where at seeds 1 and 2 the peaks move to other positions (per-position table in Appendix C). The pos0-anchored textinit magnitudes at those seeds therefore
 *understate* its peaks, one more reason to treat that arm's corner rather than its magnitudes as
 the claim. In *RF* the attention argmax sits at pos1, but with
 mass 0.053 against 0.044 at pos0, a diffuse profile rather than a displaced sink, so the RF
@@ -42,8 +41,7 @@ the reproducible claim. No specific magnitude is.
 **Provenance and seed count.** The seed-0 raw probes for the four-arm comparison come from a checksummed archive summary rather
 than first-hand re-derivation. Seeds 1 and 2 we *did* re-derive independently, an audit that caught
 a metric-labeling error in an earlier internal consolidation (Appendix G). *baseline* and *sigmoid* have two seeds, *g1gate* and *textinit* three, RF a **single seed**. RF
-also contains one **weights-only optimizer restart at about 57M tokens**, forced by an out-of-
-memory error: weights reloaded, AdamW moment estimates discarded, so RF is not one uninterrupted
+also contains one **weights-only optimizer restart at about 57M tokens**, forced by an out-of-memory error: weights reloaded, AdamW moment estimates discarded, so RF is not one uninterrupted
 optimizer trajectory. The audit verified continuity across that seam: v-ratio and h-ratio identical at the shared
 checkpoint, a double-covered 600-step overlap diverging only within probe noise, concentration
 0.000 on both sides. Concentration was reproducibly zero across both repeated-data baseline seeds,

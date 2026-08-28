@@ -23,6 +23,11 @@ ARM_COLORS = {
 
 # shared figure style for the whole suite
 mpl.rcParams.update({
+    # NeurIPS forbids Type 3 fonts in the submitted PDF ("your PDF file must only contain
+    # Type 1 or Embedded TrueType fonts"). Matplotlib defaults to Type 3 for both PDF and
+    # EPS, so force TrueType (42) on both backends before anything is drawn.
+    'pdf.fonttype': 42,
+    'ps.fonttype': 42,
     'font.family': 'sans-serif',
     'font.sans-serif': ['DejaVu Sans'],
     'axes.linewidth': 0.8,

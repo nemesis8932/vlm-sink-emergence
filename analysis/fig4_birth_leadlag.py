@@ -130,6 +130,7 @@ def main():
         out = 'analysis/fig4_leadlag_top.svg'
         fig.savefig(out, bbox_inches='tight')
         fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
+        fig.savefig(out.replace('.svg', '.pdf'), bbox_inches='tight')
         print('wrote', out)
         return
     form_arms = ['g1gate', 'sigmoid', 'textinit']
@@ -169,6 +170,7 @@ def main():
                  fontsize=11, weight='bold', y=0.98)
     out = 'analysis/fig4_birth_leadlag.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
+    fig.savefig(out.replace('.svg', '.pdf'), bbox_inches='tight')
     print('wrote', out)
 
 

@@ -34,8 +34,7 @@ vision transformer with a pretrained language model, following one magnitude rat
 three signatures. Choi et al. [12] likewise distinguish vision-sinks from language-sinks in
 a frozen model and gate them by layer. Both establish distinct vision-side and language-side
 origins, which our *textinit* inheritance result fits. What is missing is dense, joint
-tracking of the three quantities in a decoder that starts from random weights. Vision transformers also grow high-norm "register" tokens of their own [25], hence the pretrained-
-encoder limitation in §5. A separate line ties these signatures to
+tracking of the three quantities in a decoder that starts from random weights. Vision transformers also grow high-norm "register" tokens of their own [25], hence the pretrained-encoder limitation in §5. A separate line ties these signatures to
 hallucination and grounding failure in deployed models and intervenes at inference time
 [13–16], the practical reason it matters which signature a mitigation moves.
 

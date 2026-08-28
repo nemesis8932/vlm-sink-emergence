@@ -223,8 +223,7 @@ This appendix holds the detail behind the ordering paragraph of §3.1.
 <figcaption><b>Figure A4: When each signature first crosses threshold.</b> Seed 0 throughout.
 Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A
 filled marker is the first probe at which a signature crossed its threshold
-(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never crossed. <b>Crossing times are interval-
-censored</b> at the 100-step probe cadence (head-level map in Fig. A5).</figcaption>
+(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never crossed. <b>Crossing times are interval-censored</b> at the 100-step probe cadence (head-level map in Fig. A5).</figcaption>
 </figure>
 
 <figure id="figA5">

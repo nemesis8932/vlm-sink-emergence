@@ -120,6 +120,7 @@ def main():
     fig.tight_layout(rect=[0, 0, 1, 0.95], h_pad=2.2)
     out = 'analysis/fig6_sink_stripe.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
+    fig.savefig(out.replace('.svg', '.pdf'), bbox_inches='tight')
     print('wrote', out)
 
 

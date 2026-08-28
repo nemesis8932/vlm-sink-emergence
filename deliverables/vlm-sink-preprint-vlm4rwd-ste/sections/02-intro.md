@@ -7,11 +7,9 @@ quantization harder [2], and a survey now organizes a subfield around interpreti
 [3].
 
 The sink does not arrive alone. In text language models three measurements move together: attention
-concentrates on the sink token, the value vector there drops to a near-zero norm, called value-
-state drain [4], and the residual stream there grows an abnormally large norm, called a massive
+concentrates on the sink token, the value vector there drops to a near-zero norm, called value-state drain [4], and the residual stream there grows an abnormally large norm, called a massive
 activation [2, 5]. These effects settle on the same few tokens [6] and appear near step 1000 [7],
-and the field has taken the co-occurrence as licence to treat all three as facets of one attention-
-sink phenomenon.
+and the field has taken the co-occurrence as licence to treat all three as facets of one attention-sink phenomenon.
 
 Whether they really are one phenomenon is contested. One line argues for causal unity: massive
 activations mathematically require representational compression, and ablating them removes both

@@ -74,6 +74,7 @@ def main():
     fig.tight_layout()
     out = 'analysis/fig5_entropy.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=160, bbox_inches='tight')
+    fig.savefig(out.replace('.svg', '.pdf'), bbox_inches='tight')
     print('wrote', out)
     print('\narm        H_init  H_final')
     for a, h0, h1 in rows:

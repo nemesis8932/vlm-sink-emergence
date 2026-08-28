@@ -89,6 +89,7 @@ def main():
     fig.tight_layout(rect=[0, 0, 1, 0.96])
     out = 'analysis/fig3_perhead_scatter.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=160, bbox_inches='tight')
+    fig.savefig(out.replace('.svg', '.pdf'), bbox_inches='tight')
     print('wrote', out)
     print('\nPer-arm Pearson r (attn->pos0 vs v_ratio, final ckpt, 90 KV groups):')
     for arm, n, r, xmx, ymn, ymx in rows:

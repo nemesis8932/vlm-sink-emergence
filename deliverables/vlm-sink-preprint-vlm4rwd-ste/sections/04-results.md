@@ -105,8 +105,7 @@ ongoing emergence.
 
 A tight coupling between concentration and value-drain should at minimum hold the sign of their
 per-head correlation constant across regimes. It does not. Table 3 gives the Pearson r between
-attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the 90 (layer, KV-
-group) observations, averaging a group's query-head attention rather than triplicating its value
+attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the 90 (layer, KV-group) observations, averaging a group's query-head attention rather than triplicating its value
 observation (§2, scatter in Fig. A2).
 
 **Table 3 — r(attn→pos0, v-ratio), final checkpoint, seed 0.**

@@ -117,6 +117,7 @@ def main():
     out = 'analysis/fig2_phase_portrait.svg'
     fig.savefig(out, bbox_inches='tight')
     fig.savefig(out.replace('.svg', '.png'), dpi=200, bbox_inches='tight')
+    fig.savefig(out.replace('.svg', '.pdf'), bbox_inches='tight')
     print('wrote', out)
 
 

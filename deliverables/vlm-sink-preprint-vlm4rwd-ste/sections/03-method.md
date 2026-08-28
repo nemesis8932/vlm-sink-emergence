@@ -82,8 +82,7 @@ precision and batch size.
 matched 100M-token checkpoint the held-out losses are 1.182 for *baseline*, 1.133 for *g1gate*,
 1.206 for *sigmoid* and 0.877 for *textinit*, and RF reaches 0.638 at 1B tokens (Appendix F). Two
 cautions. *textinit* starts from a pretrained text decoder, so its lower loss reflects unequal
-competence, not a lever effect: only *baseline*, *g1gate* and *sigmoid* are equal-token, equal-
-initialization comparisons. And the repeated-data arms show a large train–validation asymmetry
+competence, not a lever effect: only *baseline*, *g1gate* and *sigmoid* are equal-token, equal-initialization comparisons. And the repeated-data arms show a large train–validation asymmetry
 (`val_seen` near 0.44 against `val_unseen` near 1.18), the overfitting signal that motivates RF. RF has no seen split, so the weaker statement its data supports is a held-out loss with a negative
 fitted slope over the second half, ending at 0.638, with individual evaluations fluctuating (§5). **We did not run MMStar or any other downstream benchmark
 on any arm**, so this paper makes no capability claim (§5).

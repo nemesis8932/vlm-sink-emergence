@@ -53,6 +53,7 @@ def main():
              fontsize=7, ha='center', color='dimgray')
     out = 'analysis/fig1_layerhead_grid.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
+    fig.savefig(out.replace('.svg', '.pdf'), bbox_inches='tight')
     print('wrote', out)
 
 
