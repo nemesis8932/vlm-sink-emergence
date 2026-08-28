@@ -8,13 +8,20 @@ Requires pdflatex on PATH and the official neurips_2026.sty beside this file. Th
 file must be the unmodified one from neurips.cc -- the call for papers says tweaking it may
 be grounds for desk rejection.
 """
+import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+# BasicTeX installs to /Library/TeX/texbin and only reaches PATH after a new login shell,
+# so add it here rather than making the caller restart their terminal.
+if not shutil.which("pdflatex") and Path("/Library/TeX/texbin/pdflatex").exists():
+    os.environ["PATH"] = "/Library/TeX/texbin:" + os.environ.get("PATH", "")
+
 HERE = Path(__file__).parent
 PREPRINT = "--preprint" in sys.argv
+SMOKE = "--smoketest" in sys.argv
 SLUG = "paper-neurips-preprint" if PREPRINT else "paper-neurips"
 
 
@@ -22,12 +29,47 @@ def die(msg):
     sys.exit(f"ERROR: {msg}")
 
 
+def smoketest():
+    """Compile the generated LaTeX against plain article, with the style file's macros
+    stubbed out. Proves the conversion is valid LaTeX when neurips_2026.sty is not yet
+    available: a failure here is our bug, not a missing style file. Page geometry is NOT
+    NeurIPS geometry, so the page count from this build means nothing."""
+    subprocess.run([sys.executable, "build_tex.py"], cwd=HERE, check=True)
+    src = (HERE / "paper-neurips.tex").read_text().replace(
+        "\\usepackage{neurips_2026}",
+        "\\usepackage[letterpaper,margin=1in]{geometry}\n"
+        "\\newcommand{\\answerYes}[1][]{Yes}\n"
+        "\\newcommand{\\answerNo}[1][]{No}\n"
+        "\\newcommand{\\answerNA}[1][]{NA}")
+    (HERE / "_smoketest.tex").write_text(src)
+    log = ""
+    for _ in range(2):
+        r = subprocess.run(["pdflatex", "-interaction=nonstopmode", "-file-line-error",
+                            "_smoketest.tex"], cwd=HERE, capture_output=True, text=True)
+        log = r.stdout
+    errs = [l for l in log.splitlines() if l.startswith("!")]
+    over = [l for l in log.splitlines() if "Overfull" in l]
+    undef = [l for l in log.splitlines() if "undefined" in l.lower() and "citation" in l.lower()]
+    print("-" * 62)
+    print(f"smoke test (plain article, NOT NeurIPS geometry)")
+    print(f"  LaTeX errors      : {len(errs)}")
+    for e in errs[:8]:
+        print("     ", e)
+    print(f"  overfull boxes    : {len(over)}")
+    print(f"  undefined cites   : {len(undef)}")
+    print("-" * 62)
+    return 1 if errs else 0
+
+
 def main():
     if not shutil.which("pdflatex"):
         die("pdflatex not found. Install BasicTeX or MacTeX, then re-run.")
+    if SMOKE:
+        return smoketest()
     if not (HERE / "neurips_2026.sty").exists():
         die("neurips_2026.sty missing. Download the official Styles archive from "
-            "neurips.cc and put neurips_2026.sty in this directory.")
+            "neurips.cc and put neurips_2026.sty in this directory.\n"
+            "       Run with --smoketest to syntax-check the generated LaTeX without it.")
 
     subprocess.run([sys.executable, "build_tex.py"] + (["--preprint"] if PREPRINT else []),
                    cwd=HERE, check=True)

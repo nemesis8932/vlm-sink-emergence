@@ -15,12 +15,23 @@ Both are blocked inside the agent sandbox (no sudo, no network egress).
 
 **1. Install pdflatex.** The call for papers says to generate the PDF with `pdflatex`.
 
+Note: do not paste these with trailing `#` comments. zsh does not treat `#` as a comment
+in an interactive shell by default, so the comment text is passed to brew as arguments.
+
 ```
-brew install --cask basictex          # ~100 MB; prompts for your password
-eval "$(/usr/libexec/path_helper)"    # or open a new shell
+brew install --cask basictex
+```
+
+Then open a new terminal window, and:
+
+```
 sudo tlmgr update --self
-sudo tlmgr install type1cm cm-super microtype booktabs natbib nicefrac
+sudo tlmgr install type1cm cm-super
 ```
+
+`booktabs`, `microtype`, `natbib` and `tabularx` already ship with BasicTeX. `nicefrac` is
+not a package of its own (it lives in `units`) and the paper never uses it, so it was dropped
+from the preamble.
 
 **2. Get the official style file.** `neurips_2026.sty` must sit in this directory, and must
 be the unmodified file from the conference — "Tweaking the style files may be grounds for
@@ -35,7 +46,19 @@ python3 make_pdf.py              # anonymous submission build, with line numbers
 python3 make_pdf.py --preprint   # named arXiv build
 ```
 
-`make_pdf.py` reports total pages, body pages, and whether any Type 3 font slipped in.
+`make_pdf.py` reports total pages, body pages, and whether any Type 3 font slipped in. It adds
+`/Library/TeX/texbin` to PATH itself, so a fresh BasicTeX install needs no terminal restart.
+
+Without the style file you can still check that the generated LaTeX is valid:
+
+```
+python3 make_pdf.py --smoketest
+```
+
+That compiles against plain `article` with the style file's macros stubbed out, so a failure
+is a converter bug rather than a missing `.sty`. Current status: 0 errors, 0 overfull boxes,
+0 undefined citations. The page count from that build is meaningless, since the geometry is
+not NeurIPS geometry.
 
 ## What the build enforces from the formatting instructions
 

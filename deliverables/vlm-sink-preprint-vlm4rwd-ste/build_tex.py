@@ -16,6 +16,7 @@ Conventions this enforces, from the NeurIPS 2026 formatting instructions:
   * abstract is a single paragraph
   * the paper checklist follows the references and the appendix
 """
+import html
 import re, sys
 from pathlib import Path
 
@@ -36,6 +37,7 @@ UNICODE = {
     "\u2019": "'",          "\u2264": r"$\leq$",    "\u2265": r"$\geq$",
 }
 SPECIAL = {"\\": r"\textbackslash{}", "&": r"\&", "%": r"\%", "$": r"\$",
+           "<": "$<$", ">": "$>$",
            "#": r"\#", "_": r"\_", "{": r"\{", "}": r"\}",
            "~": r"\textasciitilde{}", "^": r"\textasciicircum{}"}
 
@@ -48,6 +50,11 @@ def _protect(s, store, render):
 
 def inline(s, cite=True):
     held = []
+
+    # HTML entities: decode them before anything escapes the bare "&". Hold back the
+    # angle-bracket ones first so they cannot be mistaken for tags in the next step.
+    s = s.replace("&lt;", "\x03").replace("&gt;", "\x04")
+    s = html.unescape(s)
 
     # HTML inline emphasis -> markdown, so a single code path produces the braces
     s = re.sub(r"<(?:em|i)>(.*?)</(?:em|i)>", r"*\1*", s, flags=re.S)
@@ -85,6 +92,7 @@ def inline(s, cite=True):
     s = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", s)
     s = re.sub(r"(?<![\w*])\*([^*\n]+?)\*(?![\w*])", r"\\textit{\1}", s)
 
+    s = s.replace("\x03", "$<$").replace("\x04", "$>$")
     for i, r in enumerate(held):
         s = s.replace(f"\x00{i}\x00", r)
     return s
@@ -159,17 +167,26 @@ def table_block(lines, caption):
     for j in range(ncol):
         cells = [r[j] for r in body if j < len(r)]
         align.append("l" if j == 0 or any(len(c) > 14 for c in cells) else "c")
-    out = ["\\begin{table}[t]", "  \\centering"]
+    # a column holding prose cannot be an "l" column: it will not wrap and overflows the
+    # 5.5in text block. Give those X columns and let tabularx share the leftover width.
+    for j in range(ncol):
+        cells = [r[j] for r in body if j < len(r)] + [head[j]]
+        if any(len(c) > 24 for c in cells):
+            align[j] = "X"
+    env = "tabularx" if "X" in align else "tabular"
+    spec = ("{\\linewidth}{" + "".join(align) + "}") if env == "tabularx" else ("{" + "".join(align) + "}")
+
+    out = ["\\begin{table}[t]", "  \\centering", "  \\small"]
     if caption:
         out.append(f"  \\caption{{{inline(caption)}}}")     # CFP: caption BEFORE the table
-    out.append("  \\begin{tabular}{" + "".join(align) + "}")
+    out.append(f"  \\begin{{{env}}}" + spec)
     out.append("    \\toprule")
     out.append("    " + " & ".join(inline(c) for c in head) + " \\\\")
     out.append("    \\midrule")
     for r in body:
         out.append("    " + " & ".join(inline(c) for c in r) + " \\\\")
     out.append("    \\bottomrule")
-    out.append("  \\end{tabular}")
+    out.append(f"  \\end{{{env}}}")
     out.append("\\end{table}")
     return "\n".join(out)
 
@@ -249,9 +266,9 @@ PREAMBLE = r"""\documentclass{article}
 \usepackage[T1]{fontenc}
 \usepackage{url}
 \usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage{amsfonts}
 \usepackage{amsmath}
-\usepackage{nicefrac}
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{xcolor}
