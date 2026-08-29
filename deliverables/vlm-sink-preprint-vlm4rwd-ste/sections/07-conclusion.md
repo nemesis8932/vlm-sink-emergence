@@ -6,9 +6,9 @@ The practical implication is simple: across our arms, no one signature was a pro
 
 **Next steps.** A randomly initialized vision encoder, to isolate what the decoder
 contributes to the residual-norm signal. A fresh-data run past 1B tokens. A scale-matched
-gate control, to separate gating from the half-scale confound of §4.
+gate control, to separate gating from the half-scale confound of §3.
 
-**Reproducibility.** A self-validating probe (§4) computes all signatures on a fixed probe
+**Reproducibility.** A self-validating probe (§3) computes all signatures on a fixed probe
 batch, from logs taken every 100 steps, and the Appendix holds the per-seed tables. We will
 release the code, the probe, the run configurations, the per-run logs, and the training
 checkpoints on acceptance. We withhold the links for double-blind review.
