@@ -99,16 +99,39 @@ conversion was scoped to not change content.
 
 ## Figure width is the page-limit lever
 
-`build_tex.py` defaults to `--figwidth=0.68`. That is the measured ceiling: the body lands on
-exactly 8 pages. Measured against the real template:
+`build_tex.py` defaults to `--figwidth=0.74`, the measured ceiling for an 8-page body.
+Captions render at `\small` (9pt), which is what bought 0.68 -> 0.74:
 
-| figwidth | body pages | conclusion lines spilling past page 8 |
-|---:|---:|---:|
-| 0.62 | 8 | 0 |
-| **0.68** | **8** | **0** |
-| 0.72 | 9 | 2 |
-| 0.78 | 9 | 4 |
-| 0.85 | 9 | 7 |
+| figwidth | body pages |
+|---:|---:|
+| **0.74** | **8** |
+| 0.76 | 9 |
+| 0.86 | 9 |
 
-Going above 0.68 needs roughly 30 words out of the body per extra spilling line. Nine pages
+Going above 0.74 needs roughly 30 words out of the body per extra spilling line. Nine pages
 would be fine for the NeurIPS main track but not for the workshop.
+
+Figure *legibility* at that size is a matplotlib question, not a LaTeX one: raising the tick
+and axis-label sizes in `analysis/fig_common.py` makes the panels readable without costing
+any page area.
+
+## Iterating on structure
+
+Section order is the sort order of `sections/0N-*.md`, so reordering is a rename:
+
+```
+git mv sections/05-related-work.md sections/035-related-work.md
+python3 check_refs.py
+python3 make_pdf.py
+```
+
+The catch: section, figure, table and appendix numbers are **literal text** in the markdown.
+Nothing resolves them, so a reorder silently invalidates references. There are about 83 of
+them (40 `§N`, 8 figure, 10 table, 25 appendix). `check_refs.py` is the guard -- it derives
+the real order from the files and reports every heading whose number no longer matches its
+position, every `§N` pointing at nothing, figure and table captions numbered out of order,
+and appendix sections the body never cites. Run it after every reorder, before rebuilding.
+
+Tables with no caption are emitted inline rather than as floats, because an uncaptioned float
+cannot be numbered and drifts to the top of a later page away from the sentence that
+introduces it.

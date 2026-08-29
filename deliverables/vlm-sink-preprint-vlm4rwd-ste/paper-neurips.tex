@@ -16,6 +16,10 @@
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{tabularx}
+% article's default list indent is a full inch here; pull it back so the contributions
+% list reads as body text rather than a block quote. Spacing only, no style-file edit.
+\setlength{\leftmargini}{1.3em}
+\setlength{\leftmarginii}{1.2em}
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{microtype}
@@ -57,7 +61,7 @@ We work at deliberately small scale: a 222M-parameter nanoVLM \cite{ref17}, wher
 
 \textbf{Contributions.}
 
-\begin{enumerate}
+\begin{enumerate}\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}
   \item \textbf{Four levers, four corners (n = 2--3 seeds/arm).} The arms reach four different corners of the three-signature space, no two sharing a triple. The value-norm ratio alone is strongly drained, mildly drained, or amplified, depending on the lever (Fig. 1, Table 1). The arms are not a factorial design, so we report intervention-associated profiles, not isolated causal effects.
   \item \textbf{Low-repetition decoupling at 1B tokens (n = 1).} On a fresh stream at 2.39 effective visual epochs, with training healthy throughout (\S2), the massive-activation proxy rises from an h-ratio of 1.43 to 3.22, about 2.3$\times$, while concentration stays at exactly zero and no head ever crosses the sink threshold (\S3.2, \S5).
   \item \textbf{No consistent-sign head-level relationship.} The per-head correlation between concentration and value-norm flips sign across arms at seed 0 (+0.76 baseline $\rightarrow$ $-$0.79 textinit, pooled $-$0.20, over 90 KV groups per arm), reported descriptively (\S3.3).
@@ -71,8 +75,7 @@ Decoupling itself is not new \cite{ref9,ref10} and we do not claim it. The new p
 
 \paragraph{Arms} Four training levers, each targeting one sink-relevant mechanism. Everything else stays byte-identical across arms.
 
-\begin{table}[t]
-  \centering
+\begin{center}
   \small
   \begin{tabularx}{\linewidth}{lXlcl}
     \toprule
@@ -84,7 +87,7 @@ Decoupling itself is not new \cite{ref9,ref10} and we do not claim it. The new p
     \textit{textinit} & softmax & pretrained SmolLM2-135M & pretrained & --- (novel control) \\
     \bottomrule
   \end{tabularx}
-\end{table}
+\end{center}
 
 The \textit{g1gate} and \textit{sigmoid} levers have established sink effects in text-only models \cite{ref20,ref6}. \textit{textinit} has no precedent there: an inheritance control, carrying in whatever sink structure text pretraining built into SmolLM2.
 
@@ -114,8 +117,8 @@ All three metrics \textbf{anchor on position 0 by construction}, a measurement c
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.68\linewidth]{figures/fig2_phase_portrait.pdf}
-  \caption{\textbf{Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (left) and against the residual-norm ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}). Seed 0 unless labelled. \textbf{The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction above threshold}, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Paths smoothed, end markers raw (Appendix D). Were the three signatures one phenomenon, these trajectories would move along one direction.}
+  \includegraphics[width=0.74\linewidth]{figures/fig2_phase_portrait.pdf}
+  \caption{\small \textbf{Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (left) and against the residual-norm ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}). Seed 0 unless labelled. \textbf{The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction above threshold}, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Paths smoothed, end markers raw (Appendix D). Were the three signatures one phenomenon, these trajectories would move along one direction.}
   \label{fig:fig1}
 \end{figure}
 
@@ -126,7 +129,7 @@ Table 1 collapses the seeds into per-arm ranges, each arm at its final matched c
 \begin{table}[t]
   \centering
   \small
-  \caption{\textbf{The four corners (n = 2--3 seeds per arm).} Concentration is $\mathrm{Sink}^{0.2}_{1}$, the fraction of the 270 (layer, query-head) pairs whose mean attention$\rightarrow$pos0 exceeds 0.2. The v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 layers (\S2).}
+  \caption{\small \textbf{The four corners (n = 2--3 seeds per arm).} Concentration is $\mathrm{Sink}^{0.2}_{1}$, the fraction of the 270 (layer, query-head) pairs whose mean attention$\rightarrow$pos0 exceeds 0.2. The v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 layers (\S2).}
   \begin{tabularx}{\linewidth}{lXXX}
     \toprule
     arm & concentration & value-norm & massive-activation proxy \\
@@ -149,8 +152,8 @@ Figure 2 shows the separation inside a single head. Its rightmost panel carries 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.68\linewidth]{figures/fig6_sink_stripe.pdf}
-  \caption{\textbf{The sink stripe.} Query $\times$ key attention of each arm's top sink head, row-normalized, seed 0. Top row is early training (step 250, about 2.4M tokens), bottom row the final checkpoint. The cyan line marks key = pos0, the dotted line the image-to-text boundary. The stripe is \textit{absent} in baseline throughout, strong in textinit (attn$\rightarrow$pos0 = 0.62 at its final checkpoint), and \textit{already present at step 0} in textinit (rightmost panel), inherited from the text LM. The sigmoid column's heat maps come from an auxiliary streaming batch, while every printed sigmoid number comes from the fixed probe batch (Appendix D).}
+  \includegraphics[width=0.74\linewidth]{figures/fig6_sink_stripe.pdf}
+  \caption{\small \textbf{The sink stripe.} Query $\times$ key attention of each arm's top sink head, row-normalized, seed 0. Top row is early training (step 250, about 2.4M tokens), bottom row the final checkpoint. The cyan line marks key = pos0, the dotted line the image-to-text boundary. The stripe is \textit{absent} in baseline throughout, strong in textinit (attn$\rightarrow$pos0 = 0.62 at its final checkpoint), and \textit{already present at step 0} in textinit (rightmost panel), inherited from the text LM. The sigmoid column's heat maps come from an auxiliary streaming batch, while every printed sigmoid number comes from the fixed probe batch (Appendix D).}
   \label{fig:fig2}
 \end{figure}
 
@@ -163,7 +166,7 @@ Concentration never arrives: \textbf{$\mathrm{Sink}^{0.3}_{1}$ = 0.000 across th
 \begin{table}[t]
   \centering
   \small
-  \caption{\textbf{RF (fresh stream, n = 1 seed), init $\rightarrow$ 1B tokens.}}
+  \caption{\small \textbf{RF (fresh stream, n = 1 seed), init $\rightarrow$ 1B tokens.}}
   \begin{tabularx}{\linewidth}{XccX}
     \toprule
     signature & @ init & @ 1B & net \\
@@ -185,7 +188,7 @@ A tight coupling between concentration and value-drain should at minimum hold th
 \begin{table}[t]
   \centering
   \small
-  \caption{\textbf{R(attn$\rightarrow$pos0, v-ratio), final checkpoint, seed 0.}}
+  \caption{\small \textbf{R(attn$\rightarrow$pos0, v-ratio), final checkpoint, seed 0.}}
   \begin{tabular}{lccccc}
     \toprule
     baseline & g1gate & sigmoid & textinit & RF & pooled \\
@@ -330,22 +333,22 @@ T. Darcet, M. Oquab, J. Mairal, P. Bojanowski. \textit{Vision Transformers Need 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.68\linewidth]{figures/fig1_layerhead_grid.pdf}
-  \caption{\textbf{Where concentration lives in the network.} Mean attention to pos0 for each of the 270 (layer, query-head) pairs through training, row-normalized, seed 0 for every arm, run to each arm's final checkpoint (174M tokens baseline, 103M g1gate, 102M sigmoid, 60M textinit, 1B RF). baseline and RF stay cold throughout. textinit is hot from initialization. sigmoid lights up a band of mid-network layers.}
+  \includegraphics[width=0.74\linewidth]{figures/fig1_layerhead_grid.pdf}
+  \caption{\small \textbf{Where concentration lives in the network.} Mean attention to pos0 for each of the 270 (layer, query-head) pairs through training, row-normalized, seed 0 for every arm, run to each arm's final checkpoint (174M tokens baseline, 103M g1gate, 102M sigmoid, 60M textinit, 1B RF). baseline and RF stay cold throughout. textinit is hot from initialization. sigmoid lights up a band of mid-network layers.}
   \label{fig:figA1}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.68\linewidth]{figures/fig3_perhead_scatter.pdf}
-  \caption{\textbf{No consistent-sign head-level relationship.} Concentration against value-norm ratio for each (layer, KV-group) pair at each arm's final checkpoint, seed 0, at n = 90 pairs per arm. Grouping this way avoids triplicating each value-norm observation across the 3 query heads that share it, so these correlations are descriptive and we report no p-values (\S3.3). The sign of the correlation flips by arm, from +0.76 in baseline to $-$0.79 in textinit (Table 3). The pooled cloud is weak, at $-$0.20, only because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most individual arms show a strong |r|.}
+  \includegraphics[width=0.74\linewidth]{figures/fig3_perhead_scatter.pdf}
+  \caption{\small \textbf{No consistent-sign head-level relationship.} Concentration against value-norm ratio for each (layer, KV-group) pair at each arm's final checkpoint, seed 0, at n = 90 pairs per arm. Grouping this way avoids triplicating each value-norm observation across the 3 query heads that share it, so these correlations are descriptive and we report no p-values (\S3.3). The sign of the correlation flips by arm, from +0.76 in baseline to $-$0.79 in textinit (Table 3). The pooled cloud is weak, at $-$0.20, only because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most individual arms show a strong |r|.}
   \label{fig:figA2}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.68\linewidth]{figures/fig5_entropy.pdf}
-  \caption{\textbf{Entropy collapse tracks concentration only.} Mean attention entropy through training, seed 0, to each arm's final checkpoint. Only sigmoid and textinit collapse. baseline, g1gate, and RF stay flat. The entropy-collapse correlate from the text-LM literature therefore follows the concentration axis, not the norm axes.}
+  \includegraphics[width=0.74\linewidth]{figures/fig5_entropy.pdf}
+  \caption{\small \textbf{Entropy collapse tracks concentration only.} Mean attention entropy through training, seed 0, to each arm's final checkpoint. Only sigmoid and textinit collapse. baseline, g1gate, and RF stay flat. The entropy-collapse correlate from the text-LM literature therefore follows the concentration axis, not the norm axes.}
   \label{fig:figA3}
 \end{figure}
 
@@ -353,8 +356,7 @@ T. Darcet, M. Oquab, J. Mairal, P. Bojanowski. \textit{Vision Transformers Need 
 
 This table gives the per-seed values behind the collapsed ranges of Table 1, and adds the maximum attention$\rightarrow$pos0 where we have it. We logged that metric for seeds 1 and 2 only, because the seed-0 archive summary does not include it. We trust the seed-0 values from a checksummed archive rather than re-derive them first-hand (\S5). Each arm is read at its final matched checkpoint. All three signatures of \textit{textinit} have plateaued at 60M tokens, and its h-ratio changes by less than 10\% from 60M to 100M in the seeds that continued.
 
-\begin{table}[t]
-  \centering
+\begin{center}
   \small
   \begin{tabular}{lccccccc}
     \toprule
@@ -372,7 +374,7 @@ This table gives the per-seed values behind the collapsed ranges of Table 1, and
     textinit & s2 & 60M & 0.578 & 0.232 & \textasciitilde{}0.59 & 0.484 & 12.2 \\
     \bottomrule
   \end{tabular}
-\end{table}
+\end{center}
 
 \textit{baseline} and \textit{sigmoid} are tight across both of their seeds. \textit{textinit} is the loose arm: seed 0 sits far above the other two on every signature at once, at Sink 0.85 against 0.56--0.58, mean attn$\rightarrow$pos0 0.63 against 0.23, and h-ratio 42.5 against 5.5--12.2. The h-ratio has plateaued by 60--100M tokens in both lower seeds, so the spread is genuine seed sensitivity rather than an unconverged transient. Part of it is positional (Appendix C.2).
 
@@ -382,8 +384,7 @@ A note on g1gate. Both seeds with max-attention data show one head at about 0.21
 
 This table gives the mean and max-head attention mass by position at seed 0. It confirms that position 0 is the maximum-mass token in every arm, by mass rather than by argmax count alone. It is the direct check behind the position-0 anchoring defense of \S5.
 
-\begin{table}[t]
-  \centering
+\begin{center}
   \small
   \begin{tabularx}{\linewidth}{lcccX}
     \toprule
@@ -395,14 +396,13 @@ This table gives the mean and max-head attention mass by position at seed 0. It 
     textinit & 0.63 & 0.99 & 0 & pos0 max; razor spike (pos1 = 0.009) \\
     \bottomrule
   \end{tabularx}
-\end{table}
+\end{center}
 
 \subsection{Per-position scan at the remaining seeds, and for RF}
 
 We re-dumped per-position attention mass at the other seeds and for RF, and per-position residual and value norms for all three \textit{textinit} seeds. The table gives the position at which each quantity peaks (for value norms, the position at which the norm is smallest).
 
-\begin{table}[t]
-  \centering
+\begin{center}
   \small
   \begin{tabularx}{\linewidth}{lccccX}
     \toprule
@@ -417,7 +417,7 @@ We re-dumped per-position attention mass at the other seeds and for RF, and per-
     RF & s0 & 1 & --- & --- & mass 0.053 vs 0.044 at pos0, diffuse, not a sink \\
     \bottomrule
   \end{tabularx}
-\end{table}
+\end{center}
 
 Two readings follow. Position 0 remains the maximum-mass token in every arm with a randomly initialized decoder, so the pos0 anchoring holds where the central negative result lives. In \textit{textinit} the three signatures need not share a token, which is the positional dissociation of Appendix H and the reason the pos0-anchored textinit magnitudes at seeds 1 and 2 understate that arm's peaks.
 
@@ -437,7 +437,7 @@ This appendix is \textbf{speculative}. Nothing in it is tested by our experiment
 
 Gu et al. \cite{ref6} account for the sink as a key bias: softmax must distribute a full unit of attention mass per row, and a head with nothing informative to retrieve parks the surplus on a token whose value contributes little. If that account is right, each of our levers touches a different part of it, which would explain why each moves a different axis.
 
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}
   \item \textit{g1gate.} An output gate can suppress whatever the attended position injects into the residual stream. A model with that gate may be able to \textit{afford} concentration, because concentration no longer forces a matching change in the value path. That would be consistent with a gate whose measured effect here is on the value-norm axis rather than the concentration axis. Fesser et al. \cite{ref23} make a compatible argument from another direction: they distinguish a sink that acts as an ``adaptive nop'' (a no-op: the head suppresses its own update by routing attention to a token whose value contributes nothing), recognizable by a negligible value norm, from a sink that broadcasts global information, and they note that gating implicitly assumes the nop mechanism. If that is right, a gate should act on the value-norm axis first, which is where our gated arm differs from baseline.
   \item \textit{sigmoid.} Removing the softmax removes the sum-to-one constraint itself. A head with nothing to retrieve can simply attend weakly to everything, with no surplus to park. On this reading the value amplification we observe is what the value path does when it is no longer compensating for a forced allocation.
   \item \textit{textinit.} A pretrained text decoder arrives with sink machinery already built. Our observation that its norm signatures are present at step 0 while concentration crosses later would then reflect import of structure followed by re-targeting onto a visual prefix, rather than formation from scratch.
@@ -467,15 +467,15 @@ This appendix holds the detail behind the ordering paragraph of \S3.1.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.68\linewidth]{figures/fig4_leadlag_top.pdf}
-  \caption{\textbf{When each signature first crosses threshold.} Seed 0 throughout. Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A filled marker is the first probe at which a signature crossed its threshold (h$>$2, v$<$0.8, attn$\rightarrow$pos0$>$0.3). A hollow marker at a track's end means it never crossed. \textbf{Crossing times are interval-censored} at the 100-step probe cadence (head-level map in Fig. A5).}
+  \includegraphics[width=0.74\linewidth]{figures/fig4_leadlag_top.pdf}
+  \caption{\small \textbf{When each signature first crosses threshold.} Seed 0 throughout. Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A filled marker is the first probe at which a signature crossed its threshold (h$>$2, v$<$0.8, attn$\rightarrow$pos0$>$0.3). A hollow marker at a track's end means it never crossed. \textbf{Crossing times are interval-censored} at the 100-step probe cadence (head-level map in Fig. A5).}
   \label{fig:figA4}
 \end{figure}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.68\linewidth]{figures/figA4_birthmap.pdf}
-  \caption{\textbf{Birth-maps.} The step at which each (layer, query-head) pair first crosses the concentration threshold (attn$\rightarrow$pos0 $>$ 0.3), seed 0, for the three arms in which any head crosses. No \textit{baseline} and no \textit{RF} head ever crosses. 1\% of \textit{g1gate} heads do, against 89\% for \textit{sigmoid} and 87\% for \textit{textinit}. This is the head-level view behind Fig. A4.}
+  \includegraphics[width=0.74\linewidth]{figures/figA4_birthmap.pdf}
+  \caption{\small \textbf{Birth-maps.} The step at which each (layer, query-head) pair first crosses the concentration threshold (attn$\rightarrow$pos0 $>$ 0.3), seed 0, for the three arms in which any head crosses. No \textit{baseline} and no \textit{RF} head ever crosses. 1\% of \textit{g1gate} heads do, against 89\% for \textit{sigmoid} and 87\% for \textit{textinit}. This is the head-level view behind Fig. A4.}
   \label{fig:figA5}
 \end{figure}
 

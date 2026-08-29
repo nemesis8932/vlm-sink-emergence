@@ -156,7 +156,7 @@ def figure_block(b, width):
     cap = re.sub(r"^<b>\s*Figure\s+[A-Z]?\d+:\s*", "<b>", cap)
     return ("\\begin{figure}[t]\n  \\centering\n"
             f"  \\includegraphics[width={width}\\linewidth]{{{src}}}\n"
-            f"  \\caption{{{inline(cap)}}}\n  \\label{{fig:{fid}}}\n"
+            f"  \\caption{{\\small {inline(cap)}}}\n  \\label{{fig:{fid}}}\n"
             "\\end{figure}")
 
 
@@ -178,9 +178,13 @@ def table_block(lines, caption):
     env = "tabularx" if "X" in align else "tabular"
     spec = ("{\\linewidth}{" + "".join(align) + "}") if env == "tabularx" else ("{" + "".join(align) + "}")
 
-    out = ["\\begin{table}[t]", "  \\centering", "  \\small"]
+    # A table with no caption cannot be numbered or referenced, and as a float it drifts to
+    # the top of some later page away from the sentence that introduces it. Keep those inline.
+    floating = bool(caption)
+    out = (["\\begin{table}[t]", "  \\centering", "  \\small"] if floating
+           else ["\\begin{center}", "  \\small"])
     if caption:
-        out.append(f"  \\caption{{{inline(caption)}}}")     # CFP: caption BEFORE the table
+        out.append(f"  \\caption{{\\small {inline(caption)}}}")     # CFP: caption BEFORE the table
     out.append(f"  \\begin{{{env}}}" + spec)
     out.append("    \\toprule")
     out.append("    " + " & ".join(inline(c) for c in head) + " \\\\")
@@ -189,7 +193,7 @@ def table_block(lines, caption):
         out.append("    " + " & ".join(inline(c) for c in r) + " \\\\")
     out.append("    \\bottomrule")
     out.append(f"  \\end{{{env}}}")
-    out.append("\\end{table}")
+    out.append("\\end{table}" if floating else "\\end{center}")
     return "\n".join(out)
 
 
@@ -235,10 +239,10 @@ def convert(text, fig_width, top="section"):
         else:
             if re.match(r"^\s*\d+\.\s+", first):
                 items = _items(lines, r"^\s*\d+\.\s+")
-                out.append("\\begin{enumerate}\n" + "".join(f"  \\item {inline(i)}\n" for i in items) + "\\end{enumerate}")
+                out.append("\\begin{enumerate}\\setlength{\\itemsep}{2pt}\\setlength{\\parskip}{0pt}\n" + "".join(f"  \\item {inline(i)}\n" for i in items) + "\\end{enumerate}")
             elif re.match(r"^\s*-\s+", first):
                 items = _items(lines, r"^\s*-\s+")
-                out.append("\\begin{itemize}\n" + "".join(f"  \\item {inline(i)}\n" for i in items) + "\\end{itemize}")
+                out.append("\\begin{itemize}\\setlength{\\itemsep}{2pt}\\setlength{\\parskip}{0pt}\n" + "".join(f"  \\item {inline(i)}\n" for i in items) + "\\end{itemize}")
             else:
                 para = " ".join(l.strip() for l in lines)
                 m = RUNIN.match(para)
@@ -283,6 +287,10 @@ PREAMBLE = r"""\documentclass{article}
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{tabularx}
+%% article's default list indent is a full inch here; pull it back so the contributions
+%% list reads as body text rather than a block quote. Spacing only, no style-file edit.
+\setlength{\leftmargini}{1.3em}
+\setlength{\leftmarginii}{1.2em}
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{microtype}
@@ -326,7 +334,7 @@ def references(text):
 def main():
     # 0.68 is the measured ceiling: the body lands on exactly 8 pages, the VLM4RWD limit.
     # 0.72 and above spill the conclusion onto a 9th page. Override with --figwidth=.
-    fig_width = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--figwidth=")), "0.68")
+    fig_width = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--figwidth=")), "0.74")
     opt = "[preprint]" if PREPRINT else ""
     tex = [PREAMBLE % dict(opt=opt, title=TITLE,
                            author=AUTHOR_NAMED if PREPRINT else AUTHOR_ANON)]
