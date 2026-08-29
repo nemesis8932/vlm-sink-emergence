@@ -53,8 +53,8 @@ and its h-ratio changes by less than 10% from 60M to 100M in the seeds that cont
 | textinit | s1 | 60M | 0.556 | 0.235 | ~0.53 | 0.634 | 5.50 |
 | textinit | s2 | 60M | 0.578 | 0.232 | ~0.59 | 0.484 | 12.2 |
 
-*baseline* and *sigmoid* are tight across both of their seeds. *textinit* is the loose arm:
-seed 0 sits far above the other two on every signature at once, at Sink 0.85 against
+*baseline* and *sigmoid* are tight across both of their seeds. *textinit* is the loose arm.
+Seed 0 sits far above the other two on every signature at once, at Sink 0.85 against
 0.56–0.58, mean attn→pos0 0.63 against 0.23, and h-ratio 42.5 against 5.5–12.2. The h-ratio
 has plateaued by 60–100M tokens in both lower seeds, so the spread is genuine seed
 sensitivity rather than an unconverged transient. Part of it is positional (Appendix C.2).
@@ -137,7 +137,7 @@ This appendix is **speculative**. Nothing in it is tested by our experiments, an
 is a claim of this paper. We include it because a reader is entitled to ask *why* the
 signatures come apart, and because these hypotheses are cheap to state and testable later.
 
-Gu et al. [6] account for the sink as a key bias: softmax must distribute a full unit of
+Gu et al. [6] account for the sink as a key bias. Softmax must distribute a full unit of
 attention mass per row, and a head with nothing informative to retrieve parks the surplus on
 a token whose value contributes little. If that account is right, each of our levers touches
 a different part of it, which would explain why each moves a different axis.
@@ -147,10 +147,10 @@ a different part of it, which would explain why each moves a different axis.
   concentration no longer forces a matching change in the value path. That would be
   consistent with a gate whose measured effect here is on the value-norm axis rather than
   the concentration axis. Fesser et al. [23] make a compatible argument from another
-  direction: they distinguish a sink that acts as an "adaptive nop" (a no-op: the head
-  suppresses its own update by routing attention to a token whose value contributes
-  nothing), recognizable by a negligible value norm, from a sink that broadcasts global
-  information, and they note that gating implicitly assumes the nop mechanism. If that is
+  direction. They distinguish two kinds of sink. An "adaptive nop" head suppresses its own
+  update by routing attention to a token whose value contributes nothing, and a negligible
+  value norm identifies it. A broadcast head instead spreads global information. They note
+  that gating implicitly assumes the nop mechanism. If that is
   right, a gate should act on the value-norm axis first, which is where our gated arm
   differs from baseline.
 - *sigmoid.* Removing the softmax removes the sum-to-one constraint itself. A head with
@@ -174,33 +174,33 @@ model, 2 &times; 10<sup>&minus;3</sup> for the projector, and 10<sup>&minus;4</s
 vision encoder. We use bf16 autocast, `torch.compile`, and a batch size of 128.
 
 
-*Token accounting:* one token is one image token or one non-padding text token. A full
+*Token accounting.* One token is one image token or one non-padding text token. A full
 sequence contributes 49 image tokens plus its non-padding text tokens, so a step of batch
 128 contributes at most 16,384 tokens and about 9.5K on average. All "M tokens" figures in
 this paper use that definition.
 
-*Probe batch:* the fixed probe batch holds n = 32 samples, drawn with `random.seed(0)` from
+*Probe batch.* The fixed probe batch holds n = 32 samples, drawn with `random.seed(0)` from
 the repeated `the_cauldron` tail. We label this probe version `v1-repeatedtail-32`. RF uses
 the same probe batch as the repeated arms, so its signatures stay comparable to theirs even
 though its training stream differs (§5).
 
-*Validation:* a 1,024-example held-out pool, evaluated every 500 steps. Each estimate is the
+*Validation.* A 1,024-example held-out pool, evaluated every 500 steps. Each estimate is the
 mean over the first 512 examples of that pool, in four batches of 128 in fixed order. We
 report `val_unseen`, which holds out images. For the repeated arms we also log `val_seen`,
 which re-uses training images with fresh question–answer text. The RF run has no distinct
-seen split: at 2.39 visual epochs its `val_seen` loader re-uses the held-out pool, so we
+seen split. At 2.39 visual epochs its `val_seen` loader re-uses the held-out pool, so we
 report only `val_unseen` for RF. The seed-0 archive values for the matched 100M-token
 checkpoint are 1.161 for *baseline*, 1.138 for *g1gate*, 1.108 for *sigmoid*, and 0.832 for
 *textinit*. The main-text values are seed 1 or 2. For RF the held-out loss goes from 1.35
 over the first ten evaluations to 0.68 over the last ten, and the fitted slope over the
 second half of the run stays negative.
 
-*Aggregation:* each per-layer or per-head quantity is first averaged over the probe batch
+*Aggregation.* Each per-layer or per-head quantity is first averaged over the probe batch
 and over valid query positions, then aggregated by the formulas of §3.
 
 ## G. Notes on metric hygiene
 
-We record two corrections that we made during the audit of the numbers in this paper.
+We record three corrections that we made during the audit of the numbers in this paper.
 First, an earlier internal consolidation mixed two metrics in one column, mean and max
 attention→pos0, and thereby manufactured an apparent seed anomaly in *g1gate*. Re-derived
 like-for-like, the anomaly disappears, and g1gate becomes the most reproducible arm.
@@ -223,7 +223,8 @@ This appendix holds the detail behind the ordering paragraph of §4.1.
 <figcaption><b>Figure A4: When each signature first crosses threshold.</b> Seed 0 throughout.
 Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A
 filled marker is the first probe at which a signature crossed its threshold
-(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never crossed. <b>Crossing times are interval-censored</b> at the 100-step probe cadence (head-level map in Fig. A5).</figcaption>
+(h&gt;2, v&lt;0.8, attn→pos0&gt;0.3). A hollow marker at a track's end means it never crossed. <b>Crossing times are interval-
+censored</b> at the 100-step probe cadence (head-level map in Fig. A5).</figcaption>
 </figure>
 
 <figure id="figA5">
@@ -242,7 +243,7 @@ RF head ever crosses it, and g1gate reaches 1% of heads, a single-layer blip lat
 training. *sigmoid* mirrors that pattern, with concentration crossing at about 6M tokens and
 89% of heads eventually, against 87% for *textinit*, while neither *sigmoid* norm signature
 ever crosses (Fig. A5). *textinit* inherits its
-norm signatures rather than growing them: value-drain and an elevated residual-norm ratio
+norm signatures rather than growing them. Value-drain and an elevated residual-norm ratio
 are both present at 0 tokens, imported with the pretrained text-LM weights. Concentration is
 *not* inherited the same way, since Sink^0.3 is 0.000 at step 0 and crosses before 1M
 tokens. Even in the arm that imports the most sink structure, the norm signatures precede
@@ -269,8 +270,8 @@ scanned, and in *RF* the attention argmax sits at pos1 with mass 0.053 against 0
 position 0, a diffuse profile rather than a sink (Appendix C).
 
 We report this as a supporting observation, not a second headline. It has one consequence for
-measurement: because all three metrics anchor on position 0, the *textinit* magnitudes at
-seeds 1 and 2 are read at a token that is no longer the peak and therefore **understate** the
-arm's true peaks, a further reason to report that arm as a range and a median (§4.1, §5).
+measurement. All three metrics anchor on position 0, so the *textinit* magnitudes at seeds 1
+and 2 are read at a token that is no longer the peak and therefore **understate** the arm's
+true peaks, a further reason to report that arm as a range and a median (§4.1, §5).
 The anchoring holds for the randomly initialized decoders, which carry the central negative
 result.

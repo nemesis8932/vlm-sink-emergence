@@ -18,7 +18,7 @@ Table 1 collapses the seeds into per-arm ranges, each arm at its final matched c
 about 100M tokens, 60M for *textinit*, whose signatures have plateaued by then (per-seed
 table in Appendix B). **No two arms share a signature triple.**
 
-**Table 1 — the four corners (n = 2–3 seeds per arm).** Concentration is Sink^0.2, the
+**Table 1: the four corners (n = 2–3 seeds per arm).** Concentration is Sink^0.2, the
 fraction of the 270 (layer, query-head) pairs whose mean attention→pos0 exceeds 0.2. The
 v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 layers (§3).
 
@@ -29,21 +29,20 @@ v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 lay
 | sigmoid | strong (0.76–0.83) | **amplified** (1.48–1.60) | no strong asymmetry (1.1–1.3) |
 | textinit | strong (0.56–0.85) | strong drain (0.38–0.63) | extreme (5.5–42.5) |
 
-The value-norm axis alone takes three directions — drained hard, drained mildly, amplified — and
-the corners separate pairwise on single axes. *g1gate* differs from *baseline* on the
-value-norm axis alone: concentration absent or near-absent and the residual-norm ratio
+The value-norm axis alone takes three directions: drained hard, drained mildly, amplified. The
+corners separate pairwise on single axes. *g1gate* differs from *baseline* on
+the value-norm axis alone. Concentration is absent or near-absent and the residual-norm ratio
 moderate in both, while the gate makes the baseline's mild drain milder still, a 15–19%
 drain rather than none. *sigmoid* and *textinit* both reach strong concentration and then part on the *direction* of the
-value-norm move and on the residual-norm ratio. The *sigmoid* corner is relative: its concentration
-is row-normalized over a shrinking raw gate budget, with top-head raw pos0 mass 0.065 at the final
-checkpoint (Appendix D). The arms are
-not a factorial design, so we report distinct intervention-associated profiles rather than
-isolated causal effects of single levers. The trajectories in Figure 1 separate early and do
-not share one origin: *textinit* starts from a pretrained text decoder that already carries
+value-norm move and on the residual-norm ratio. The *sigmoid* corner is relative. Its
+concentration is row-normalized over a shrinking raw gate budget, with top-head raw pos0 mass 0.065
+at the final checkpoint (Appendix D). The arms are not a factorial design, so these are
+intervention-associated profiles, not isolated causal effects of single levers. The trajectories in Figure 1 separate early and do
+not share one origin. *textinit* starts from a pretrained text decoder that already carries
 a subthreshold first-position bias, with Sink^0.3 still 0.000 at step 0.
 
 Reproducibility differs by arm. *g1gate* is tightest, Sink^0.2 of 0.004, 0.011 and 0.0037 across
-three seeds. The corner of *textinit* repeats across seeds and its magnitudes do not: seed 0 sits
+three seeds. The corner of *textinit* repeats across seeds and its magnitudes do not. Seed 0 sits
 far above the other two on every signature at once, h-ratio 42.5 against 5.5–12.2, partly because
 at seeds 1 and 2 its peak signatures move off position 0, where our metrics anchor (Appendix B, H).
 We therefore report textinit's massive-activation proxy as a **range (5.5–42.5×) with a median near
@@ -54,11 +53,11 @@ arms, *baseline*, *g1gate* and *RF*, cross the norm thresholds without ever cros
 *sigmoid* is the mirror image, crossing concentration without either norm threshold. *textinit*
 starts above both norm thresholds and crosses concentration later. Where a run crosses both kinds,
 the norm signatures come first, and under text initialization the three need not even settle on the
-same token (timings, positional scan and entropy-collapse correlate in Appendix H, Appendix E
-sets out, as untested hypotheses, how each lever might move a different axis).
+same token. Appendix H gives the timings, the positional scan and the entropy-collapse correlate,
+and Appendix E sets out, as untested hypotheses, how each lever might move a different axis.
 
-Figure 2 shows the separation inside a single head. Its rightmost panel carries the most weight:
-**the textinit stripe is already there at step 0**, imported with the text-LM weights before the
+Figure 2 shows the separation inside a single head. Its rightmost panel carries the most weight.
+**The textinit stripe is already there at step 0**, imported with the text-LM weights before the
 model has seen one image.
 
 <figure id="fig2">
@@ -76,16 +75,16 @@ probe batch (Appendix D).</figcaption>
 ## 4.2 The proxy grows across 1B low-repetition tokens with concentration at zero
 
 The four-arm comparison reuses a 146K-image pool, so a reader could read its "concentration
-never emerges" result as an overfitting artifact. The RF arm answers that: the identical
-*baseline* recipe on a fresh FineVision stream to one billion tokens at **2.39 effective
-visual epochs**, a **low-repetition** run rather than a repetition-free one. Its held-out
-loss has a negative fitted slope over the second half of training and ends at 0.638, while
+never emerges" result as an overfitting artifact. The RF arm answers that. It runs the
+identical *baseline* recipe on a fresh FineVision stream to one billion tokens at **2.39
+effective visual epochs**, a **low-repetition** run rather than a repetition-free one, with
+a held-out loss that ends at 0.638 on a negative fitted slope over the second half, while
 individual evaluations fluctuate (§3, §5).
 
-Concentration never arrives: **Sink^0.3 = 0.000 across the entire 0 → 1B run**, no head of the 270
-crossing the threshold at any of about 700 probes. The massive-activation proxy meanwhile keeps growing far past warmup.
+Concentration never arrives. **Sink^0.3 = 0.000 across the entire 0 → 1B run**, and no head of the
+270 crosses the threshold at any of about 700 probes.
 
-**Table 2 — RF (fresh stream, n = 1 seed), init → 1B tokens.**
+**Table 2: RF (fresh stream, n = 1 seed), init → 1B tokens.**
 
 | signature | @ init | @ 1B | net |
 |---|---|---|---|
@@ -94,9 +93,9 @@ crossing the threshold at any of about 700 probes. The massive-activation proxy 
 | h-ratio (massive-activation proxy) | 1.43 | **3.22** | **≈2.3×**, positive long-horizon trend |
 | v-ratio (value-norm) | 1.00 | 0.69 | net drain, non-monotone |
 
-Warmup does not explain the rise: the h-ratio climbs from 2.40 at about 57M tokens to 3.22 at 1B,
-long after the 3% warmup window closes, though not monotonically at probe resolution, hence a
-positive long-horizon trend. In Figure 1, right, the violet trajectory climbs and never moves
+Warmup does not explain the rise. The h-ratio climbs from 2.40 at about 57M tokens to 3.22 at 1B,
+long after the 3% warmup window closes. The climb is not monotonic at probe resolution, so we call
+it a positive long-horizon trend. In Figure 1, right, the violet trajectory climbs and never moves
 rightward. The v-ratio ends below its initialization value, but about 75% of that drop happens in
 the first 57M tokens and part then recovers, so we report it as supporting context rather than
 ongoing emergence. 
@@ -105,22 +104,23 @@ ongoing emergence.
 
 A tight coupling between concentration and value-drain should at minimum hold the sign of their
 per-head correlation constant across regimes. It does not. Table 3 gives the Pearson r between
-attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the 90 (layer, KV-group) observations, averaging a group's query-head attention rather than triplicating its value
+attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the 90 (layer,
+KV-group) observations. We average a group's query-head attention rather than triplicate its value
 observation (§3, scatter in Fig. A2).
 
-**Table 3 — r(attn→pos0, v-ratio), final checkpoint, seed 0.**
+**Table 3: r(attn→pos0, v-ratio), final checkpoint, seed 0.**
 
 | baseline | g1gate | sigmoid | textinit | RF | pooled |
 |---|---|---|---|---|---|
 | +0.76 | +0.57 | −0.03 | −0.79 | +0.51 | −0.20 |
 
-These correlations are **descriptive, not inferential**: heads within a layer are not independent
+These correlations are **descriptive, not inferential**. Heads within a layer are not independent,
 and each arm rests on a single seed here, so a p-value would mislead and we report none. Collapsing
-to the 90 KV groups removes the pseudoreplication a per-query-head reading would introduce, leaving
-the picture unchanged (Appendix D).
+to the 90 KV groups removes the pseudoreplication a per-query-head reading would introduce, and
+the picture does not change (Appendix D).
 
-The pattern is about **sign**, which pseudoreplication does not manufacture: heads attending more
+The pattern is about **sign**, which pseudoreplication does not manufacture. Heads attending more
 to position 0 have *larger* value norms in the baseline regime and *smaller* ones under text
 initialization, and the pooled correlation is weak only because arms of opposite sign cancel. We
-claim no consistent-sign relationship across arms — not the absence of a coupling law, though a
+claim that no consistent-sign relationship holds across arms, not that no coupling law exists. A
 fixed coupling would show one sign everywhere, and it does not.

@@ -42,6 +42,21 @@ SPECIAL = {"\\": r"\textbackslash{}", "&": r"\&", "%": r"\%", "$": r"\$",
            "~": r"\textasciitilde{}", "^": r"\textasciicircum{}"}
 
 
+def joinlines(lines):
+    """Join source lines wrapped by the editor. A line ending in a hyphen ahead of a lower-case
+    continuation is a wrapped compound ("out-of-\nmemory"), so it joins with no space."""
+    out = ""
+    for ln in lines:
+        ln = ln.strip()
+        if out and re.search(r"\w-$", out) and ln[:1].islower():
+            out += ln
+        elif out:
+            out += " " + ln
+        else:
+            out = ln
+    return out
+
+
 def _protect(s, store, render):
     """Pull a construct out of the text so escaping cannot touch it."""
     store.append(render)
@@ -151,7 +166,7 @@ def figure_block(b, width):
         raise SystemExit("unparsed figure block:\n" + b[:200])
     fid, src, cap = m.group(1), m.group(2), m.group(3)
     src = src.replace(".svg", ".pdf")            # pdflatex needs the vector PDF
-    cap = " ".join(cap.split())
+    cap = joinlines(cap.split("\n"))
     # \caption already prints "Figure N:", so strip the number we carry in the source
     cap = re.sub(r"^<b>\s*Figure\s+[A-Z]?\d+:\s*", "<b>", cap)
     return ("\\begin{figure}[t]\n  \\centering\n"
@@ -220,9 +235,9 @@ def convert(text, fig_width, top="section"):
         if first.startswith("|"):
             out.append(table_block(lines, pending_caption)); pending_caption = None; continue
         if TABCAP.match(first):
-            raw = " ".join(l.strip() for l in lines)
+            raw = joinlines(lines)
             # "**Table 1 - short title.** rest of the caption"; \caption supplies "Table N:"
-            m = re.match(r"^\*\*Table\s+\d+\s*[\u2014\u2013-]?\s*(.*?)\*\*\s*(.*)$", raw, re.S)
+            m = re.match(r"^\*\*Table\s+\d+\s*[:\u2014\u2013-]?\s*(.*?)\*\*\s*(.*)$", raw, re.S)
             if m:
                 title = m.group(1).strip()
                 title = title[:1].upper() + title[1:]      # CFP: first word capitalised
@@ -244,7 +259,7 @@ def convert(text, fig_width, top="section"):
                 items = _items(lines, r"^\s*-\s+")
                 out.append("\\begin{itemize}\\setlength{\\itemsep}{2pt}\\setlength{\\parskip}{0pt}\n" + "".join(f"  \\item {inline(i)}\n" for i in items) + "\\end{itemize}")
             else:
-                para = " ".join(l.strip() for l in lines)
+                para = joinlines(lines)
                 m = RUNIN.match(para)
                 if m and not para.startswith("**Table"):
                     out.append(f"\\paragraph{{{inline(m.group(1), cite=False)}}} {inline(m.group(2))}")
@@ -324,7 +339,7 @@ def references(text):
         b = b.strip()
         if not b.startswith("["):
             continue
-        m = re.match(r"\[(\d+)\]\s*(.*)", " ".join(l.strip() for l in b.split("\n")), re.S)
+        m = re.match(r"\[(\d+)\]\s*(.*)", joinlines(b.split("\n")), re.S)
         entries.append((int(m.group(1)), inline(m.group(2), cite=False)))
     entries.sort()
     body = "\n\n".join(f"\\bibitem{{ref{n}}}\n{txt}" for n, txt in entries)

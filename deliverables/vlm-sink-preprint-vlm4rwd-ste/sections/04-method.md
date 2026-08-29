@@ -1,11 +1,11 @@
 # 3. Setup
 
-**Model and token layout.** All runs use a 222M-parameter nanoVLM [17]: a pretrained,
-trainable SigLIP-B/16 vision encoder [18] feeding a decoder with the SmolLM2-135M
+**Model and token layout.** All runs use a 222M-parameter nanoVLM [17]. A pretrained,
+trainable SigLIP-B/16 vision encoder [18] feeds a decoder with the SmolLM2-135M
 architecture [19] through a learned modality projector. The decoder has 30 layers of
-grouped-query attention, 9 query heads per layer sharing 3 KV heads: 270 (layer, query-head) pairs but only 90
-(layer, KV-group) value projections, a distinction that matters in §4.3. It trains **from random initialization** in every arm except *textinit*, the designed exception,
-importing first-position structure from text pretraining (§4.1). Each sequence holds 49 image tokens as a
+grouped-query attention, with 9 query heads per layer sharing 3 KV heads. That gives 270 (layer, query-head) pairs but only 90
+(layer, KV-group) value projections, a distinction that matters in §4.3. It trains **from random initialization** in every arm except *textinit*, the designed exception, which
+imports first-position structure from text pretraining (§4.1). Each sequence holds 49 image tokens as a
 causal prefix, then 79 left-padded text tokens, 128 in all. **Position 0 is the first image token, and there is no BOS token** (§1). 
 
 **Arms.** Four training levers, each targeting one sink-relevant mechanism. Everything else stays
@@ -19,25 +19,27 @@ byte-identical across arms.
 | *textinit* | softmax | pretrained SmolLM2-135M | pretrained | — (novel control) |
 
 The *g1gate* and *sigmoid* levers have established sink effects in text-only models [20, 6].
-*textinit* has no precedent there: an inheritance control, carrying in whatever sink structure text
-pretraining built into SmolLM2.
+*textinit* has no precedent there. It is an inheritance control for whatever sink structure
+text pretraining built into SmolLM2.
 
 **A scale confound in our gate variant.** Unlike Qiu et al. [20], we initialize the G1 gate at
 exactly zero, so it opens at σ(0) = 0.5 and the arm begins as a half-scale output intervention as
-well as a gating one — **Qiu-style G1 in our zero-initialized variant** throughout (§5).
+well as a gating one. We therefore write **Qiu-style G1 in our zero-initialized variant**
+throughout (§5).
 
 **Data and the two training regimes.** The four-arm comparison trains on four curated
 subsets of `the_cauldron` [21], about 146K images, matched at about 100M tokens per arm. *textinit* stops at 60M, where its signatures have plateaued (§4.1). Reuse of that pool gives high visual-epoch counts, the objection the **RF** arm (random-fresh)
-answers (§4.2): the *baseline* recipe re-trained on a fresh FineVision stream [22] to 1B tokens,
-over about 4.6M natural images, at **2.39 effective visual epochs** — a **low-repetition** run, not
-a repetition-free one, since examples repeat about 2.4 times on average. We estimate the overlap between
+answers (§4.2). RF re-trains the *baseline* recipe on a fresh FineVision stream [22] to 1B tokens,
+over about 4.6M natural images, at **2.39 effective visual epochs**. That is a **low-repetition**
+run rather than a repetition-free one, since examples repeat about 2.4 times on average. We estimate the overlap between
 the fresh pool and the repeated subsets at under 3%, from config-level composition rather
 than image-level deduplication. Swapping datasets trades the repetition confound for a
 domain-shift confound, which §5 takes up.
 
 **Three signatures, tracked separately.** We log the three sink symptoms the text-LM literature
 reports together, each at its own granularity, following Gu et al. [6] at fixed sequence length.
-The decoder has *L* = 30 layers, *H* = 9 query heads and *G* = 3 KV heads per layer. Every quantity below is averaged over valid query positions and over the fixed probe batch.
+The decoder has *L* = 30 layers, *H* = 9 query heads and *G* = 3 KV heads per layer. We average
+every quantity below over valid query positions and over the fixed probe batch.
 
 *Concentration* (Sink^ε_1) is the fraction of the *L·H* = 270 (layer, query-head) pairs
 whose mean attention to position 0 exceeds ε. We use the ε = 0.3 default of [6] and check
@@ -52,10 +54,10 @@ repeats across 3 query heads, so the ratio rests on *L·G* = 90 distinct value p
 
 *Residual-norm ratio* (h-ratio) is the residual-stream norm at position 0 divided by the
 mean norm over the other positions, again per layer and averaged over the 30 layers. We call
-it a **massive-activation proxy**, because massive activations are normally defined by
+it a **massive-activation proxy**, because the literature defines massive activations by
 channel-level outliers [2, 5], which we never measured (§5).
 
-All three metrics **anchor on position 0 by construction**, a measurement choice we check: at seed
+All three metrics **anchor on position 0 by construction**, and we check that choice. At seed
 0, per-position attention mass makes position 0 the maximum-mass token in every arm (Appendix C),
 and §5 handles the remaining seed-level caveat. The *sigmoid* arm reports the row-normalized
 attention view, which keeps concentration comparable across arms, and we also log the raw sigmoid mass
@@ -69,7 +71,7 @@ constraint and tests it directly.
 eager mode, fp32, no gradients, independent of the training path (fused SDPA kernels, autocast,
 `torch.compile`). Every call validates its hidden states against the real forward pass to a relative error below
 10<sup>−2</sup>, so the probe cannot drift from what the trained model computes. The probe batch is
-fixed across all runs and seeds, keeping every number comparable, and probes fire every 100
+fixed across all runs and seeds, which keeps every number comparable, and probes fire every 100
 optimizer steps, dense enough to timestamp each signature's first threshold crossing. Appendix F gives the probe
 batch, token accounting and validation protocol.
 
@@ -82,7 +84,10 @@ precision and batch size.
 matched 100M-token checkpoint the held-out losses are 1.182 for *baseline*, 1.133 for *g1gate*,
 1.206 for *sigmoid* and 0.877 for *textinit*, and RF reaches 0.638 at 1B tokens (Appendix F). Two
 cautions. *textinit* starts from a pretrained text decoder, so its lower loss reflects unequal
-competence, not a lever effect: only *baseline*, *g1gate* and *sigmoid* are equal-token, equal-initialization comparisons. And the repeated-data arms show a large train–validation asymmetry
-(`val_seen` near 0.44 against `val_unseen` near 1.18), the overfitting signal that motivates RF. RF has no seen split, so the weaker statement its data supports is a held-out loss with a negative
-fitted slope over the second half, ending at 0.638, with individual evaluations fluctuating (§5). **We did not run MMStar or any other downstream benchmark
+competence, not a lever effect. Only *baseline*, *g1gate* and *sigmoid* are equal-token,
+equal-initialization comparisons. And the repeated-data arms show a large train–validation
+asymmetry (`val_seen` near 0.44 against `val_unseen` near 1.18), the overfitting signal that
+motivates RF. RF has no seen split. The weaker statement its data supports is a held-out loss that ends
+at 0.638 with a negative fitted slope over the second half, individual evaluations
+fluctuating (§5). **We did not run MMStar or any other downstream benchmark
 on any arm**, so this paper makes no capability claim (§5).
