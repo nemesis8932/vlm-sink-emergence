@@ -1,4 +1,4 @@
-# 3. Results
+# 4. Results
 
 <figure id="fig1">
 <img src="figures/fig2_phase_portrait.svg" alt="Decoupling phase portrait">
@@ -12,7 +12,7 @@ smoothed, end markers raw (Appendix D). Were the three signatures one phenomenon
 trajectories would move along one direction.</figcaption>
 </figure>
 
-## 3.1 Four training levers reach four different signature corners
+## 4.1 Four training levers reach four different signature corners
 
 Table 1 collapses the seeds into per-arm ranges, each arm at its final matched checkpoint:
 about 100M tokens, 60M for *textinit*, whose signatures have plateaued by then (per-seed
@@ -20,7 +20,7 @@ table in Appendix B). **No two arms share a signature triple.**
 
 **Table 1 — the four corners (n = 2–3 seeds per arm).** Concentration is Sink^0.2, the
 fraction of the 270 (layer, query-head) pairs whose mean attention→pos0 exceeds 0.2. The
-v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 layers (§2).
+v-ratio rests on 90 (layer, KV-head) value projections and the h-ratio on 30 layers (§3).
 
 | arm | concentration | value-norm | massive-activation proxy |
 |---|---|---|---|
@@ -73,14 +73,14 @@ come from an auxiliary streaming batch, while every printed sigmoid number comes
 probe batch (Appendix D).</figcaption>
 </figure>
 
-## 3.2 The proxy grows across 1B low-repetition tokens with concentration at zero
+## 4.2 The proxy grows across 1B low-repetition tokens with concentration at zero
 
 The four-arm comparison reuses a 146K-image pool, so a reader could read its "concentration
 never emerges" result as an overfitting artifact. The RF arm answers that: the identical
 *baseline* recipe on a fresh FineVision stream to one billion tokens at **2.39 effective
 visual epochs**, a **low-repetition** run rather than a repetition-free one. Its held-out
 loss has a negative fitted slope over the second half of training and ends at 0.638, while
-individual evaluations fluctuate (§2, §5).
+individual evaluations fluctuate (§3, §5).
 
 Concentration never arrives: **Sink^0.3 = 0.000 across the entire 0 → 1B run**, no head of the 270
 crossing the threshold at any of about 700 probes. The massive-activation proxy meanwhile keeps growing far past warmup.
@@ -101,12 +101,12 @@ rightward. The v-ratio ends below its initialization value, but about 75% of tha
 the first 57M tokens and part then recovers, so we report it as supporting context rather than
 ongoing emergence. 
 
-## 3.3 No consistent-sign head-level concentration–value-norm relationship
+## 4.3 No consistent-sign head-level concentration–value-norm relationship
 
 A tight coupling between concentration and value-drain should at minimum hold the sign of their
 per-head correlation constant across regimes. It does not. Table 3 gives the Pearson r between
 attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the 90 (layer, KV-group) observations, averaging a group's query-head attention rather than triplicating its value
-observation (§2, scatter in Fig. A2).
+observation (§3, scatter in Fig. A2).
 
 **Table 3 — r(attn→pos0, v-ratio), final checkpoint, seed 0.**
 

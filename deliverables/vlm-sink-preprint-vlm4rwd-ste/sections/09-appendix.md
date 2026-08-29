@@ -163,7 +163,7 @@ a different part of it, which would explain why each moves a different axis.
   prefix, rather than formation from scratch.
 
 Each of these is a hypothesis about mechanism. Testing them needs interventions we did not
-run: gate-scale sweeps that separate gating from the half-scale confound of §2, sigmoid runs
+run: gate-scale sweeps that separate gating from the half-scale confound of §3, sigmoid runs
 at matched effective attention temperature, and text-initialized runs with the sink
 machinery ablated before alignment.
 
@@ -196,7 +196,7 @@ over the first ten evaluations to 0.68 over the last ten, and the fitted slope o
 second half of the run stays negative.
 
 *Aggregation:* each per-layer or per-head quantity is first averaged over the probe batch
-and over valid query positions, then aggregated by the formulas of §2.
+and over valid query positions, then aggregated by the formulas of §3.
 
 ## G. Notes on metric hygiene
 
@@ -216,7 +216,7 @@ profiles already sum to one over the full sequence.
 
 ## H. Ordering, the sigmoid measurement note, and positional dissociation
 
-This appendix holds the detail behind the ordering paragraph of §3.1.
+This appendix holds the detail behind the ordering paragraph of §4.1.
 
 <figure id="figA4">
 <img src="figures/fig4_leadlag_top.svg" alt="Sink lead-lag ordering">
@@ -271,6 +271,6 @@ position 0, a diffuse profile rather than a sink (Appendix C).
 We report this as a supporting observation, not a second headline. It has one consequence for
 measurement: because all three metrics anchor on position 0, the *textinit* magnitudes at
 seeds 1 and 2 are read at a token that is no longer the peak and therefore **understate** the
-arm's true peaks, a further reason to report that arm as a range and a median (§3.1, §5).
+arm's true peaks, a further reason to report that arm as a range and a median (§4.1, §5).
 The anchoring holds for the randomly initialized decoders, which carry the central negative
 result.

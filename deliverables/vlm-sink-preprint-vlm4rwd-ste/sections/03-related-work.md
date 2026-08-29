@@ -1,4 +1,4 @@
-# 4. Related Work
+# 2. Related Work
 
 **Attention sinks and their companions in text language models.** Gu et al. [6] give the
 canonical account: the sink token acts "more like key biases, storing extra attention
@@ -41,7 +41,7 @@ hallucination and grounding failure in deployed models and intervenes at inferen
 **The gating lever.** Qiu et al. [20] introduce the head-specific elementwise sigmoid gate
 on attention output that our *g1gate* arm adapts. In text models it "largely reduces the
 attention score allocated to the first token and decreases massive activations" while
-improving quality. Our zero-initialized variant confounds gating with initial output scaling (§2, §5). With that
+improving quality. Our zero-initialized variant confounds gating with initial output scaling (§3, §5). With that
 caveat, concentration is already absent in our baseline, so the gated arm differs on the value-norm
 axis: the drain becomes milder, 0.69–0.72 to 0.81–0.85, rather than disappearing — invisible unless
 the three signatures are logged separately.

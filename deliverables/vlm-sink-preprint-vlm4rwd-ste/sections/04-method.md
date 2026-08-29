@@ -1,11 +1,11 @@
-# 2. Setup
+# 3. Setup
 
 **Model and token layout.** All runs use a 222M-parameter nanoVLM [17]: a pretrained,
 trainable SigLIP-B/16 vision encoder [18] feeding a decoder with the SmolLM2-135M
 architecture [19] through a learned modality projector. The decoder has 30 layers of
 grouped-query attention, 9 query heads per layer sharing 3 KV heads: 270 (layer, query-head) pairs but only 90
-(layer, KV-group) value projections, a distinction that matters in §3.3. It trains **from random initialization** in every arm except *textinit*, the designed exception,
-importing first-position structure from text pretraining (§3.1). Each sequence holds 49 image tokens as a
+(layer, KV-group) value projections, a distinction that matters in §4.3. It trains **from random initialization** in every arm except *textinit*, the designed exception,
+importing first-position structure from text pretraining (§4.1). Each sequence holds 49 image tokens as a
 causal prefix, then 79 left-padded text tokens, 128 in all. **Position 0 is the first image token, and there is no BOS token** (§1). 
 
 **Arms.** Four training levers, each targeting one sink-relevant mechanism. Everything else stays
@@ -27,8 +27,8 @@ exactly zero, so it opens at σ(0) = 0.5 and the arm begins as a half-scale outp
 well as a gating one — **Qiu-style G1 in our zero-initialized variant** throughout (§5).
 
 **Data and the two training regimes.** The four-arm comparison trains on four curated
-subsets of `the_cauldron` [21], about 146K images, matched at about 100M tokens per arm. *textinit* stops at 60M, where its signatures have plateaued (§3.1). Reuse of that pool gives high visual-epoch counts, the objection the **RF** arm (random-fresh)
-answers (§3.2): the *baseline* recipe re-trained on a fresh FineVision stream [22] to 1B tokens,
+subsets of `the_cauldron` [21], about 146K images, matched at about 100M tokens per arm. *textinit* stops at 60M, where its signatures have plateaued (§4.1). Reuse of that pool gives high visual-epoch counts, the objection the **RF** arm (random-fresh)
+answers (§4.2): the *baseline* recipe re-trained on a fresh FineVision stream [22] to 1B tokens,
 over about 4.6M natural images, at **2.39 effective visual epochs** — a **low-repetition** run, not
 a repetition-free one, since examples repeat about 2.4 times on average. We estimate the overlap between
 the fresh pool and the repeated subsets at under 3%, from config-level composition rather
@@ -48,7 +48,7 @@ to pass.
 over the other valid positions, per layer and averaged over the 30 layers. Below 1 is value-drain
 [4], above 1 amplification. Under grouped-query attention a value vector belongs to a KV group and
 repeats across 3 query heads, so the ratio rests on *L·G* = 90 distinct value projections, not 270
-(§3.3).
+(§4.3).
 
 *Residual-norm ratio* (h-ratio) is the residual-stream norm at position 0 divided by the
 mean norm over the other positions, again per layer and averaged over the 30 layers. We call

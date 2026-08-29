@@ -11,7 +11,7 @@ result does not depend on the anchor.
 
 **The gate arm carries a scale confound.** We initialize the G1 gate at exactly zero, so it opens
 at σ(0) = 0.5 and halves attention output at step 0, where Qiu et al. [20] use ordinary
-initialization (§2). Gating and initial output scaling are therefore confounded in *g1gate*: its
+initialization (§3). Gating and initial output scaling are therefore confounded in *g1gate*: its
 differences from baseline cannot be attributed to gating alone, and a scale-matched control is
 future work.
 
@@ -26,7 +26,7 @@ isolate the decoder, is future work.
 
 **The h-ratio is a proxy, not a measurement of massive activations.** Massive activations
 are normally defined by channel-level outliers [2, 5]. We measured a position-specific
-residual-norm ratio and never computed channel-level statistics (§2). A large h-ratio is
+residual-norm ratio and never computed channel-level statistics (§3). A large h-ratio is
 consistent with massive activations without establishing them.
 
 **Token scale.** Our runs reach at most 1B tokens per arm, against the roughly 5B canonical in the
@@ -48,7 +48,7 @@ checkpoint, a double-covered 600-step overlap diverging only within probe noise,
 adequate support for the negative claim, and a second fresh-data seed would strengthen it.
 
 **What the RF control does and does not establish.** RF has no distinct seen split, so we cannot
-run for it the `val_seen` / `val_unseen` comparison that exposes memorization in the repeated arms. The weaker statement its data supports is the falling-slope statement of §2. Its streaming shuffle
+run for it the `val_seen` / `val_unseen` comparison that exposes memorization in the repeated arms. The weaker statement its data supports is the falling-slope statement of §3. Its streaming shuffle
 buffer dropped from 1500 to 500 examples partway through, again for memory, so stream ordering is
 not homogeneous, though the Sink^0.3 = 0.000 result and the h-ratio rise hold within each regime
 separately. Its probe batch is still the **fixed repeated-`the_cauldron` tail** used by the other
@@ -56,8 +56,8 @@ arms, which keeps RF's signatures comparable to theirs — what the negative res
 cost of measuring them on data from the other distribution. And RF buys lower repetition by
 changing dataset, so it trades the repetition confound for a domain-shift one, deliberately and
 with the fresh pool chosen to minimize shift. The under-3% overlap figure is config-level, not
-image-level (§2), and the third, domain-matched control we did not run is the known follow-up.
+image-level (§3), and the third, domain-matched control we did not run is the known follow-up.
 
-**We report no benchmark accuracy.** We measure sink signatures only (§2): no downstream benchmark
+**We report no benchmark accuracy.** We measure sink signatures only (§3): no downstream benchmark
 evaluation, such as MMStar, on any arm, and no claim about how signature dissociation relates to
 downstream capability.
