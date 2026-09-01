@@ -35,30 +35,29 @@ multimodal sink studies we know analyze mostly frozen, already-trained backbones
 (§2). Telling whether the signatures arrive together, in sequence, or independently takes a
 randomly initialized decoder with all three logged separately from step 0.
 
-We work at small scale by choice. The model is a 222M-parameter nanoVLM [17], where a pretrained
-SigLIP-B/16 encoder [18] feeds a randomly initialized decoder with the SmolLM2-135M architecture
-[19]. Four levers each target one sink-relevant mechanism (§3): standard softmax attention
-(*baseline*), a Qiu-style G1 output gate in our zero-initialized variant [20] (*g1gate*),
-unnormalized sigmoid attention, which removes the normalization sinks are argued to come from [6]
-(*sigmoid*), and initialization from the pretrained SmolLM2 text model (*textinit*). A validated
-probe logs all three signatures every 100 steps. The four-arm comparison reuses a small image pool,
-so we re-test the central negative result under low repetition, on a fresh stream of one billion
-tokens (*RF*, 2.39 effective visual epochs).
+We work at small scale by choice. The model is a 222M-parameter nanoVLM [17] with a
+pretrained SigLIP-B/16 encoder [18] and a randomly initialized decoder of the SmolLM2-135M
+architecture [19], trained under four levers that each target one sink-relevant mechanism
+(§3): softmax attention (*baseline*), a zero-initialized Qiu-style G1 output gate [20]
+(*g1gate*), unnormalized sigmoid attention, which removes the normalization sinks are argued
+to come from [6] (*sigmoid*), and initialization from the pretrained SmolLM2 text model
+(*textinit*). A validated probe logs all three signatures every 100 steps. Because the
+four-arm comparison reuses a small image pool, we re-test the central negative result on a
+fresh stream of one billion tokens (*RF*, 2.39 effective visual epochs).
 
-**Contributions.**
+**Contributions.** Decoupling itself is not new [9, 10] and we do not claim it. What is new
+is the conjunction. We track all three signatures jointly, from step 0, under randomly
+initialized decoders in a multimodal model, and add value-norm drain as a third axis. Across
+four levers (n = 2–3 seeds per arm) the arms reach four different corners of the
+three-signature space, no two sharing a triple, and the value-norm ratio alone is strongly
+drained, mildly drained or amplified depending on the lever (Fig. 1, Table 1). The arms are
+not a factorial design, so these are intervention-associated profiles rather than isolated
+causal effects. Two observations carry the most weight.
 
-1. **Four levers, four corners (n = 2–3 seeds/arm).** The arms reach four different corners of the
-three-signature space, no two sharing a triple. The value-norm ratio alone is strongly drained,
-mildly drained, or amplified, depending on the lever (Fig. 1, Table 1). The arms are not a
-factorial design, so we report intervention-associated profiles, not isolated causal effects.
-2. **Low-repetition decoupling at 1B tokens (n = 1).** On a fresh stream at 2.39 effective visual
-epochs, with training healthy throughout (§3), the massive-activation proxy rises from an h-ratio
-of 1.43 to 3.22, about 2.3×, while concentration stays at exactly zero and no head ever crosses the
-sink threshold (§4.2, §5).
-3. **No consistent-sign head-level relationship.** The per-head correlation between
-   concentration and value-norm flips sign across arms at seed 0 (+0.76 baseline → −0.79
-   textinit, pooled −0.20, over 90 KV groups per arm), reported descriptively (§4.3).
-
-Decoupling itself is not new [9, 10] and we do not claim it. The new part is the conjunction. We
-track all three signatures jointly, under randomly initialized decoders in a multimodal model, and
-add value-norm drain as a third axis.
+- *Low-repetition decoupling at 1B tokens (n = 1).* On a fresh stream at 2.39 effective
+  visual epochs, with training healthy throughout (§3), the massive-activation proxy rises
+  from an h-ratio of 1.43 to 3.22, about 2.3×, while concentration stays at exactly zero and
+  no head ever crosses the sink threshold (§4.2, §5).
+- *No consistent-sign head-level relationship.* The per-head correlation between
+  concentration and value-norm flips sign across arms at seed 0, +0.76 in baseline to −0.79
+  in textinit with a pooled −0.20, over 90 KV groups per arm, reported descriptively (§4.3).
