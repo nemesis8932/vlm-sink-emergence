@@ -101,10 +101,10 @@ def main():
     # the explanatory text lives in the LaTeX caption; the free cell holds the colorbar
     axes[1, 4].axis('off')
     pos = axes[1, 4].get_position()
-    cax = fig.add_axes([pos.x0 + 0.15 * pos.width, pos.y0 + 0.45 * pos.height,
-                        0.7 * pos.width, 0.06 * pos.height])
+    cax = fig.add_axes([pos.x0 + 0.08 * pos.width, pos.y0 + 0.45 * pos.height,
+                        0.84 * pos.width, 0.06 * pos.height])
     cb = fig.colorbar(im, cax=cax, orientation='horizontal')
-    cb.set_label('attention (row-normalized, γ = 0.5)', fontsize=5.5, labelpad=2)
+    cb.set_label('attention (row-norm., γ = 0.5)', fontsize=5.2, labelpad=2)
     cb.ax.tick_params(labelsize=5, length=2, pad=1)
 
     for i in range(2):
