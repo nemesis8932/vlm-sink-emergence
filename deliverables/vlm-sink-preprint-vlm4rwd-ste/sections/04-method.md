@@ -56,26 +56,26 @@ individual evaluations fluctuating (Section 5).
 We log the three sink symptoms the text-LM literature reports together, each at its own
 granularity, following Gu et al. [6] at fixed sequence length. Let $a_{l,h}$ be the mean
 attention that head $(l,h)$ sends to position 0, and $\|v^{(l)}_i\|$ and $\|h^{(l)}_i\|$
-the value-vector and residual-stream norms at position $i$ in layer $l$. Every quantity is
-averaged over valid query positions and over the fixed probe batch, and an overline with
-subscript $i>0$ denotes the mean over the other valid positions.
+the value-vector and residual-stream norms at position $i$ in layer $l$, all averaged over
+valid query positions and the fixed probe batch. An overline denotes the mean over the other
+valid positions $i > 0$. With $L = 30$ layers, $H = 9$ query heads and $G = 3$ KV groups,
 
-*Concentration* is the share of heads above a threshold,
-$\mathrm{Sink}^{\epsilon}_1 = \tfrac{1}{LH}\sum_{l,h}\mathbf{1}[a_{l,h} > \epsilon]$,
-over $L = 30$ layers and $H = 9$ query heads, 270 pairs. We use the $\epsilon = 0.3$ default
-of [6] and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm tables report the stricter
-$\epsilon = 0.2$, which makes an absence claim harder to pass.
+$$
+\mathrm{Sink}^{\epsilon}_1 = \frac{1}{LH}\sum_{l,h} \mathbf{1}\!\left[a_{l,h} > \epsilon\right],
+\qquad
+\text{v-ratio} = \frac{1}{L}\sum_{l} \frac{\|v^{(l)}_0\|}{\overline{\|v^{(l)}_{i}\|}},
+\qquad
+\text{h-ratio} = \frac{1}{L}\sum_{l} \frac{\|h^{(l)}_0\|}{\overline{\|h^{(l)}_{i}\|}}.
+$$
 
-*Value-norm ratio* is
-$\text{v-ratio} = \tfrac{1}{L}\sum_l \|v^{(l)}_0\| \,/\, \overline{\|v^{(l)}_{i}\|}_{i>0}$.
-Below 1 is value-drain [4], above 1 amplification. Under grouped-query attention a value
-vector is shared by 3 query heads, so the ratio rests on $LG = 90$ distinct projections, not
-270 (Section 4.3).
-
-*Residual-norm ratio* is the same ratio on the residual stream,
-$\text{h-ratio} = \tfrac{1}{L}\sum_l \|h^{(l)}_0\| \,/\, \overline{\|h^{(l)}_{i}\|}_{i>0}$.
-We call it a massive-activation proxy. The literature defines massive activations by
-channel-level outliers [2, 5], which we never measured (Section 5).
+*Concentration* is the share of the 270 (layer, query-head) pairs above threshold. We use
+the $\epsilon = 0.3$ default of [6] and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm
+tables report the stricter $\epsilon = 0.2$, which makes an absence claim harder to pass.
+The *value-norm ratio* is below 1 under value-drain [4] and above 1 under amplification.
+A value vector is shared by the 3 query heads of its KV group, so it rests on $LG = 90$
+distinct projections, not 270 (Section 4.3). The *residual-norm ratio* is the same ratio on
+the residual stream. We call it a massive-activation proxy, since the literature defines
+massive activations by channel-level outliers [2, 5], which we never measured (Section 5).
 
 All three anchor on position 0 by construction, and we check that choice. At seed 0,
 per-position attention mass makes position 0 the maximum-mass token in every arm (Appendix

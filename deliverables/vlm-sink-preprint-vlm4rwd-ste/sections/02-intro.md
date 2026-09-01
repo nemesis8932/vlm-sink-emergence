@@ -13,14 +13,12 @@ and the field reads the co-occurrence as permission to treat all three as facets
 attention-sink phenomenon.
 
 <figure id="fig0">
-<img src="figures/fig0_overview.svg" alt="Overview: pipeline, probe and the four corners">
-<figcaption><b>Figure 1: Overview.</b> (A) A pretrained SigLIP-B/16 encoder feeds 49
-image tokens, then 79 text tokens, into a randomly initialized decoder of the SmolLM2-135M
-architecture. There is no BOS token, so position 0 is the first image token, where a probe
-reads three signatures every 100 steps: concentration over 270 query heads, the value-norm
-ratio over 90 KV groups, and the residual-norm ratio over 30 layers. Four levers change one
-thing each, and RF repeats the baseline recipe on a fresh 1B-token stream. (B) Table 1 as a
-strip, each arm's seed range per signature. No two arms share a triple.</figcaption>
+<img src="figures/fig0_overview.tex" alt="Overview: pipeline, position 0 and the probe">
+<figcaption><b>Figure 1: Setup.</b> A pretrained SigLIP-B/16 encoder feeds 49 image tokens,
+then 79 text tokens, into a randomly initialized decoder of the SmolLM2-135M architecture.
+There is no BOS token, so position 0 is the first image token. A probe reads three signatures
+there every 100 steps, each at its own granularity. Four levers change one thing each, and RF
+repeats the baseline recipe on a fresh 1B-token stream.</figcaption>
 </figure>
 
 Whether they really are one phenomenon is contested. One line argues for causal unity:
@@ -62,7 +60,7 @@ jointly, from step 0, under randomly initialized decoders in a multimodal model,
 value-norm drain as a third axis. First, across four levers (n = 2–3 seeds per arm) the
 arms reach four different corners of the three-signature space, no two sharing a triple,
 and the value-norm ratio alone is strongly drained, mildly drained or amplified depending on
-the lever (Fig. 1B, Fig. 2, Table 1). The arms are not a factorial design, so these are
+the lever (Fig. 2, Table 1). The arms are not a factorial design, so these are
 intervention-associated profiles rather than isolated causal effects. Second, on a fresh
 stream at 2.39 effective visual epochs, with training healthy throughout (Section 3), the
 massive-activation proxy rises from an h-ratio of 1.43 to 3.22, about 2.3×, while

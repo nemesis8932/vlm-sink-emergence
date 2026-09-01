@@ -169,11 +169,14 @@ def figure_block(b, width):
         raise SystemExit("unparsed figure block:\n" + b[:200])
     fid, src, cap = m.group(1), m.group(2), m.group(3)
     src = src.replace(".svg", ".pdf")            # pdflatex needs the vector PDF
+    # a .tex source is a TikZ picture compiled in place, in the paper's own font
+    graphic = (f"  \\input{{{src}}}\n" if src.endswith(".tex")
+               else f"  \\includegraphics[width={width}\\linewidth]{{{src}}}\n")
     cap = joinlines(cap.split("\n"))
     # \caption already prints "Figure N:", so strip the number we carry in the source
     cap = re.sub(r"^<b>\s*Figure\s+[A-Z]?\d+:\s*", "<b>", cap)
     return ("\\begin{figure}[t]\n  \\centering\n"
-            f"  \\includegraphics[width={width}\\linewidth]{{{src}}}\n"
+            + graphic +
             f"  \\caption{{{inline(cap)}}}\n  \\label{{fig:{fid}}}\n"
             "\\end{figure}")
 
@@ -233,6 +236,9 @@ def convert(text, fig_width, top="section"):
         lines = b.split("\n")
         first = lines[0].lstrip()
 
+        if first.startswith("$$") and lines[-1].strip().endswith("$$"):
+            body = "\n".join(lines).strip()[2:-2].strip()
+            out.append("\\[\n" + body + "\n\\]"); continue
         if first.startswith("<figure"):
             out.append(figure_block(b, fig_width)); continue
         if first.startswith("|"):
@@ -305,6 +311,14 @@ PREAMBLE = r"""\documentclass{article}
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc}
+%% arm colours, identical to analysis/fig_common.py ARM_COLORS
+\definecolor{armbaseline}{HTML}{3272AE}
+\definecolor{armg1gate}{HTML}{2E9459}
+\definecolor{armsigmoid}{HTML}{C23B2C}
+\definecolor{armtextinit}{HTML}{D2790D}
+\definecolor{armrf}{HTML}{7E63AC}
 %% article's default list indent is a full inch here; pull it back so the contributions
 %% list reads as body text rather than a block quote. Spacing only, no style-file edit.
 \setlength{\leftmargini}{1.3em}

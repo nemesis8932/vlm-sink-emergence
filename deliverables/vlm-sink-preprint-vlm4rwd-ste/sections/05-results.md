@@ -6,9 +6,9 @@
 concentration-against-value-norm space (left) and against the residual-norm ratio (right,
 log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens,
 60M for <em>textinit</em>, 1B for <em>RF</em>), seed 0 unless labelled. The horizontal axis
-is the <em>maximum</em> attention→pos0 over heads, not Table 1's fraction above threshold,
-so an arm can sit off zero here with Sink<sup>ε</sup> = 0.000. Paths smoothed, end markers
-raw (Appendix F). Were the three signatures one phenomenon, these trajectories would move
+is the <em>maximum</em> attention→pos0 over heads, not Table 1's fraction, so an arm can
+sit off zero here with Sink<sup>ε</sup> = 0.000. Smoothed paths, raw end markers
+(Appendix F). Were the three signatures one phenomenon, these trajectories would move
 along one direction.</figcaption>
 </figure>
 

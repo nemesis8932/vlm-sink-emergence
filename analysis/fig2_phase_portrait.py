@@ -51,12 +51,12 @@ def draw(ax, xs, ys_raw, color, label):
             solid_capstyle='round')
     # a few progress dots (grow with training)
     idx = np.linspace(0, len(xs) - 1, 6).astype(int)[1:-1]
-    ax.scatter(xs[idx], ys[idx], s=np.linspace(5, 14, len(idx)), color=color,
+    ax.scatter(xs[idx], ys[idx], s=np.linspace(4, 9, len(idx)), color=color,
                alpha=0.45, zorder=5, edgecolors='none')
     # init = open circle (raw values), final = diamond (raw values)
-    ax.scatter([xs[0]], [ys_raw[0]], s=26, facecolors='white', edgecolors=color,
+    ax.scatter([xs[0]], [ys_raw[0]], s=16, facecolors='white', edgecolors=color,
                lw=1.1, zorder=7)
-    ax.scatter([xs[-1]], [ys_raw[-1]], s=50, color=color, marker='D',
+    ax.scatter([xs[-1]], [ys_raw[-1]], s=28, color=color, marker='D',
                edgecolors='white', lw=0.9, zorder=8)
 
 

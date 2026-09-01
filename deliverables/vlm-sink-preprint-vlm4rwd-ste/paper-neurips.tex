@@ -16,6 +16,14 @@
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc}
+% arm colours, identical to analysis/fig_common.py ARM_COLORS
+\definecolor{armbaseline}{HTML}{3272AE}
+\definecolor{armg1gate}{HTML}{2E9459}
+\definecolor{armsigmoid}{HTML}{C23B2C}
+\definecolor{armtextinit}{HTML}{D2790D}
+\definecolor{armrf}{HTML}{7E63AC}
 % article's default list indent is a full inch here; pull it back so the contributions
 % list reads as body text rather than a block quote. Spacing only, no style-file edit.
 \setlength{\leftmargini}{1.3em}
@@ -53,8 +61,8 @@ The sink does not arrive alone. Three measurements move together in text languag
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=1.0\linewidth]{figures/fig0_overview.pdf}
-  \caption{\textbf{Overview.} (A) A pretrained SigLIP-B/16 encoder feeds 49 image tokens, then 79 text tokens, into a randomly initialized decoder of the SmolLM2-135M architecture. There is no BOS token, so position 0 is the first image token, where a probe reads three signatures every 100 steps: concentration over 270 query heads, the value-norm ratio over 90 KV groups, and the residual-norm ratio over 30 layers. Four levers change one thing each, and RF repeats the baseline recipe on a fresh 1B-token stream. (B) Table 1 as a strip, each arm's seed range per signature. No two arms share a triple.}
+  \input{figures/fig0_overview.tex}
+  \caption{\textbf{Setup.} A pretrained SigLIP-B/16 encoder feeds 49 image tokens, then 79 text tokens, into a randomly initialized decoder of the SmolLM2-135M architecture. There is no BOS token, so position 0 is the first image token. A probe reads three signatures there every 100 steps, each at its own granularity. Four levers change one thing each, and RF repeats the baseline recipe on a fresh 1B-token stream.}
   \label{fig:fig0}
 \end{figure}
 
@@ -66,7 +74,7 @@ Vision--language models suit the question, because the multimodal setting change
 
 We work at small scale by choice. The model is a 222M-parameter nanoVLM \cite{ref17} with a pretrained SigLIP-B/16 encoder \cite{ref18} and a randomly initialized decoder of the SmolLM2-135M architecture \cite{ref19}, trained under four levers that each target one sink-relevant mechanism (Section 3): softmax attention (\textit{baseline}), a zero-initialized Qiu-style G1 output gate \cite{ref20} (\textit{g1gate}), unnormalized sigmoid attention, which removes the normalization sinks are argued to come from \cite{ref6} (\textit{sigmoid}), and initialization from the pretrained SmolLM2 text model (\textit{textinit}). A validated probe logs all three signatures every 100 steps. Because the four-arm comparison reuses a small image pool, we re-test the central negative result on a fresh stream of one billion tokens (\textit{RF}, 2.39 effective visual epochs).
 
-This paper reports three observations from that setup. Decoupling itself is not new \cite{ref9,ref10} and we do not claim it. What is new is the conjunction: all three signatures tracked jointly, from step 0, under randomly initialized decoders in a multimodal model, with value-norm drain as a third axis. First, across four levers (n = 2--3 seeds per arm) the arms reach four different corners of the three-signature space, no two sharing a triple, and the value-norm ratio alone is strongly drained, mildly drained or amplified depending on the lever (Fig. 1B, Fig. 2, Table 1). The arms are not a factorial design, so these are intervention-associated profiles rather than isolated causal effects. Second, on a fresh stream at 2.39 effective visual epochs, with training healthy throughout (Section 3), the massive-activation proxy rises from an h-ratio of 1.43 to 3.22, about 2.3$\times$, while concentration stays at exactly zero and no head ever crosses the sink threshold (Sections 4.2 and 5, one seed). Third, the per-head correlation between concentration and value-norm flips sign across arms at seed 0, +0.76 in baseline to $-$0.79 in textinit with a pooled $-$0.20, over 90 KV groups per arm, reported descriptively (Section 4.3).
+This paper reports three observations from that setup. Decoupling itself is not new \cite{ref9,ref10} and we do not claim it. What is new is the conjunction: all three signatures tracked jointly, from step 0, under randomly initialized decoders in a multimodal model, with value-norm drain as a third axis. First, across four levers (n = 2--3 seeds per arm) the arms reach four different corners of the three-signature space, no two sharing a triple, and the value-norm ratio alone is strongly drained, mildly drained or amplified depending on the lever (Fig. 2, Table 1). The arms are not a factorial design, so these are intervention-associated profiles rather than isolated causal effects. Second, on a fresh stream at 2.39 effective visual epochs, with training healthy throughout (Section 3), the massive-activation proxy rises from an h-ratio of 1.43 to 3.22, about 2.3$\times$, while concentration stays at exactly zero and no head ever crosses the sink threshold (Sections 4.2 and 5, one seed). Third, the per-head correlation between concentration and value-norm flips sign across arms at seed 0, +0.76 in baseline to $-$0.79 in textinit with a pooled $-$0.20, over 90 KV groups per arm, reported descriptively (Section 4.3).
 
 \section{Related work}
 
@@ -98,13 +106,17 @@ Training stays healthy in every reported run (held-out losses in Appendix A). Tw
 
 \subsection{Three signatures, tracked separately}
 
-We log the three sink symptoms the text-LM literature reports together, each at its own granularity, following Gu et al. \cite{ref6} at fixed sequence length. Let $a_{l,h}$ be the mean attention that head $(l,h)$ sends to position 0, and $\|v^{(l)}_i\|$ and $\|h^{(l)}_i\|$ the value-vector and residual-stream norms at position $i$ in layer $l$. Every quantity is averaged over valid query positions and over the fixed probe batch, and an overline with subscript $i>0$ denotes the mean over the other valid positions.
+We log the three sink symptoms the text-LM literature reports together, each at its own granularity, following Gu et al. \cite{ref6} at fixed sequence length. Let $a_{l,h}$ be the mean attention that head $(l,h)$ sends to position 0, and $\|v^{(l)}_i\|$ and $\|h^{(l)}_i\|$ the value-vector and residual-stream norms at position $i$ in layer $l$, all averaged over valid query positions and the fixed probe batch. An overline denotes the mean over the other valid positions $i > 0$. With $L = 30$ layers, $H = 9$ query heads and $G = 3$ KV groups,
 
-\textit{Concentration} is the share of heads above a threshold, $\mathrm{Sink}^{\epsilon}_1 = \tfrac{1}{LH}\sum_{l,h}\mathbf{1}[a_{l,h} > \epsilon]$, over $L = 30$ layers and $H = 9$ query heads, 270 pairs. We use the $\epsilon = 0.3$ default of \cite{ref6} and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm tables report the stricter $\epsilon = 0.2$, which makes an absence claim harder to pass.
+\[
+\mathrm{Sink}^{\epsilon}_1 = \frac{1}{LH}\sum_{l,h} \mathbf{1}\!\left[a_{l,h} > \epsilon\right],
+\qquad
+\text{v-ratio} = \frac{1}{L}\sum_{l} \frac{\|v^{(l)}_0\|}{\overline{\|v^{(l)}_{i}\|}},
+\qquad
+\text{h-ratio} = \frac{1}{L}\sum_{l} \frac{\|h^{(l)}_0\|}{\overline{\|h^{(l)}_{i}\|}}.
+\]
 
-\textit{Value-norm ratio} is $\text{v-ratio} = \tfrac{1}{L}\sum_l \|v^{(l)}_0\| \,/\, \overline{\|v^{(l)}_{i}\|}_{i>0}$. Below 1 is value-drain \cite{ref4}, above 1 amplification. Under grouped-query attention a value vector is shared by 3 query heads, so the ratio rests on $LG = 90$ distinct projections, not 270 (Section 4.3).
-
-\textit{Residual-norm ratio} is the same ratio on the residual stream, $\text{h-ratio} = \tfrac{1}{L}\sum_l \|h^{(l)}_0\| \,/\, \overline{\|h^{(l)}_{i}\|}_{i>0}$. We call it a massive-activation proxy. The literature defines massive activations by channel-level outliers \cite{ref2,ref5}, which we never measured (Section 5).
+\textit{Concentration} is the share of the 270 (layer, query-head) pairs above threshold. We use the $\epsilon = 0.3$ default of \cite{ref6} and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm tables report the stricter $\epsilon = 0.2$, which makes an absence claim harder to pass. The \textit{value-norm ratio} is below 1 under value-drain \cite{ref4} and above 1 under amplification. A value vector is shared by the 3 query heads of its KV group, so it rests on $LG = 90$ distinct projections, not 270 (Section 4.3). The \textit{residual-norm ratio} is the same ratio on the residual stream. We call it a massive-activation proxy, since the literature defines massive activations by channel-level outliers \cite{ref2,ref5}, which we never measured (Section 5).
 
 All three anchor on position 0 by construction, and we check that choice. At seed 0, per-position attention mass makes position 0 the maximum-mass token in every arm (Appendix E), and Section 5 covers the seed-level exception. The \textit{sigmoid} arm reports the row-normalized attention view, which keeps concentration comparable across arms, and we also log the raw sigmoid mass (Appendix F).
 
@@ -115,7 +127,7 @@ A probe recomputes all three from the live weights every 100 optimizer steps, on
 \begin{figure}[t]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig2_phase_portrait.pdf}
-  \caption{\textbf{Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (left) and against the residual-norm ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}), seed 0 unless labelled. The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction above threshold, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Paths smoothed, end markers raw (Appendix F). Were the three signatures one phenomenon, these trajectories would move along one direction.}
+  \caption{\textbf{Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (left) and against the residual-norm ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}), seed 0 unless labelled. The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Smoothed paths, raw end markers (Appendix F). Were the three signatures one phenomenon, these trajectories would move along one direction.}
   \label{fig:fig1}
 \end{figure}
 
@@ -209,13 +221,13 @@ Across the arms the three signatures land in different corners, and no single on
 
 \section{Conclusion}
 
-The coupling is lever-dependent. Across four training levers, the three signatures land in four distinct corners: value norms are strongly drained, mildly drained, or amplified, and on a billion fresh tokens the massive-activation proxy more than doubles while concentration stays at zero. This extends two-way dissociations in text-only models \cite{ref9,ref10} to a third, separately measured axis in multimodal pretraining. In text LMs, massive activations can causally produce sinks \cite{ref7}; our results show the coupling can also fail to form.
+The coupling of attention-sink signatures is lever-dependent. Across four training interventions, the three tracked signatures map to separate corners of signature space, with value norms shifting between strong drain, mild drain and amplification. Most notably, over a one-billion-token fresh stream, the massive-activation proxy more than doubles while attention concentration stays at exactly zero. This extends prior two-way dissociations in text-only models \cite{ref9,ref10} to a separately measured third axis, value-norm drain, in multimodal pretraining. Massive activations can causally produce sinks in text LMs \cite{ref7}. Our results show the coupling can also fail to form.
 
-\paragraph{Practical implication} Across our arms, no one signature was a proxy for the others. A model without a concentration sink can still develop a growing residual-norm asymmetry, and an intervention judged on one signature may leave the others unchanged, so a sink mitigation should report all three.
+\paragraph{Practical implications} The takeaway for VLM deployment and evaluation is that no single signature acted as a reliable proxy for the others in our arms. A model without a concentration sink can still develop a growing residual-norm asymmetry, and an intervention judged successful by one metric may leave the other signatures unchanged. A sink mitigation should therefore report all three.
 
-\paragraph{Status and next steps} This is work in progress at small scale, and Section 5 names the gaps. Three controls would close the ones we can. A randomly initialized vision encoder would isolate what the decoder contributes to the residual-norm signal. A second fresh-data seed and a run past 1B tokens would firm up the RF result. A scale-matched gate control would separate gating from the half-scale confound of Section 3. Channel-level statistics would turn the h-ratio proxy into a measurement of massive activations.
+\paragraph{Status and next steps} This is work in progress at small scale, and Section 5 names the gaps. Next steps are a randomly initialized vision encoder to isolate the decoder's contribution to the residual-norm signal, a second fresh-data seed and fresh-data runs past 1B tokens, a scale-matched gate control to separate gating from the half-scale initialization confound, and channel-level statistics to turn the h-ratio proxy into a measurement of massive activations.
 
-\paragraph{Reproducibility} A self-validating probe (Section 3) computes all signatures on a fixed probe batch, from logs taken every 100 steps, and the Appendix holds the per-seed tables. We will release the code, the probe, the run configurations, the per-run logs, and the training checkpoints on acceptance. We withhold the links for double-blind review.
+\paragraph{Reproducibility} A self-validating probe (Section 3) computes all signatures on a fixed probe batch from logs taken every 100 steps, and the Appendix holds the per-seed tables. We will release the code, the probe, the run configurations, the per-run logs and the training checkpoints upon acceptance. The links are withheld here for double-blind review.
 
 \small
 \begin{thebibliography}{25}
