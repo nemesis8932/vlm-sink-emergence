@@ -171,7 +171,7 @@ def figure_block(b, width):
     cap = re.sub(r"^<b>\s*Figure\s+[A-Z]?\d+:\s*", "<b>", cap)
     return ("\\begin{figure}[t]\n  \\centering\n"
             f"  \\includegraphics[width={width}\\linewidth]{{{src}}}\n"
-            f"  \\caption{{\\small {inline(cap)}}}\n  \\label{{fig:{fid}}}\n"
+            f"  \\caption{{{inline(cap)}}}\n  \\label{{fig:{fid}}}\n"
             "\\end{figure}")
 
 
@@ -199,7 +199,7 @@ def table_block(lines, caption):
     out = (["\\begin{table}[t]", "  \\centering", "  \\small"] if floating
            else ["\\begin{center}", "  \\small"])
     if caption:
-        out.append(f"  \\caption{{\\small {inline(caption)}}}")     # CFP: caption BEFORE the table
+        out.append(f"  \\caption{{{inline(caption)}}}")     # CFP: caption BEFORE the table
     out.append(f"  \\begin{{{env}}}" + spec)
     out.append("    \\toprule")
     out.append("    " + " & ".join(inline(c) for c in head) + " \\\\")
@@ -349,7 +349,7 @@ def references(text):
 def main():
     # 0.68 is the measured ceiling: the body lands on exactly 8 pages, the VLM4RWD limit.
     # 0.72 and above spill the conclusion onto a 9th page. Override with --figwidth=.
-    fig_width = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--figwidth=")), "0.74")
+    fig_width = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--figwidth=")), "1.0")
     opt = "[preprint]" if PREPRINT else ""
     tex = [PREAMBLE % dict(opt=opt, title=TITLE,
                            author=AUTHOR_NAMED if PREPRINT else AUTHOR_ANON)]

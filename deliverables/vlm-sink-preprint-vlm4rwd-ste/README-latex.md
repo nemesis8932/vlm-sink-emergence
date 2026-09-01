@@ -97,23 +97,17 @@ references, checklist and appendix. `make_pdf.py` prints the body count against 
 Both were left as honest `No` answers rather than being written into the paper, because the
 conversion was scoped to not change content.
 
-## Figure width is the page-limit lever
+## Figures print at full width
 
-`build_tex.py` defaults to `--figwidth=0.74`, the measured ceiling for an 8-page body.
-Captions render at `\small` (9pt), which is what bought 0.68 -> 0.74:
+`build_tex.py` defaults to `--figwidth=1.0`. After the September compaction pass the body sits
+at 8 pages with both figures at the full 5.5in text width and captions at the style file's
+10pt. Captions are *not* set in `\small`: the formatting instructions say "do not change font
+sizes", so an earlier 9pt-caption experiment was reverted.
 
-| figwidth | body pages |
-|---:|---:|
-| **0.74** | **8** |
-| 0.76 | 9 |
-| 0.86 | 9 |
-
-Going above 0.74 needs roughly 30 words out of the body per extra spilling line. Nine pages
-would be fine for the NeurIPS main track but not for the workshop.
-
-Figure *legibility* at that size is a matplotlib question, not a LaTeX one: raising the tick
-and axis-label sizes in `analysis/fig_common.py` makes the panels readable without costing
-any page area.
+Figure legibility is solved at the source, not in LaTeX. `fig2_phase_portrait.py` and
+`fig6_sink_stripe.py` now draw at 5.5in with 6-7.5pt fonts, so what matplotlib shows is what
+prints. The appendix figures still need the same treatment; `docs/figure-plan.md` has the
+list and the rule.
 
 ## Iterating on structure
 

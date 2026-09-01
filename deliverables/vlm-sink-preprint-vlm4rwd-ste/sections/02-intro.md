@@ -12,20 +12,20 @@ activation [2, 5]. These effects settle on the same few tokens [6] and appear ne
 and the field reads the co-occurrence as permission to treat all three as facets of one
 attention-sink phenomenon.
 
-Whether they really are one phenomenon is contested. One line argues for causal unity. Massive
-activations mathematically require representational compression, and ablating them removes both
-compression valleys and sink formation [7]. A related view holds that outlier-driven rescaling by
-attention and residual sinks is *essential* to stable training [8]. Two recent studies pull the
-other way. Each separates a pair of the signatures by intervention, one through the normalization
-scheme [9] and one through value scale [10]. Both are text-only, and each separates at most two of
-the three.
+Whether they really are one phenomenon is contested. One line argues for causal unity:
+massive activations mathematically require representational compression, and ablating them
+removes both compression valleys and sink formation [7], while a related view holds that
+outlier-driven rescaling by attention and residual sinks is essential to stable training
+[8]. Two recent text-only studies pull the other way, each separating one pair of the
+signatures, by normalization scheme [9] or by value scale [10]. Neither separates all three.
 
-Which signature a study measures decides what it can conclude. If the three move independently, a
-lever that clears concentration while leaving the value path alone reads as a fix under one metric
-and a failure under the next, and two papers can disagree while both are right. Sink-like attention
-has also been tied to hallucination and weak visual grounding in deployed vision–language models
-[13–16], so a mitigation credited with removing the sink may leave the signature that mattered
-untouched. We measure all three at once, throughout training, and test no downstream behavior.
+Which signature a study measures decides what it can conclude. If the three move
+independently, a lever that clears concentration while leaving the value path alone reads as
+a fix under one metric and a failure under the next, and two papers can disagree while both
+are right. Sink-like attention has also been tied to hallucination and weak visual grounding
+in deployed vision–language models [13–16], so a mitigation credited with removing the sink
+may leave the signature that mattered untouched. We measure all three at once, throughout
+training, and test no downstream behavior.
 
 Vision–language models suit the question, because the multimodal setting changes what position 0
 *is*. Our sequence starts with 49 image tokens and has no BOS token, so the candidate sink token is
