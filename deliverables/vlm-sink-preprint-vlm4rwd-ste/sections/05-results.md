@@ -3,7 +3,7 @@
 <figure id="fig1">
 <img src="figures/fig2_phase_portrait.svg" alt="Decoupling phase portrait">
 <figcaption><b>Figure 2: Decoupling phase-portrait.</b> Every arm in
-concentration-against-value-norm space (left) and against the residual-norm ratio (right,
+concentration-against-value-norm space (top) and against the residual-norm ratio (bottom,
 log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens,
 60M for <em>textinit</em>, 1B for <em>RF</em>), seed 0 unless labelled. The horizontal axis
 is the <em>maximum</em> attention→pos0 over heads, not Table 1's fraction, so an arm can

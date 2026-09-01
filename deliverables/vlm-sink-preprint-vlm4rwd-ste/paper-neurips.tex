@@ -49,7 +49,7 @@
 
 
 \begin{abstract}
-Attention sinks, token positions that draw heavy attention while contributing little, are a widely studied target of interventions in language models and are often linked, though not causally, to hallucinations in vision-language models. A sink is defined by attention concentration ($\mathrm{Sink}^{\epsilon}_{1}$), but in text LMs it reliably arrives with two companions: a drained value norm (v-ratio) and massive activations (h-ratio) at the same position. We measure these three signatures during multimodal pretraining: a 222M vision-language model with a randomly initialized decoder, position 0 being an image token, no BOS, trained under four levers: softmax attention, output-gated softmax, unnormalized sigmoid attention, and initialization from a pretrained text LM. We find that the signatures come apart, across 2-3 seeds, depending on which train-time lever was applied. Most notably: on a 1B fresh-token run (2.39 effective visual epochs, single seed), the massive-activation proxy more than doubles while attention concentration stays at exactly zero at every threshold we test. Value-norm drain emerges as a third axis, apart from the massive-activation vs. sink dissociations known from text-only models.
+Attention sinks are a widely studied target of interventions in language models and are often linked, though not causally, to hallucinations in vision-language models. A sink is defined by attention concentration ($\mathrm{Sink}^{\epsilon}_{1}$), but in text LMs it reliably arrives with two companions: a drained value norm (v-ratio) and massive activations (h-ratio) at the same position. We measure these three signatures during multimodal pretraining: a 222M vision-language model with a randomly initialized decoder, position 0 being an image token, no BOS, trained under four levers: softmax attention, output-gated softmax, unnormalized sigmoid attention, and initialization from a pretrained text LM. We find that the signatures come apart, across 2-3 seeds, depending on which train-time lever was applied. Most notably: on a 1B fresh-token run (2.39 effective visual epochs, single seed), the massive-activation proxy more than doubles while attention concentration stays at exactly zero at every threshold we test. Value-norm drain emerges as a third axis, apart from the massive-activation vs. sink dissociations known from text-only models.
 \end{abstract}
 
 
@@ -106,17 +106,31 @@ Training stays healthy in every reported run (held-out losses in Appendix A). Tw
 
 \subsection{Three signatures, tracked separately}
 
-We log the three sink symptoms the text-LM literature reports together, each at its own granularity, following Gu et al. \cite{ref6} at fixed sequence length. Let $a_{l,h}$ be the mean attention that head $(l,h)$ sends to position 0, and $\|v^{(l)}_i\|$ and $\|h^{(l)}_i\|$ the value-vector and residual-stream norms at position $i$ in layer $l$, all averaged over valid query positions and the fixed probe batch. An overline denotes the mean over the other valid positions $i > 0$. With $L = 30$ layers, $H = 9$ query heads and $G = 3$ KV groups,
+We log the three sink symptoms the text-LM literature reports together, each at its own granularity, following Gu et al. \cite{ref6} at fixed sequence length. Let $a_{l,h}$ be the mean attention that head $(l,h)$ sends to position 0, and $\|v^{(l)}_i\|$ and $\|h^{(l)}_i\|$ the value-vector and residual-stream norms at position $i$ in layer $l$, all averaged over valid query positions and the fixed probe batch. An overline denotes the mean over the other valid positions $i > 0$. The decoder has $L = 30$ layers, $H = 9$ query heads and $G = 3$ KV groups.
+
+\textit{Concentration} is the share of (layer, query-head) pairs whose attention to position 0 exceeds a threshold, the metric of \cite{ref6},
 
 \[
-\mathrm{Sink}^{\epsilon}_1 = \frac{1}{LH}\sum_{l,h} \mathbf{1}\!\left[a_{l,h} > \epsilon\right],
-\qquad
-\text{v-ratio} = \frac{1}{L}\sum_{l} \frac{\|v^{(l)}_0\|}{\overline{\|v^{(l)}_{i}\|}},
-\qquad
-\text{h-ratio} = \frac{1}{L}\sum_{l} \frac{\|h^{(l)}_0\|}{\overline{\|h^{(l)}_{i}\|}}.
+\mathrm{Sink}^{\epsilon}_1 = \frac{1}{LH}\sum_{l=1}^{L}\sum_{h=1}^{H} \mathbf{1}\!\left[a_{l,h} > \epsilon\right].
 \]
 
-\textit{Concentration} is the share of the 270 (layer, query-head) pairs above threshold. We use the $\epsilon = 0.3$ default of \cite{ref6} and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm tables report the stricter $\epsilon = 0.2$, which makes an absence claim harder to pass. The \textit{value-norm ratio} is below 1 under value-drain \cite{ref4} and above 1 under amplification. A value vector is shared by the 3 query heads of its KV group, so it rests on $LG = 90$ distinct projections, not 270 (Section 4.3). The \textit{residual-norm ratio} is the same ratio on the residual stream. We call it a massive-activation proxy, since the literature defines massive activations by channel-level outliers \cite{ref2,ref5}, which we never measured (Section 5).
+We use their $\epsilon = 0.3$ default and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm tables report the stricter $\epsilon = 0.2$, which makes an absence claim harder to pass.
+
+\textit{Value-norm ratio} compares the value norm at position 0 with the rest of the sequence,
+
+\[
+\text{v-ratio} = \frac{1}{L}\sum_{l=1}^{L} \frac{\|v^{(l)}_0\|}{\overline{\|v^{(l)}_{i}\|}},
+\]
+
+below 1 under value-drain \cite{ref4} and above 1 under amplification. A value vector is shared by the 3 query heads of its KV group, so the ratio rests on $LG = 90$ distinct projections, not 270 (Section 4.3).
+
+\textit{Residual-norm ratio} is the same ratio on the residual stream,
+
+\[
+\text{h-ratio} = \frac{1}{L}\sum_{l=1}^{L} \frac{\|h^{(l)}_0\|}{\overline{\|h^{(l)}_{i}\|}}.
+\]
+
+We call it a massive-activation proxy, since the literature defines massive activations by channel-level outliers \cite{ref2,ref5}, which we never measured (Section 5).
 
 All three anchor on position 0 by construction, and we check that choice. At seed 0, per-position attention mass makes position 0 the maximum-mass token in every arm (Appendix E), and Section 5 covers the seed-level exception. The \textit{sigmoid} arm reports the row-normalized attention view, which keeps concentration comparable across arms, and we also log the raw sigmoid mass (Appendix F).
 
@@ -127,7 +141,7 @@ A probe recomputes all three from the live weights every 100 optimizer steps, on
 \begin{figure}[t]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig2_phase_portrait.pdf}
-  \caption{\textbf{Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (left) and against the residual-norm ratio (right, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}), seed 0 unless labelled. The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Smoothed paths, raw end markers (Appendix F). Were the three signatures one phenomenon, these trajectories would move along one direction.}
+  \caption{\textbf{Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (top) and against the residual-norm ratio (bottom, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}), seed 0 unless labelled. The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Smoothed paths, raw end markers (Appendix F). Were the three signatures one phenomenon, these trajectories would move along one direction.}
   \label{fig:fig1}
 \end{figure}
 
@@ -221,7 +235,7 @@ Across the arms the three signatures land in different corners, and no single on
 
 \section{Conclusion}
 
-The coupling of attention-sink signatures is lever-dependent. Across four training interventions, the three tracked signatures map to separate corners of signature space, with value norms shifting between strong drain, mild drain and amplification. Most notably, over a one-billion-token fresh stream, the massive-activation proxy more than doubles while attention concentration stays at exactly zero. This extends prior two-way dissociations in text-only models \cite{ref9,ref10} to a separately measured third axis, value-norm drain, in multimodal pretraining. Massive activations can causally produce sinks in text LMs \cite{ref7}. Our results show the coupling can also fail to form.
+The three signatures that define an attention sink in text models do not have to travel together. Which of them a vision--language model develops depends on the training lever: across four interventions, the signatures map to separate corners of signature space, with value norms shifting between strong drain, mild drain and amplification. Most notably, over a one-billion-token fresh stream, the massive-activation proxy more than doubles while attention concentration stays at exactly zero. This extends prior two-way dissociations in text-only models \cite{ref9,ref10} to a separately measured third axis, value-norm drain, in multimodal pretraining. Massive activations can causally produce sinks in text LMs \cite{ref7}. Our results show the coupling can also fail to form.
 
 \paragraph{Practical implications} The takeaway for VLM deployment and evaluation is that no single signature acted as a reliable proxy for the others in our arms. A model without a concentration sink can still develop a growing residual-norm asymmetry, and an intervention judged successful by one metric may leave the other signatures unchanged. A sink mitigation should therefore report all three.
 

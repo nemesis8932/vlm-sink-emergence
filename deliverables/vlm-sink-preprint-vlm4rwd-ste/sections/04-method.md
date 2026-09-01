@@ -58,24 +58,37 @@ granularity, following Gu et al. [6] at fixed sequence length. Let $a_{l,h}$ be 
 attention that head $(l,h)$ sends to position 0, and $\|v^{(l)}_i\|$ and $\|h^{(l)}_i\|$
 the value-vector and residual-stream norms at position $i$ in layer $l$, all averaged over
 valid query positions and the fixed probe batch. An overline denotes the mean over the other
-valid positions $i > 0$. With $L = 30$ layers, $H = 9$ query heads and $G = 3$ KV groups,
+valid positions $i > 0$. The decoder has $L = 30$ layers, $H = 9$ query heads and $G = 3$ KV
+groups.
+
+*Concentration* is the share of (layer, query-head) pairs whose attention to position 0
+exceeds a threshold, the metric of [6],
 
 $$
-\mathrm{Sink}^{\epsilon}_1 = \frac{1}{LH}\sum_{l,h} \mathbf{1}\!\left[a_{l,h} > \epsilon\right],
-\qquad
-\text{v-ratio} = \frac{1}{L}\sum_{l} \frac{\|v^{(l)}_0\|}{\overline{\|v^{(l)}_{i}\|}},
-\qquad
-\text{h-ratio} = \frac{1}{L}\sum_{l} \frac{\|h^{(l)}_0\|}{\overline{\|h^{(l)}_{i}\|}}.
+\mathrm{Sink}^{\epsilon}_1 = \frac{1}{LH}\sum_{l=1}^{L}\sum_{h=1}^{H} \mathbf{1}\!\left[a_{l,h} > \epsilon\right].
 $$
 
-*Concentration* is the share of the 270 (layer, query-head) pairs above threshold. We use
-the $\epsilon = 0.3$ default of [6] and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm
+We use their $\epsilon = 0.3$ default and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm
 tables report the stricter $\epsilon = 0.2$, which makes an absence claim harder to pass.
-The *value-norm ratio* is below 1 under value-drain [4] and above 1 under amplification.
-A value vector is shared by the 3 query heads of its KV group, so it rests on $LG = 90$
-distinct projections, not 270 (Section 4.3). The *residual-norm ratio* is the same ratio on
-the residual stream. We call it a massive-activation proxy, since the literature defines
-massive activations by channel-level outliers [2, 5], which we never measured (Section 5).
+
+*Value-norm ratio* compares the value norm at position 0 with the rest of the sequence,
+
+$$
+\text{v-ratio} = \frac{1}{L}\sum_{l=1}^{L} \frac{\|v^{(l)}_0\|}{\overline{\|v^{(l)}_{i}\|}},
+$$
+
+below 1 under value-drain [4] and above 1 under amplification. A value vector is shared by
+the 3 query heads of its KV group, so the ratio rests on $LG = 90$ distinct projections, not
+270 (Section 4.3).
+
+*Residual-norm ratio* is the same ratio on the residual stream,
+
+$$
+\text{h-ratio} = \frac{1}{L}\sum_{l=1}^{L} \frac{\|h^{(l)}_0\|}{\overline{\|h^{(l)}_{i}\|}}.
+$$
+
+We call it a massive-activation proxy, since the literature defines massive activations by
+channel-level outliers [2, 5], which we never measured (Section 5).
 
 All three anchor on position 0 by construction, and we check that choice. At seed 0,
 per-position attention mass makes position 0 the maximum-mass token in every arm (Appendix

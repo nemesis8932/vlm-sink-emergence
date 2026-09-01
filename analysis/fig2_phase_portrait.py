@@ -62,7 +62,7 @@ def draw(ax, xs, ys_raw, color, label):
 
 def main():
     # sized to the NeurIPS 5.5in text block so every font prints at its nominal size
-    fig, (axL, axR) = plt.subplots(1, 2, figsize=(5.5, 2.55))
+    fig, (axL, axR) = plt.subplots(2, 1, figsize=(5.5, 3.9))
     for arm in ARMS:
         S = fc.load_summ(arm)
         x = [s['max_attn_pos0'] for s in S]
@@ -78,8 +78,8 @@ def main():
         ax.grid(True, which='major', color='#999999', alpha=0.16, lw=0.5)
         ax.set_axisbelow(True)
         fc.style_ax(ax)
-        ax.set_xlabel('attention concentration (max attn→pos0)', fontsize=7)
-        ax.tick_params(labelsize=6)
+        ax.set_xlabel('attention concentration (max attn→pos0)', fontsize=7.5)
+        ax.tick_params(labelsize=6.5)
 
     axL.set_ylabel('value-norm ratio  ‖v‖$_{pos0}$ / ‖v‖$_{rest}$', fontsize=7)
     axL.set_title('Concentration vs value-norm', fontsize=7.5, weight='bold', pad=4)
@@ -111,10 +111,10 @@ def main():
                        lw=0, label='init', markersize=6.5),
                 Line2D([0], [0], marker='D', color='#666666', markerfacecolor='#666666',
                        markeredgecolor='white', lw=0, label='final', markersize=6.5)]
-    fig.legend(handles=handles, loc='lower center', ncol=4, fontsize=6, frameon=False,
-               bbox_to_anchor=(0.5, -0.06), handlelength=1.5, columnspacing=1.0)
+    fig.legend(handles=handles, loc='lower center', ncol=4, fontsize=6.5, frameon=False,
+               bbox_to_anchor=(0.5, -0.03), handlelength=1.5, columnspacing=1.0)
     # no suptitle: the LaTeX caption carries the title
-    fig.tight_layout(rect=[0, 0.08, 1, 1.0])
+    fig.tight_layout(rect=[0, 0.05, 1, 1.0], h_pad=1.6)
     out = 'analysis/fig2_phase_portrait.svg'
     fig.savefig(out, bbox_inches='tight')
     fig.savefig(out.replace('.svg', '.png'), dpi=200, bbox_inches='tight')

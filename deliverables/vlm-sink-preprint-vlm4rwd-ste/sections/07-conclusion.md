@@ -1,7 +1,8 @@
 # 6. Conclusion
 
-The coupling of attention-sink signatures is lever-dependent. Across four training
-interventions, the three tracked signatures map to separate corners of signature space, with
+The three signatures that define an attention sink in text models do not have to travel
+together. Which of them a vision–language model develops depends on the training lever:
+across four interventions, the signatures map to separate corners of signature space, with
 value norms shifting between strong drain, mild drain and amplification. Most notably, over a
 one-billion-token fresh stream, the massive-activation proxy more than doubles while attention
 concentration stays at exactly zero. This extends prior two-way dissociations in text-only
