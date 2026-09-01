@@ -8,7 +8,7 @@ log scale). Circles mark initialization, diamonds the final checkpoint (about 10
 60M for <em>textinit</em>, 1B for <em>RF</em>). Seed 0 unless labelled. <b>The horizontal
 axis is the <em>maximum</em> attention→pos0 over heads, not Table 1's fraction above
 threshold</b>, so an arm can sit off zero here with Sink<sup>ε</sup> = 0.000. Paths
-smoothed, end markers raw (Appendix D). Were the three signatures one phenomenon, these
+smoothed, end markers raw (Appendix F). Were the three signatures one phenomenon, these
 trajectories would move along one direction.</figcaption>
 </figure>
 
@@ -16,7 +16,7 @@ trajectories would move along one direction.</figcaption>
 
 Table 1 collapses the seeds into per-arm ranges, each arm at its final matched checkpoint:
 about 100M tokens, 60M for *textinit*, whose signatures have plateaued by then (per-seed
-table in Appendix B). **No two arms share a signature triple.**
+table in Appendix D). **No two arms share a signature triple.**
 
 **Table 1: the four corners (n = 2–3 seeds per arm).** Concentration is Sink^0.2, the
 fraction of the 270 (layer, query-head) pairs whose mean attention→pos0 exceeds 0.2. The
@@ -36,7 +36,7 @@ moderate in both, while the gate makes the baseline's mild drain milder still, a
 drain rather than none. *sigmoid* and *textinit* both reach strong concentration and then part on the *direction* of the
 value-norm move and on the residual-norm ratio. The *sigmoid* corner is relative. Its
 concentration is row-normalized over a shrinking raw gate budget, with top-head raw pos0 mass 0.065
-at the final checkpoint (Appendix D). The arms are not a factorial design, so these are
+at the final checkpoint (Appendix F). The arms are not a factorial design, so these are
 intervention-associated profiles, not isolated causal effects of single levers. The trajectories in Figure 1 separate early and do
 not share one origin. *textinit* starts from a pretrained text decoder that already carries
 a subthreshold first-position bias, with Sink^0.3 still 0.000 at step 0.
@@ -44,17 +44,17 @@ a subthreshold first-position bias, with Sink^0.3 still 0.000 at step 0.
 Reproducibility differs by arm. *g1gate* is tightest, Sink^0.2 of 0.004, 0.011 and 0.0037 across
 three seeds. The corner of *textinit* repeats across seeds and its magnitudes do not. Seed 0 sits
 far above the other two on every signature at once, h-ratio 42.5 against 5.5–12.2, partly because
-at seeds 1 and 2 its peak signatures move off position 0, where our metrics anchor (Appendix B, H).
+at seeds 1 and 2 its peak signatures move off position 0, where our metrics anchor (Appendix D, H).
 We therefore report textinit's massive-activation proxy as a **range (5.5–42.5×) with a median near
 12×** throughout, and treat the corner as the reproducible claim rather than any magnitude.
 
-**The corners also separate in time** (Appendix H, Fig. A4, seed 0). The random-decoder softmax
+**The corners also separate in time** (Appendix I, Fig. A4, seed 0). The random-decoder softmax
 arms, *baseline*, *g1gate* and *RF*, cross the norm thresholds without ever crossing concentration.
 *sigmoid* is the mirror image, crossing concentration without either norm threshold. *textinit*
 starts above both norm thresholds and crosses concentration later. Where a run crosses both kinds,
 the norm signatures come first, and under text initialization the three need not even settle on the
-same token. Appendix H gives the timings, the positional scan and the entropy-collapse correlate,
-and Appendix E sets out, as untested hypotheses, how each lever might move a different axis.
+same token. Appendix I gives the timings, the positional scan and the entropy-collapse correlate,
+and Appendix G sets out, as untested hypotheses, how each lever might move a different axis.
 
 Figure 2 shows the separation inside a single head. Its rightmost panel carries the most weight.
 **The textinit stripe is already there at step 0**, imported with the text-LM weights before the
@@ -69,7 +69,7 @@ image-to-text boundary. The stripe is <em>absent</em> in baseline throughout, st
 textinit (attn→pos0 = 0.62 at its final checkpoint), and <em>already present at step 0</em>
 in textinit (rightmost panel), inherited from the text LM. The sigmoid column's heat maps
 come from an auxiliary streaming batch, while every printed sigmoid number comes from the fixed
-probe batch (Appendix D).</figcaption>
+probe batch (Appendix F).</figcaption>
 </figure>
 
 ## 4.2 The proxy grows across 1B low-repetition tokens with concentration at zero
@@ -117,7 +117,7 @@ observation (§3, scatter in Fig. A2).
 These correlations are **descriptive, not inferential**. Heads within a layer are not independent,
 and each arm rests on a single seed here, so a p-value would mislead and we report none. Collapsing
 to the 90 KV groups removes the pseudoreplication a per-query-head reading would introduce, and
-the picture does not change (Appendix D).
+the picture does not change (Appendix F).
 
 The pattern is about **sign**, which pseudoreplication does not manufacture. Heads attending more
 to position 0 have *larger* value norms in the baseline regime and *smaller* ones under text
