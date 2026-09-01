@@ -1,14 +1,14 @@
 # 6. Conclusion
 
 The three signatures that define an attention sink in text models do not have to travel
-together. Which of them a vision–language model develops depends on the training lever:
-across four interventions, the signatures map to separate corners of signature space, with
-value norms shifting between strong drain, mild drain and amplification. Most notably, over a
-one-billion-token fresh stream, the massive-activation proxy more than doubles while attention
-concentration stays at exactly zero. This extends prior two-way dissociations in text-only
-models [9, 10] to a separately measured third axis, value-norm drain, in multimodal
-pretraining. Massive activations can causally produce sinks in text LMs [7]. Our results show
-the coupling can also fail to form.
+together. Tracked separately through vision–language pretraining, they come apart along
+whichever axis the training lever moves. Across four interventions the arms occupy separate
+corners of signature space, with value norms strongly drained, mildly drained or amplified.
+The sharpest case is the fresh-data run, where over one billion tokens the
+massive-activation proxy more than doubles while attention concentration stays at exactly
+zero. This extends the two-way dissociations of text-only models [9, 10] to a separately
+measured third axis, value-norm drain, in multimodal pretraining. Massive activations can
+causally produce sinks in text LMs [7]. Here the coupling can also fail to form.
 
 **Practical implications.** The takeaway for VLM deployment and evaluation is that no single
 signature acted as a reliable proxy for the others in our arms. A model without a
