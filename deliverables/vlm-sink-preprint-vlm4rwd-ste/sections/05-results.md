@@ -54,8 +54,8 @@ The corners also separate in time (Fig. A4, seed 0, Appendix I). *baseline*, *g1
 image, crossing concentration without either norm threshold. *textinit* starts above both
 norm thresholds and crosses concentration later. Where a run crosses both kinds, the norm
 signatures come first, and under text initialization the three need not even settle on the
-same token (Appendix I; Appendix G offers untested hypotheses for why each lever moves a
-different axis). Figure 2 shows the separation inside a single head. Its rightmost panel
+same token (Appendix I). Appendix G offers untested hypotheses for why each lever moves a
+different axis. Figure 2 shows the separation inside a single head. Its rightmost panel
 carries the most weight: the textinit stripe is already there at step 0, imported with the
 text-LM weights before the model has seen one image.
 
