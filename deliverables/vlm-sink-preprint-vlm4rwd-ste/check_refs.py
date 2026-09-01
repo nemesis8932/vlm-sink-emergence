@@ -53,9 +53,10 @@ apx = set(re.findall(r"^## ([A-Z])\.", (SEC / "09-appendix.md").read_text(), re.
 # --- what the prose claims ---------------------------------------------------------------
 for f in body + [SEC / "09-appendix.md"]:
     text = f.read_text()
-    for ref in set(re.findall(r"§(\d+(?:\.\d+)?)", text)):
-        if ref not in valid:
-            note(f"{f.name}: §{ref} has no such section")
+    for m in re.finditer(r"Sections? (\d+(?:\.\d+)?)(?: and (\d+(?:\.\d+)?))?", text):
+        for ref in filter(None, m.groups()):
+            if ref not in valid:
+                note(f"{f.name}: Section {ref} has no such section")
     for kind, seen, ref in ([("Figure", figs, r) for r in
                              re.findall(r"(?:Fig\.|Figure) (\d+)", text)] +
                             [("Table", tabs, r) for r in re.findall(r"Table (\d+)", text)]):

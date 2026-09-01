@@ -12,6 +12,17 @@ activation [2, 5]. These effects settle on the same few tokens [6] and appear ne
 and the field reads the co-occurrence as permission to treat all three as facets of one
 attention-sink phenomenon.
 
+<figure id="fig0">
+<img src="figures/fig0_overview.svg" alt="Overview: pipeline, probe and the four corners">
+<figcaption><b>Figure 1: Overview.</b> (A) A pretrained SigLIP-B/16 encoder feeds 49
+image tokens, then 79 text tokens, into a randomly initialized decoder of the SmolLM2-135M
+architecture. There is no BOS token, so position 0 is the first image token, where a probe
+reads three signatures every 100 steps: concentration over 270 query heads, the value-norm
+ratio over 90 KV groups, and the residual-norm ratio over 30 layers. Four levers change one
+thing each, and RF repeats the baseline recipe on a fresh 1B-token stream. (B) Table 1 as a
+strip, each arm's seed range per signature. No two arms share a triple.</figcaption>
+</figure>
+
 Whether they really are one phenomenon is contested. One line argues for causal unity:
 massive activations mathematically require representational compression, and ablating them
 removes both compression valleys and sink formation [7], while a related view holds that
@@ -32,32 +43,30 @@ Vision–language models suit the question, because the multimodal setting chang
 a visual token, without the special-token machinery that text-LM sink accounts lean on. The
 multimodal sink studies we know analyze mostly frozen, already-trained backbones at inference time
 [11, 12], and the one training-time view follows a single magnitude rather than three signatures
-(§2). Telling whether the signatures arrive together, in sequence, or independently takes a
+(Section 2). Telling whether the signatures arrive together, in sequence, or independently takes a
 randomly initialized decoder with all three logged separately from step 0.
 
 We work at small scale by choice. The model is a 222M-parameter nanoVLM [17] with a
 pretrained SigLIP-B/16 encoder [18] and a randomly initialized decoder of the SmolLM2-135M
 architecture [19], trained under four levers that each target one sink-relevant mechanism
-(§3): softmax attention (*baseline*), a zero-initialized Qiu-style G1 output gate [20]
+(Section 3): softmax attention (*baseline*), a zero-initialized Qiu-style G1 output gate [20]
 (*g1gate*), unnormalized sigmoid attention, which removes the normalization sinks are argued
 to come from [6] (*sigmoid*), and initialization from the pretrained SmolLM2 text model
 (*textinit*). A validated probe logs all three signatures every 100 steps. Because the
 four-arm comparison reuses a small image pool, we re-test the central negative result on a
 fresh stream of one billion tokens (*RF*, 2.39 effective visual epochs).
 
-**Contributions.** Decoupling itself is not new [9, 10] and we do not claim it. What is new
-is the conjunction. We track all three signatures jointly, from step 0, under randomly
-initialized decoders in a multimodal model, and add value-norm drain as a third axis. Across
-four levers (n = 2–3 seeds per arm) the arms reach four different corners of the
-three-signature space, no two sharing a triple, and the value-norm ratio alone is strongly
-drained, mildly drained or amplified depending on the lever (Fig. 1, Table 1). The arms are
-not a factorial design, so these are intervention-associated profiles rather than isolated
-causal effects. Two observations carry the most weight.
-
-- *Low-repetition decoupling at 1B tokens (n = 1).* On a fresh stream at 2.39 effective
-  visual epochs, with training healthy throughout (§3), the massive-activation proxy rises
-  from an h-ratio of 1.43 to 3.22, about 2.3×, while concentration stays at exactly zero and
-  no head ever crosses the sink threshold (§4.2, §5).
-- *No consistent-sign head-level relationship.* The per-head correlation between
-  concentration and value-norm flips sign across arms at seed 0, +0.76 in baseline to −0.79
-  in textinit with a pooled −0.20, over 90 KV groups per arm, reported descriptively (§4.3).
+This paper reports three observations from that setup. Decoupling itself is not new [9, 10]
+and we do not claim it. What is new is the conjunction: all three signatures tracked
+jointly, from step 0, under randomly initialized decoders in a multimodal model, with
+value-norm drain as a third axis. First, across four levers (n = 2–3 seeds per arm) the
+arms reach four different corners of the three-signature space, no two sharing a triple,
+and the value-norm ratio alone is strongly drained, mildly drained or amplified depending on
+the lever (Fig. 1B, Fig. 2, Table 1). The arms are not a factorial design, so these are
+intervention-associated profiles rather than isolated causal effects. Second, on a fresh
+stream at 2.39 effective visual epochs, with training healthy throughout (Section 3), the
+massive-activation proxy rises from an h-ratio of 1.43 to 3.22, about 2.3×, while
+concentration stays at exactly zero and no head ever crosses the sink threshold (Sections
+4.2 and 5, one seed). Third, the per-head correlation between concentration and value-norm
+flips sign across arms at seed 0, +0.76 in baseline to −0.79 in textinit with a pooled
+−0.20, over 90 KV groups per arm, reported descriptively (Section 4.3).

@@ -25,7 +25,7 @@ this paper use that definition.
 *Probe batch.* The fixed probe batch holds n = 32 samples, drawn with `random.seed(0)` from
 the repeated `the_cauldron` tail. We label this probe version `v1-repeatedtail-32`. RF uses
 the same probe batch as the repeated arms, so its signatures stay comparable to theirs even
-though its training stream differs (§5).
+though its training stream differs (Section 5).
 
 *Validation.* A 1,024-example held-out pool, evaluated every 500 steps. Each estimate is the
 mean over the first 512 examples of that pool, in four batches of 128 in fixed order. We
@@ -46,7 +46,7 @@ measurements, the analysis decisions and the claims are the authors' own. The re
 repository keeps its commit history, including the assistant-authored commits.
 
 *Aggregation.* Each per-layer or per-head quantity is first averaged over the probe batch
-and over valid query positions, then aggregated by the formulas of §3.
+and over valid query positions, then aggregated by the formulas of Section 3.
 
 ## B. Extended limitations
 
@@ -67,7 +67,7 @@ not depend on the anchor.
 ### B.2 The gate arm carries a scale confound
 
 We initialize the G1 gate at exactly zero, so it opens at σ(0) = 0.5 and halves attention
-output at step 0, where Qiu et al. [20] use ordinary initialization (§3). Gating and initial
+output at step 0, where Qiu et al. [20] use ordinary initialization (Section 3). Gating and initial
 output scaling are therefore confounded in *g1gate*. We cannot attribute its differences from
 baseline to gating alone, and a scale-matched control is future work.
 
@@ -107,7 +107,7 @@ negative claim, and a second fresh-data seed would strengthen it.
 
 RF has no distinct seen split, so we cannot run for it the `val_seen` / `val_unseen`
 comparison that exposes memorization in the repeated arms. The weaker statement its data
-supports is the falling-slope statement of §3. Its streaming shuffle buffer dropped from 1500
+supports is the falling-slope statement of Section 3. Its streaming shuffle buffer dropped from 1500
 to 500 examples partway through, again for memory, so stream ordering is not homogeneous,
 though the Sink^0.3 = 0.000 result and the h-ratio rise hold within each regime separately.
 Its probe batch is still the fixed repeated-`the_cauldron` tail used by the other arms. That
@@ -115,7 +115,7 @@ keeps RF's signatures comparable to theirs, which is what the negative result ne
 cost of measuring them on data from the other distribution. And RF buys lower repetition by
 changing dataset, so it trades the repetition confound for a domain-shift one, and we chose
 the fresh pool to minimize shift. The under-3% overlap figure is config-level, not
-image-level (§3), and the third, domain-matched control we did not run is the known
+image-level (Section 3), and the third, domain-matched control we did not run is the known
 follow-up.
 
 ## C. Supporting figures
@@ -154,7 +154,7 @@ text-LM literature therefore follows the concentration axis, not the norm axes.<
 This table gives the per-seed values behind the collapsed ranges of Table 1, and adds the
 maximum attention→pos0 where we have it. We logged that metric for seeds 1 and 2 only,
 because the seed-0 archive summary does not include it. We trust the seed-0 values from a
-checksummed archive rather than re-derive them first-hand (§5). Each arm is read at its
+checksummed archive rather than re-derive them first-hand (Section 5). Each arm is read at its
 final matched checkpoint. All three signatures of *textinit* have plateaued at 60M tokens,
 and its h-ratio changes by less than 10% from 60M to 100M in the seeds that continued.
 
@@ -187,7 +187,7 @@ That pattern repeats across seeds.
 
 This table gives the mean and max-head attention mass by position at seed 0. It confirms
 that position 0 is the maximum-mass token in every arm, by mass rather than by argmax count
-alone. It is the direct check behind the position-0 anchoring defense of §5.
+alone. It is the direct check behind the position-0 anchoring defense of Section 5.
 
 | arm | mass@pos0 (mean) | max-head@pos0 | argmax-mass position | reading |
 |---|---|---|---|---|
@@ -220,7 +220,7 @@ dissociation of Appendix I and the reason the pos0-anchored textinit magnitudes 
 
 ## F. Measurement and rendering details
 
-**Figure 1 smoothing.** Paths are smoothed with a moving average, 5 points on the horizontal
+**Figure 2 smoothing.** Paths are smoothed with a moving average, 5 points on the horizontal
 axis and 9 on the vertical. The faint dots behind each path are the unsmoothed per-probe
 values, and the initialization and final markers use raw values.
 
@@ -241,7 +241,7 @@ relative reallocation of a shrinking gate budget onto position 0, not the growth
 absolute mass there (Appendix I). Raw and row-normalized values here come from the same fixed
 probe batch as every other number in this paper, masked to valid query positions.
 
-**Sigmoid heat-map provenance.** The sigmoid column of Figure 2 uses head L7H3 (0-indexed),
+**Sigmoid heat-map provenance.** The sigmoid column of Figure 3 uses head L7H3 (0-indexed),
 the arm's top sink head on the fixed probe batch. An earlier dump selected heads by raw,
 unnormalized gate score, picked different heads, and understated the arm. The sigmoid heat
 maps are re-rendered from an auxiliary streaming batch, because the saved matrices covered
@@ -281,7 +281,7 @@ a different part of it, which would explain why each moves a different axis.
   prefix, rather than formation from scratch.
 
 Each of these is a hypothesis about mechanism. Testing them needs interventions we did not
-run: gate-scale sweeps that separate gating from the half-scale confound of §3, sigmoid runs
+run: gate-scale sweeps that separate gating from the half-scale confound of Section 3, sigmoid runs
 at matched effective attention temperature, and text-initialized runs with the sink
 machinery ablated before alignment.
 
@@ -303,7 +303,7 @@ profiles already sum to one over the full sequence.
 
 ## I. Ordering, the sigmoid measurement note, and positional dissociation
 
-This appendix holds the detail behind the ordering paragraph of §4.1.
+This appendix holds the detail behind the ordering paragraph of Section 4.1.
 
 <figure id="figA4">
 <img src="figures/fig4_leadlag_top.svg" alt="Sink lead-lag ordering">
@@ -359,6 +359,6 @@ position 0, a diffuse profile rather than a sink (Appendix E).
 We report this as a supporting observation, not a second headline. It has one consequence for
 measurement. All three metrics anchor on position 0, so the *textinit* magnitudes at seeds 1
 and 2 are read at a token that is no longer the peak and therefore **understate** the arm's
-true peaks, a further reason to report that arm as a range and a median (§4.1, §5).
+true peaks, a further reason to report that arm as a range and a median (Sections 4.1 and 5).
 The anchoring holds for the randomly initialized decoders, which carry the central negative
 result.

@@ -7,7 +7,7 @@ also show that unnormalized sigmoid attention prevents sink formation in text mo
 1B parameters, which our *sigmoid* arm builds on. Guo et al. [4] call the concentration and
 value-drain coupling "active-dormant" heads. Queipo-de-Llano, Arroyo et al. [7] make the
 strongest unity claim, and the only causal one. Ablating a model's layer-0 massive
-activation removes both compression valleys and sink formation (§1). We reserve "causally
+activation removes both compression valleys and sink formation (Section 1). We reserve "causally
 unified" for that result. Peng et al. [24] trace a first-position sink circuit emerging
 early in from-scratch text pretraining, without separating the signatures.
 
@@ -33,7 +33,7 @@ frozen model and gate them by layer. Both establish distinct vision-side and lan
 origins, which our *textinit* inheritance result fits. Neither gives dense, joint tracking
 of the three quantities in a decoder that starts from random weights. Vision transformers
 also grow high-norm "register" tokens of their own [25], hence the pretrained-encoder
-limitation in §5. A separate line ties these signatures to hallucination and grounding
+limitation in Section 5. A separate line ties these signatures to hallucination and grounding
 failure in deployed models and intervenes at inference time [13–16], the practical reason it
 matters which signature a mitigation moves.
 
@@ -41,8 +41,8 @@ matters which signature a mitigation moves.
 on attention output that our *g1gate* arm adapts. In text models it "largely reduces the
 attention score allocated to the first token and decreases massive activations" while
 improving quality. Our zero-initialized variant confounds gating with initial output scaling
-(§3, §5). With that caveat, concentration is already absent in our baseline, so the gated
-arm differs on the value-norm axis (the v-ratio of §3). The drain becomes milder, 0.69–0.72
+(Sections 3 and 5). With that caveat, concentration is already absent in our baseline, so the gated
+arm differs on the value-norm axis (the v-ratio of Section 3). The drain becomes milder, 0.69–0.72
 to 0.81–0.85, rather than disappearing, a difference invisible unless the three signatures
 are logged separately.
 

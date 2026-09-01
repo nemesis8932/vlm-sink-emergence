@@ -87,6 +87,9 @@ def inline(s, cite=True):
         return _protect(s, held, r"\texttt{" + inner + "}")
     s = re.sub(r"`([^`]+?)`", code, s)
 
+    # $...$ spans are hand-written LaTeX math: pass them through untouched
+    s = re.sub(r"\$([^$]+?)\$", lambda m: _protect(s, held, "$" + m.group(1) + "$"), s)
+
     s = re.sub(r"<sup>(.*?)</sup>", lambda m: _protect(s, held, "$^{" + _math(m.group(1)) + "}$"), s)
     s = re.sub(r"<sub>(.*?)</sub>", lambda m: _protect(s, held, "$_{" + _math(m.group(1)) + "}$"), s)
 
