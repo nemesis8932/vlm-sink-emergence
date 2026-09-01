@@ -1,8 +1,8 @@
 # 6. Conclusion
 
-In text language models the three attention-sink signatures arrive together. In
-vision–language pretraining from a randomly initialized decoder they need not. Tracked
-separately, they come apart along whichever axis the training lever moves. Across four interventions the arms occupy separate
+In text language models the three attention-sink signatures arrive together. In a
+vision–language model with a randomly initialized decoder, they need not. Tracked
+separately, they come apart differently under each training lever applied. Across four interventions the arms occupy separate
 corners of signature space, with value norms strongly drained, mildly drained or amplified.
 The sharpest case is the fresh-data run, where over one billion tokens the
 massive-activation proxy more than doubles while attention concentration stays at exactly
