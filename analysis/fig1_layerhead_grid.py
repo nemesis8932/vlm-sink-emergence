@@ -23,7 +23,7 @@ def grid_at(arm, which):
 
 def main():
     ncol = len(ARMS)
-    fig, axes = plt.subplots(3, ncol, figsize=(2.05 * ncol, 7.2))
+    fig, axes = plt.subplots(3, ncol, figsize=(5.5, 4.4))
     rows = ['init', 'early', 'final']
     for j, arm in enumerate(ARMS):
         last_step = fc.load_summ(arm)[-1]['step']
@@ -36,21 +36,18 @@ def main():
                            interpolation='nearest')
             ax.set_xticks([]); ax.set_yticks([])
             if i == 0:
-                ax.set_title(fc.ARM_LABELS[arm].split(' (')[0], fontsize=9, weight='bold',
+                ax.set_title(fc.ARM_LABELS[arm].split(' (')[0], fontsize=7, weight='bold',
                              color=fc.ARM_COLORS[arm])
             if j == 0:
-                ax.set_ylabel(f'{rk}\n(30 layers)', fontsize=8)
-            ax.text(0.97, 0.04, f'step {st}', transform=ax.transAxes, fontsize=6.2,
+                ax.set_ylabel(f'{rk}\n30 layers', fontsize=7)
+            ax.text(0.97, 0.04, f'{st}', transform=ax.transAxes, fontsize=6.5,
                     ha='right', va='bottom', color='white',
                     path_effects=[pe.withStroke(linewidth=1.6, foreground='black')])
     for j in range(ncol):
-        axes[2, j].set_xlabel('9 heads', fontsize=7.5)
+        axes[2, j].set_xlabel('9 heads', fontsize=7)
     cbar = fig.colorbar(im, ax=axes, fraction=0.018, pad=0.012)
-    cbar.set_label('attn → pos0', fontsize=8); cbar.ax.tick_params(labelsize=7)
-    fig.suptitle('Where the concentration sink lives: per-(layer,head) attn→pos0 over training',
-                 fontsize=11, weight='bold', x=0.45)
-    fig.text(0.45, 0.005, 'row-normalized attention (sigmoid raw gate ≈0.5 everywhere ≠ concentration); shared scale 0–0.6',
-             fontsize=7, ha='center', color='dimgray')
+    cbar.set_label('attention to position 0', fontsize=7); cbar.ax.tick_params(labelsize=6)
+    cbar.set_ticks([0, .2, .4, .6]); cbar.ax.set_yticklabels(['0', '.2', '.4', '≥.6'])
     out = 'analysis/fig1_layerhead_grid.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
     fig.savefig(out.replace('.svg', '.pdf'), bbox_inches='tight')

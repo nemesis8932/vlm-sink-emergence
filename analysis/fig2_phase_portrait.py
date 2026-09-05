@@ -62,7 +62,7 @@ def draw(ax, xs, ys_raw, color, label):
 
 def main():
     # sized to the NeurIPS 5.5in text block so every font prints at its nominal size
-    fig, (axL, axR) = plt.subplots(2, 1, figsize=(5.5, 3.9))
+    fig, (axL, axR) = plt.subplots(2, 1, figsize=(5.5, 4.9))
     for arm in ARMS:
         S = fc.load_summ(arm)
         x = [s['max_attn_pos0'] for s in S]
@@ -78,32 +78,22 @@ def main():
         ax.grid(True, which='major', color='#999999', alpha=0.16, lw=0.5)
         ax.set_axisbelow(True)
         fc.style_ax(ax)
-        ax.set_xlabel('attention concentration (max attn→pos0)', fontsize=7.5)
-        ax.tick_params(labelsize=6.5)
+        ax.set_xlabel('maximum attention to position 0, $a_{max}$', fontsize=8)
+        ax.tick_params(labelsize=7)
 
-    axL.set_ylabel('value-norm ratio  ‖v‖$_{pos0}$ / ‖v‖$_{rest}$', fontsize=7)
-    axL.set_title('Concentration vs value-norm', fontsize=7.5, weight='bold', pad=4)
-    axL.text(0.02, 0.965, '↑ value amplified', transform=axL.transAxes, fontsize=5.5,
-             color='#777777', style='italic')
-    axL.text(0.02, 0.035, '↓ value drained', transform=axL.transAxes, fontsize=5.5,
-             color='#777777', style='italic')
+    axL.set_ylabel('value-norm ratio', fontsize=8, labelpad=3)
+    axL.set_title('(a) Attention vs value-norm ratio', fontsize=8.5, weight='bold', pad=5)
+    axL.text(0.02, 0.94, 'above 1: amplified', transform=axL.transAxes, fontsize=6.5,
+             color='#666666')
+    axL.text(0.02, 0.04, 'below 1: drained', transform=axL.transAxes, fontsize=6.5,
+             color='#666666')
 
     axR.set_yscale('log')
-    axR.set_ylabel('residual-norm ratio  ‖h‖$_{pos0}$ / ‖h‖$_{rest}$  (log)',
-                   fontsize=7)
-    axR.set_title('Concentration vs residual-norm', fontsize=7.5, weight='bold', pad=4)
+    axR.set_ylabel('residual-norm ratio (log scale)', fontsize=8, labelpad=3)
+    axR.set_title('(b) Attention vs residual-norm ratio', fontsize=8.5, weight='bold', pad=5)
     axR.yaxis.set_major_locator(FixedLocator([0.5, 1, 2, 5, 10, 20, 40]))
     axR.yaxis.set_major_formatter(lambda v, _: f'{v:g}×')
     axR.yaxis.set_minor_formatter(NullFormatter())
-
-    # corner annotations (left panel), colors matched to arms
-    box = dict(boxstyle='round,pad=0.32', fc='white', ec='none', alpha=0.75)
-    axL.text(0.24, 1.555, 'sigmoid: concentration\n+ value amplified', fontsize=5.6,
-             color=COLORS['sigmoid'], ha='left', va='top', weight='bold', bbox=box)
-    axL.text(0.985, 0.465, 'textinit: concentration\n+ severe drain', fontsize=5.6,
-             color=COLORS['textinit'], ha='right', va='bottom', weight='bold', bbox=box)
-    axL.text(0.315, 0.955, 'baseline / RF / g1gate:\nno concentration', fontsize=5.6,
-             color='#555555', ha='left', va='top', weight='bold', bbox=box)
 
     handles = [Line2D([0], [0], color=COLORS[a], lw=2.4, label=fc.ARM_LABELS[a],
                       solid_capstyle='round') for a in ARMS]
@@ -111,10 +101,10 @@ def main():
                        lw=0, label='init', markersize=6.5),
                 Line2D([0], [0], marker='D', color='#666666', markerfacecolor='#666666',
                        markeredgecolor='white', lw=0, label='final', markersize=6.5)]
-    fig.legend(handles=handles, loc='lower center', ncol=4, fontsize=6.5, frameon=False,
+    fig.legend(handles=handles, loc='lower center', ncol=3, fontsize=7, frameon=False,
                bbox_to_anchor=(0.5, -0.03), handlelength=1.5, columnspacing=1.0)
     # no suptitle: the LaTeX caption carries the title
-    fig.tight_layout(rect=[0, 0.05, 1, 1.0], h_pad=1.6)
+    fig.tight_layout(rect=[0, 0.10, 1, 1.0], h_pad=2.0)
     out = 'analysis/fig2_phase_portrait.svg'
     fig.savefig(out, bbox_inches='tight')
     fig.savefig(out.replace('.svg', '.png'), dpi=200, bbox_inches='tight')

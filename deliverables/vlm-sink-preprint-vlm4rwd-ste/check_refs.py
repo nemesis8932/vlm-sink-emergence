@@ -40,9 +40,10 @@ for i, f in enumerate(body, start=1):
 top = {str(n) for n, _, _ in declared}
 valid = top | set(sub)
 
-# figures and tables, in order of appearance across the body
-figs = [int(n) for f in body for n in re.findall(r"<b>\s*Figure\s+(\d+):", f.read_text())]
-tabs = [int(n) for f in body for n in re.findall(r"^\*\*Table\s+(\d+)", f.read_text(), re.M)]
+# The PDF numbers appendix figures and tables continuously after the body.
+all_content = body + [SEC / "09-appendix.md"]
+figs = [int(n) for f in all_content for n in re.findall(r"<b>\s*Figure\s+(\d+):", f.read_text())]
+tabs = [int(n) for f in all_content for n in re.findall(r"^\*\*Table\s+(\d+)", f.read_text(), re.M)]
 for name, got in (("Figure", figs), ("Table", tabs)):
     if got != list(range(1, len(got) + 1)):
         note(f"{name} captions appear in order {got}; LaTeX will number them "

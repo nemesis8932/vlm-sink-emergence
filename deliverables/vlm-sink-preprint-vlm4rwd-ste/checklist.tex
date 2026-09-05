@@ -9,7 +9,7 @@
 \item {\bf Claims}
     \item[] Question: Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
     \item[] Answer: \answerYes{}
-    \item[] Justification: The abstract and Section~1 state exactly the three contributions the paper supports, each with its scope attached: four signature corners at $n = 2$--3 seeds per arm, the low-repetition 1B-token result at a single seed, and the sign-flipping per-head correlation reported at seed 0 and described as descriptive rather than inferential. Section~1 also states plainly that two-way decoupling in text-only models is not ours, and that no downstream behaviour is tested here.
+    \item[] Justification: The abstract and Section~1 describe the signature profiles across 2--3 seeds, the single-seed 1B-token result, and descriptive KV-group correlations. The scope is joint measurement during multimodal pretraining; prior text-model dissociations are acknowledged.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the abstract and introduction do not include the claims made in the paper.
@@ -51,7 +51,7 @@
 \item {\bf Experimental result reproducibility}
     \item[] Question: Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?
     \item[] Answer: \answerYes{}
-    \item[] Justification: Section~2 gives the model, token layout, the four training levers, the datasets, the definition of each of the three signatures, the probe and its self-validation tolerance, the optimizer recipe and the seed counts. Appendix~F adds the learning rates, precision, batch size, probe-batch composition, token accounting and the validation protocol. Appendix~B gives the per-seed numbers behind every collapsed range in Table~1.
+    \item[] Justification: Section~3 defines the model, conditions, datasets, token accounting and signatures. Appendix~A specifies optimization and probe construction. Appendices~B and F describe restart and measurement provenance; Appendix~D gives individual seed values.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the paper does not include experiments.
@@ -63,7 +63,7 @@
 \item {\bf Open access to data and code}
     \item[] Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?
     \item[] Answer: \answerNo{}
-    \item[] Justification: The code, probe, run configurations, per-run logs and training checkpoints are prepared for release and the paper commits to releasing them on acceptance, but the links are withheld at submission to preserve double-blind review, and no anonymized mirror is provided. Both datasets used are public and cited. The paper is written so the results can be reproduced from the description alone.
+    \item[] Justification: Code and checkpoint release is planned upon acceptance. No anonymized code mirror is supplied with this submission. The datasets are public and cited; the paper describes training and measurement procedures.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that paper does not include experiments requiring code.
@@ -78,7 +78,7 @@
 \item {\bf Experimental setting/details}
     \item[] Question: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer) necessary to understand the results?
     \item[] Answer: \answerYes{}
-    \item[] Justification: Section~2 specifies the optimizer, weight decay, gradient clipping, schedule and warmup, the token budgets per arm, the held-out split behaviour, and the seed counts. Appendix~F specifies the per-module learning rates, the precision and the batch size. Every arm differs only in the lever under test, which Section~2 states explicitly.
+    \item[] Justification: Section~3 and Appendix~A specify the training conditions, optimizer, schedule, learning rates, batch size, precision, token budgets and evaluation splits. Appendix~B records RF's restart and data-ordering changes.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the paper does not include experiments.
@@ -89,7 +89,7 @@
 \item {\bf Experiment statistical significance}
     \item[] Question: Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?
     \item[] Answer: \answerNo{}
-    \item[] Justification: We report no error bars or significance tests, and say so explicitly. Instead, the main tables give per-arm ranges over 2--3 seeds and Appendix~B gives every per-seed value, so the seed-level variability is fully visible. Section~3.3 states that the per-head correlations are descriptive rather than inferential, because heads within a layer are not independent and each arm rests on a single seed, so a p-value would mislead. Section~5 states that the RF arm is a single seed. With these seed counts, error bars would convey false precision.
+    \item[] Justification: Tables~1 and 4 report ranges and individual values across 2--3 seeds. We provide no confidence intervals or significance tests. Section~4.3 treats KV-group correlations as descriptive because groups share layers and each condition has one seed in that analysis. RF is a single-seed run.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the paper does not include experiments.
@@ -106,7 +106,7 @@
 \item {\bf Experiments compute resources}
     \item[] Question: For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?
     \item[] Answer: \answerNo{}
-    \item[] Justification: The paper states the token budget of every run, which fixes the dominant cost, but it does not state the accelerator type, memory or wall-clock time. Two memory-driven events are disclosed in Section~5, the weights-only optimizer restart in the RF run and the reduction of the streaming shuffle buffer, because they affect interpretation of the results rather than only the cost.
+    \item[] Justification: Token budgets are reported, but a complete per-run account of accelerator memory and wall-clock time is not included. Appendix~B records RF's memory-related restart and shuffle-buffer change.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the paper does not include experiments.
@@ -118,7 +118,7 @@
 \item {\bf Code of ethics}
     \item[] Question: Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics?
     \item[] Answer: \answerYes{}
-    \item[] Justification: The work trains small vision--language models on public, already-published image--text corpora, involves no human subjects and no personal data, and releases no model with foreseeable misuse potential. Anonymity is preserved in this submission.
+    \item[] Justification: The study uses existing public image--text datasets and involves no new human-subject study or participant recruitment. The submission is anonymized. Limitations of the models and measurements are described in Section~5.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the authors have not reviewed the NeurIPS Code of Ethics.
@@ -129,7 +129,7 @@
 \item {\bf Broader impacts}
     \item[] Question: Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?
     \item[] Answer: \answerNA{}
-    \item[] Justification: This is foundational measurement work on the internal mechanics of 222M-parameter research models. It proposes no application, releases no deployable system, and improves no capability. Its practical consequence is confined to how interpretability and mitigation work reports attention sinks, which the Conclusion states.
+    \item[] Justification: The paper studies internal measurements rather than a deployed application. It discusses implications for reporting sink interventions, but does not evaluate societal effects or provide a broader-impact assessment.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that there is no societal impact of the work performed.
@@ -143,7 +143,7 @@
 \item {\bf Safeguards}
     \item[] Question: Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pre-trained language models, image generators, or scraped datasets)?
     \item[] Answer: \answerNA{}
-    \item[] Justification: The artefacts are 222M-parameter research checkpoints trained for a measurement study. They are far below any capability threshold that would carry misuse risk, and no dataset is released.
+    \item[] Justification: The submission introduces no new dataset or deployed system. The planned artifacts are small research checkpoints and analysis code. Downstream capabilities and misuse risks have not been evaluated.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the paper poses no such risks.
@@ -155,7 +155,7 @@
 \item {\bf Licenses for existing assets}
     \item[] Question: Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?
     \item[] Answer: \answerNo{}
-    \item[] Justification: Every existing asset is cited to its original paper at the point of use: the nanoVLM codebase, the SigLIP-B/16 encoder, the SmolLM2 architecture and weights, and both image--text corpora. The paper does not, however, enumerate the license of each asset by name, so this answer is No rather than Yes. All assets are publicly released for research use and were used within those terms.
+    \item[] Justification: Existing code, models and datasets are cited. The paper does not enumerate all constituent dataset licenses and terms, so this answer is No.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the paper does not use existing assets.
@@ -206,7 +206,7 @@
 \item {\bf Declaration of LLM usage}
     \item[] Question: Does the paper describe the usage of LLMs if it is an important, original, or non-standard component of the core methods in this research? Note that if the LLM is used only for writing, editing, or formatting purposes and does not impact the core methodology, scientific rigor, or originality of the research, declaration is not required.
     \item[] Answer: \answerNA{}
-    \item[] Justification: Language models appear in this work as the object of study, a 135M-parameter decoder trained and probed by the authors. No large language model forms part of the method. LLM coding assistants were used to write and refactor the training, probe and analysis code and to edit prose, which Appendix~A discloses; the experimental design, measurements, analysis decisions and claims are the authors' own, so this use does not affect the methodology, rigor or originality of the research.
+    \item[] Justification: Language models are objects of study, not external judges or generators used in the evaluation. Coding assistants helped implement training, probes and analysis and edit prose, as disclosed in Appendix~A. The authors are responsible for verification and the reported claims.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the core method development in this research does not involve LLMs as any important, original, or non-standard components.

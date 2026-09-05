@@ -62,14 +62,10 @@ def main():
         rows.append((arm, ys[0], ys[-1]))
     ax.set_xscale('log')
     ax.set_xlabel('tokens (millions, log)', fontsize=9)
-    ax.set_ylabel('normalized attention entropy  H / log T  (mean over heads)', fontsize=9)
-    ax.set_title('Entropy collapse separates by arm — not locked to the norm signatures',
+    ax.set_ylabel('key-marginal entropy  H / log(128), mean over heads', fontsize=9)
+    ax.set_title('Entropy of the attention distribution over key positions',
                  fontsize=10.5, weight='bold')
     ax.legend(fontsize=8, loc='lower left', framealpha=0.92)
-    ax.axvspan(0.5, 2.0, color='gray', alpha=0.07)
-    y0, y1 = ax.get_ylim()
-    ax.text(1.0, y0 + 0.035 * (y1 - y0), 'text-LM sink\n+collapse ~step 1k', fontsize=6.8,
-            color='gray', ha='center', va='bottom')
     fc.style_ax(ax)
     fig.tight_layout()
     out = 'analysis/fig5_entropy.svg'

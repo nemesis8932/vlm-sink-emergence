@@ -1,42 +1,25 @@
 # 5. Limitations
 
-Across the arms the three signatures land in different corners, and no single one predicts
-the others. For VLM work the consequence is direct. An intervention judged on concentration
-alone can leave value-norm drain or the residual-norm ratio where they were, and a model with
-no concentration sink can still grow a residual-norm asymmetry, as RF does. What that licenses
-depends on the five limits below. Appendix B expands each with its evidence, and Section 6
-turns the ones we can close into next steps.
+**Measurement scope.** The h-ratio measures residual-norm asymmetry; channel-level outlier
+statistics are needed to establish massive activations in the stricter sense of [2, 5].
+All headline metrics use one fixed 32-example probe batch and position 0. Their denominators
+include both image and text positions. Supplementary image-only norm profiles retain the
+RF asymmetry at the inspected checkpoint, while spatial scans show that textinit's
+attention and norm extrema can separate (Appendix E). The reported textinit ratios are
+position-specific measurements, not estimates of each run's largest possible asymmetry.
 
-**The h-ratio is only a proxy.** The literature defines massive activations by channel-level outliers
-[2, 5]. We measured a position-specific residual-norm ratio and never computed channel-level
-statistics (Section 3). A large h-ratio is consistent with massive activations without establishing
-them.
+**Training controls.** The four conditions are not a factorial experiment. In g1gate,
+learned gating and the initial 0.5 output scale are inseparable without a scale-matched
+control. The vision encoder is pretrained and trainable in every run; increasing residual
+norms may involve adaptation of inherited visual structure as well as decoder learning.
+A random-encoder control would test that contribution. Textinit also differs in prior
+training and token budget, so its lower validation loss is not evidence for a superior
+attention intervention.
 
-**RF is one seed and one run.** The 1B-token result rests on a single seed with one weights-only
-optimizer restart at about 57M tokens, the weights reloaded and the AdamW moments discarded.
-The audit verified continuity across that seam (Appendix B). Concentration was reproducibly
-zero across both repeated-data baseline seeds, which supports the negative claim, and a second
-fresh-data seed would strengthen it. RF also has no seen split, and it buys low repetition by
-changing dataset, so it trades the repetition confound for a domain-shift one. The under-3%
-overlap figure is config-level, not image-level.
-
-**The gate arm carries a scale confound.** Zero-initializing the G1 gate opens it at σ(0) = 0.5
-and halves attention output at step 0, where Qiu et al. [20] use ordinary initialization.
-Gating and initial output scaling are confounded in *g1gate*, and a scale-matched control is
-future work.
-
-**No arm is fully from scratch, and the metrics anchor on position 0.** The SigLIP encoder is
-pretrained in every arm, and vision transformers grow high-norm tokens of their own [25], so
-part of the residual-norm signal could be inherited. Our defense is the trajectory. The
-h-ratio starts at 1.0–1.4 and rises to 3.22 across 1B tokens in RF, where a static inherited
-source predicts a high, flat value from step 0. Position 0 is the maximum-mass token in every
-arm at seed 0 and at every seed for the random-decoder arms, but not for *textinit* at seeds
-1 and 2, where the peaks move (Appendix E). Those magnitudes understate the arm's peaks, so we
-report *textinit* as a corner and a range, 5.5–42.5×, and not as a magnitude.
-
-**Scale and scope.** Runs reach at most 1B tokens against roughly 5B canonical in the text-LM
-sink literature [6]. Text-LM sinks form near step 1000 [7], well inside our range, but a
-signature absent at 1B could still emerge later. The seed-0 probes for the four-arm
-comparison come from a checksummed archive summary, and seeds 1 and 2 were re-derived
-first-hand (Appendix B.5, Appendix H). We ran no downstream benchmark on any arm and make no capability
-claim.
+**RF and generalization.** RF provides one seed at 1B tokens. It includes a weights-only
+restart near 57M tokens and a smaller shuffle buffer later in training (Appendix B).
+Changing from The Cauldron to FineVision reduces repetition but also changes the training
+distribution. Its probe remains on The Cauldron, and no separate seen-image validation
+split is available. The study uses one 222M architecture and 128-position sequences;
+later sink emergence, larger models and other sequence layouts remain untested.
+We evaluate internal signatures, without downstream grounding or hallucination benchmarks.

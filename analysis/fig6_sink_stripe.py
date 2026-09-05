@@ -37,7 +37,7 @@ def true_share(run_dir, step, layer, head):
     return float(np.load(p)['norm_to_pos0'][layer, head])
 
 
-def panel(ax, M, title, color, show_pos0_share=True, share_override=None):
+def panel(ax, M, title, color, show_pos0_share=False, share_override=None):
     P = rownorm(M)
     im = ax.imshow(P, aspect='equal', cmap='magma', norm=PowerNorm(0.5, 0, VMAX),
                    interpolation='nearest')
@@ -45,7 +45,7 @@ def panel(ax, M, title, color, show_pos0_share=True, share_override=None):
     ax.axvline(N_IMG - 0.5, color='white', lw=0.5, alpha=0.4, ls=':')  # img|text boundary
     ax.axhline(N_IMG - 0.5, color='white', lw=0.5, alpha=0.4, ls=':')
     ax.set_xticks([]); ax.set_yticks([])
-    ax.set_title(title, fontsize=5.2, color=color, weight='bold', pad=2, linespacing=1.2)
+    ax.set_title(title, fontsize=6.2, color=color, weight='bold', pad=3, linespacing=1.15)
     if show_pos0_share:
         share = float(P[:, 0].mean()) if share_override is None else share_override
         ax.text(0.96, 0.06, f'pos0={share:.2f}', transform=ax.transAxes, fontsize=5,
@@ -78,15 +78,18 @@ def main():
         if arm == 'sigmoid':
             early, final = 250, 10664
             Me = d[f'{pref}_l7h3_step{early}']; Mf = d[f'{pref}_l7h3_step{final}']
-            se = true_share('runs/sigmoid', early, *SIG_LH)
-            sf = true_share('runs/sigmoid', final, *SIG_LH)
+            se = sf = None
             tag = f' L{SIG_LH[0]}H{SIG_LH[1]}'
         else:
             sts = [s for s in steps_for(pref) if s > 0] if arm == 'textinit' else steps_for(pref)
             early, final = sts[0], sts[-1]
-            Me = pick_strong(d[f'{pref}_step{early}']); Mf = pick_strong(d[f'{pref}_step{final}'])
+            candidates = d[f'{pref}_step{final}']
+            selected = int(np.argmax([rownorm(m)[:, 0].mean() for m in candidates]))
+            Me = d[f'{pref}_step{early}'][selected]
+            Mf = candidates[selected]
             se = sf = None
-            tag = ''
+            layer, head = d[f'{pref}_heads'][selected]
+            tag = f' L{layer}H{head}'
         # short two-line titles: the caption carries "seed 0" and the step numbers live in
         # Appendix A, so each panel only needs arm, phase and token count
         im = panel(axes[0, j], Me, f'{arm}{tag}\nearly · {TOK.get((arm, early), "?")} tok',
@@ -104,14 +107,16 @@ def main():
     cax = fig.add_axes([pos.x0 + 0.08 * pos.width, pos.y0 + 0.45 * pos.height,
                         0.84 * pos.width, 0.06 * pos.height])
     cb = fig.colorbar(im, cax=cax, orientation='horizontal')
-    cb.set_label('attention (row-norm., γ = 0.5)', fontsize=5.2, labelpad=2)
-    cb.ax.tick_params(labelsize=5, length=2, pad=1)
+    cb.set_label('row-normalized\nattention, γ = 0.5', fontsize=6, labelpad=2)
+    cb.set_ticks([0, 0.25, 0.5])
+    cb.ax.set_xticklabels(['0', '.25', '≥.5'])
+    cb.ax.tick_params(labelsize=6, length=2, pad=1)
 
     for i in range(2):
-        axes[i, 0].set_ylabel('query position', fontsize=5.5)
+        axes[i, 0].set_ylabel('query position', fontsize=6.5)
     for j in range(4):
-        axes[1, j].set_xlabel('key position', fontsize=5.5)
-    axes[0, 4].set_xlabel('key position', fontsize=5.5)
+        axes[1, j].set_xlabel('key position', fontsize=6.5)
+    axes[0, 4].set_xlabel('key position', fontsize=6.5)
     # no suptitle: the LaTeX caption carries the title
     out = 'analysis/fig6_sink_stripe.svg'
     fig.savefig(out, bbox_inches='tight'); fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')
