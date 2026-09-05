@@ -16,7 +16,9 @@ Position 0 is the first image token.
 followed by 79 left-padded text positions. Position 0 is the first image token and there is
 no BOS token. (b) A read-only probe on a fixed 32-example batch records the three
 signatures every 100 optimizer steps (Section 3.3). (c) The four training conditions and the
-fresh-data run RF. Decoder initialization is random except in textinit.</figcaption>
+fresh-data run RF. Decoder initialization is random except in textinit. The gate also halves
+the initial attention output and RF also changes the data stream, so neither isolates a
+single factor.</figcaption>
 </figure>
 
 The four conditions share the architecture and training recipe except for the specified

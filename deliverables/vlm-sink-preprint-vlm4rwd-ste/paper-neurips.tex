@@ -86,7 +86,7 @@ All runs use a 222M-parameter nanoVLM \cite{ref17}. A pretrained, trainable SigL
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig1_setup.pdf}
-  \caption{\textbf{Model, measurements and training conditions.} (a) A pretrained SigLIP encoder and a learned projector produce a 49-token visual prefix, followed by 79 left-padded text positions. Position 0 is the first image token and there is no BOS token. (b) A read-only probe on a fixed 32-example batch records the three signatures every 100 optimizer steps (Section 3.3). (c) The four training conditions and the fresh-data run RF. Decoder initialization is random except in textinit.}
+  \caption{\textbf{Model, measurements and training conditions.} (a) A pretrained SigLIP encoder and a learned projector produce a 49-token visual prefix, followed by 79 left-padded text positions. Position 0 is the first image token and there is no BOS token. (b) A read-only probe on a fixed 32-example batch records the three signatures every 100 optimizer steps (Section 3.3). (c) The four training conditions and the fresh-data run RF. Decoder initialization is random except in textinit. The gate also halves the initial attention output and RF also changes the data stream, so neither isolates a single factor.}
   \label{fig:fig0}
 \end{figure}
 
