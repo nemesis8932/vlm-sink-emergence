@@ -10,12 +10,13 @@ The decoder has $L=30$ layers, $H=9$ query heads per layer and $G=3$ KV groups, 
 Position 0 is the first image token.
 
 <figure id="fig0">
-<img src="figures/fig0_overview.tex" alt="Overview: pipeline, position 0 and the probe">
-<figcaption><b>Figure 1: Model and measurement setup.</b> The image encoder and projector
-produce a 49-token visual prefix. The decoder receives this prefix followed by text.
-Position 0 is the first image token. Probes measure attention concentration, projected
-value norms and residual-stream norms every 100 steps. Decoder initialization is random
-except in textinit. RF uses the baseline architecture on a larger image pool.</figcaption>
+<img src="figures/fig1_setup.svg" alt="Setup: model and token sequence, the three measurements, and the five training conditions">
+<figcaption><b>Figure 1: Model, measurements and training conditions.</b>
+(a) A pretrained SigLIP encoder and a learned projector produce a 49-token visual prefix,
+followed by 79 left-padded text positions. Position 0 is the first image token and there is
+no BOS token. (b) A read-only probe on a fixed 32-example batch records the three
+signatures every 100 optimizer steps (Section 3.3). (c) The four training conditions and the
+fresh-data run RF. Decoder initialization is random except in textinit.</figcaption>
 </figure>
 
 The four conditions share the architecture and training recipe except for the specified

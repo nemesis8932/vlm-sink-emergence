@@ -84,8 +84,8 @@ All runs use a 222M-parameter nanoVLM \cite{ref17}. A pretrained, trainable SigL
 
 \begin{figure}[!htbp]
   \centering
-  \input{figures/fig0_overview.tex}
-  \caption{\textbf{Model and measurement setup.} The image encoder and projector produce a 49-token visual prefix. The decoder receives this prefix followed by text. Position 0 is the first image token. Probes measure attention concentration, projected value norms and residual-stream norms every 100 steps. Decoder initialization is random except in textinit. RF uses the baseline architecture on a larger image pool.}
+  \includegraphics[width=1.0\linewidth]{figures/fig1_setup.pdf}
+  \caption{\textbf{Model, measurements and training conditions.} (a) A pretrained SigLIP encoder and a learned projector produce a 49-token visual prefix, followed by 79 left-padded text positions. Position 0 is the first image token and there is no BOS token. (b) A read-only probe on a fixed 32-example batch records the three signatures every 100 optimizer steps (Section 3.3). (c) The four training conditions and the fresh-data run RF. Decoder initialization is random except in textinit.}
   \label{fig:fig0}
 \end{figure}
 
@@ -226,7 +226,7 @@ These are descriptive associations within trained models. Layer dependence and t
 
 \section{Conclusion}
 
-In text language models the three attention-sink signatures arrive together. In a vision-language model with a randomly initialized decoder, they need not. Tracked separately, they come apart under each training lever applied. Across four interventions the arms occupy separate corners of signature space, with value norms strongly drained, mildly drained or amplified. The sharpest case is the fresh-data run, where over one billion tokens the massive-activation proxy more than doubles while attention concentration stays at exactly zero. This extends the two-way dissociations of text-only models \cite{ref9,ref10} to a separately measured third axis, value-norm drain, in multimodal pretraining. Massive activations can causally produce sinks in text LMs \cite{ref7}. Here the coupling can also fail to form.
+In text language models the three attention-sink signatures arrive together. However, in a vision-language model with a randomly initialized decoder, they need not. Tracked separately, they come apart under each training lever applied. Across four interventions the arms occupy separate corners of signature space, with value norms strongly drained, mildly drained or amplified. The sharpest case is the fresh-data run, where over one billion tokens the massive-activation proxy more than doubles while attention concentration stays at exactly zero. This extends the two-way dissociations of text-only models \cite{ref9,ref10} to a separately measured third axis, value-norm drain, in multimodal pretraining. Massive activations can causally produce sinks in text LMs \cite{ref7}. Here the coupling can also fail to form.
 
 \paragraph{Practical implications} No single signature acted as a reliable proxy for the others in our arms. A model without a concentration sink can still develop a growing residual-norm asymmetry, and an intervention judged successful by one metric may leave the other signatures unchanged. A sink mitigation for VLMs should therefore report all three. Their downstream relevance, for grounding or hallucination, requires behavioral evaluation.
 

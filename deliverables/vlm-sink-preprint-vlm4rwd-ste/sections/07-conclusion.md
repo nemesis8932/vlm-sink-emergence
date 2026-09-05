@@ -1,6 +1,6 @@
 # 6. Conclusion
 
-In text language models the three attention-sink signatures arrive together. In a
+In text language models the three attention-sink signatures arrive together. However, in a
 vision-language model with a randomly initialized decoder, they need not. Tracked
 separately, they come apart under each training lever applied. Across four interventions
 the arms occupy separate corners of signature space, with value norms strongly drained,
