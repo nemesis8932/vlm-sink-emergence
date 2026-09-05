@@ -105,8 +105,8 @@
 
 \item {\bf Experiments compute resources}
     \item[] Question: For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?
-    \item[] Answer: \answerNo{}
-    \item[] Justification: Token budgets are reported, but a complete per-run account of accelerator memory and wall-clock time is not included. Appendix~B records RF's memory-related restart and shuffle-buffer change.
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Appendix~A reports the accelerator, a single NVIDIA RTX 4090 with 48~GB of memory, and approximately 48 hours of total GPU time for the runs reported here. Token budgets are given in Section~3.2 and Appendix~A. Appendix~B records RF's memory-related restart and shuffle-buffer change.
     \item[] Guidelines:
     \begin{itemize}
         \item The answer NA means that the paper does not include experiments.

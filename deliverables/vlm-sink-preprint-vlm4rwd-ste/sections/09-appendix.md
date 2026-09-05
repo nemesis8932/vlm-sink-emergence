@@ -15,6 +15,10 @@ are $4\times10^{-4}$ for the decoder, $2\times10^{-3}$ for the projector and $10
 for the encoder, with cosine decay and 3% warmup. Batch size is 128. The gated condition
 adds a zero-initialized output gate, and textinit imports pretrained decoder weights.
 
+*Compute.* All training and probing ran on a single NVIDIA RTX 4090 with 48 GB of
+memory. The four-condition comparison and the 1B-token RF run together used
+approximately 48 hours of GPU time.
+
 *Token accounting.* Budgets count 49 image tokens plus the non-padding text tokens in each
 example. A step of 128 examples therefore contributes at most 16,384 tokens and about
 9.5K in the repeated-data runs. These are processed tokens, not a count of unique examples
