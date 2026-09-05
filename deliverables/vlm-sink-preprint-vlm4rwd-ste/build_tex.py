@@ -195,7 +195,7 @@ def table_block(lines, caption):
     # 5.5in text block. Give those X columns and let tabularx share the leftover width.
     for j in range(ncol):
         cells = [r[j] for r in body if j < len(r)] + [head[j]]
-        if any(len(c) > 24 for c in cells):
+        if any(len(c) > 40 for c in cells):
             align[j] = "X"
     env = "tabularx" if "X" in align else "tabular"
     spec = ("{\\linewidth}{" + "".join(align) + "}") if env == "tabularx" else ("{" + "".join(align) + "}")

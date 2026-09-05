@@ -22,7 +22,7 @@ or solely the tokens used in the text loss.
 
 *Probe batches.* Live training trajectories use a fixed 32-example batch from the
 repeated The Cauldron tail, including for RF. Saved-checkpoint reprobes provide additional
-per-group and per-position arrays; the local streaming reprobe constructs a different
+per-group and per-position arrays. The local streaming reprobe constructs a different
 32-example batch with seed 0. Figure 3 uses batch-mean saved matrices, with its sigmoid
 column regenerated on that streaming batch (Appendix F). Results from different probe
 products are identified separately rather than treated as numerically identical.
@@ -46,7 +46,7 @@ repository keeps its commit history, including the assistant-authored commits.
 Headline measurements anchor on the first image token. Appendix E checks attention mass
 across positions and reports a supplementary norm scan. Textinit's attention and norm
 extrema need not coincide, and their locations vary by seed. The position-0 ratios
-therefore characterize that position; relocating the measurement to the attention maximum
+therefore characterize that position. Relocating the measurement to the attention maximum
 does not necessarily increase the residual-norm ratio. Main norm ratios compare image
 position 0 with a mixed image/text denominator, while the supplementary image-only
 profiles use a different aggregation described in Appendix E.
@@ -56,7 +56,7 @@ profiles use a different aggregation described in Appendix E.
 Our gate begins at $\sigma(0)=0.5$, halving the attention output before the output
 projection. The measured difference from baseline combines this initial scale change
 with subsequent learned gating. A constant half-scale control would distinguish the
-two explanations; the present comparison cannot do so.
+two explanations. The present comparison cannot do so.
 
 ### B.3 Pretrained encoder
 
@@ -79,7 +79,7 @@ RF contains one weights-only restart near 57M tokens after an out-of-memory fail
 weights were restored and AdamW moments discarded. Recorded v-ratio and h-ratio values
 agree at the shared checkpoint, and concentration is zero on both sides. The restart
 remains part of the training trajectory. Main per-seed tables combine archived seed-0
-summaries with independently consolidated later seeds; Figures 2 and 4 retain the
+summaries with independently consolidated later seeds. Figures 2 and 4 retain the
 available seed-0 probe trajectories. Raw checkpoint reprobes support the per-group
 analysis separately from those archived table summaries.
 
@@ -99,7 +99,7 @@ A matched fresh/repeated FineVision comparison and a second RF seed are direct f
 <img src="figures/fig1_layerhead_grid.svg" alt="Layer-by-head first-position attention at three checkpoints">
 <figcaption><b>Figure 4: First-position attention by layer and query head.</b>
 Initialization, an intermediate checkpoint near one quarter of each run's steps, and the
-final probe, seed 0. Rows within each panel are layers and columns query heads; inset
+final probe, seed 0. Rows within each panel are layers and columns query heads. Inset
 numbers are optimizer steps. Attention is row-normalized for sigmoid. All panels share
 a scale saturated at 0.6. Run endpoints are those of Figure 2.</figcaption>
 </figure>
@@ -108,7 +108,7 @@ a scale saturated at 0.6. Run endpoints are those of Figure 2.</figcaption>
 <img src="figures/fig3_perhead_scatter.svg" alt="Attention and value-norm ratios across KV groups">
 <figcaption><b>Figure 5: Concentration–value-norm associations by condition.</b>
 Each point is one layer/KV-group pair, 90 per condition, at the final available seed-0
-reprobe. Attention averages the group's three query heads; its value ratio is counted
+reprobe. Attention averages the group's three query heads. Its value ratio is counted
 once. Pearson correlations match Table 3. The observations are descriptive and retain
 dependence between groups within a layer.</figcaption>
 </figure>
@@ -118,7 +118,7 @@ dependence between groups within a layer.</figcaption>
 <figcaption><b>Figure 6: Entropy of attention over key positions.</b>
 Shannon entropy of the query-averaged key distribution, normalized by log(128), then
 averaged over heads and layers, seed 0. This is marginal entropy, not the average entropy
-of individual attention rows. Checkpoints are joined by lines; initialization is placed
+of individual attention rows. Checkpoints are joined by lines. Initialization is placed
 at 0.02M tokens for the logarithmic axis.</figcaption>
 </figure>
 
@@ -126,8 +126,8 @@ at 0.02M tokens for the logarithmic axis.</figcaption>
 
 Table 4 provides the values summarized in Table 1. Seed-0 entries use the archived
 matched-budget table, while Figure 2 uses full live trajectories, including baseline's
-later 174M endpoint. A dash denotes a maximum not retained in this table's source;
-it does not mean the metric is unavailable in the trajectory logs.
+later 174M endpoint. A dash denotes a maximum not retained in this table's source.
+It does not mean the metric is unavailable in the trajectory logs.
 
 **Table 4: Per-seed signatures at the comparison checkpoints.**
 
@@ -146,13 +146,13 @@ it does not mean the metric is unavailable in the trajectory logs.
 
 The textinit h-ratio is much larger at seed 0 than at seeds 1 and 2. This variation
 persists in the later supplementary norm profiles, which also show spatial differences
-(Appendix E.1). Small g1gate concentration fractions indicate a few heads above 0.2;
-some seed-0 probes also cross 0.3, as shown in Figures 7 and 8.
+(Appendix E.1). Small g1gate concentration fractions indicate a few heads above 0.2.
+Some seed-0 probes also cross 0.3, as shown in Figures 7 and 8.
 
 ## E. Per-position attention and norm profiles
 
 Table 5 reports raw attention weights from the final available seed-0 checkpoint reprobes,
-averaged over valid queries and the batch. Softmax weights are normalized; sigmoid
+averaged over valid queries and the batch. Softmax weights are normalized. Sigmoid
 weights are raw and unnormalized. The sigmoid row therefore describes absolute gate
 weights, distinct from the normalized concentration in Table 1.
 
@@ -169,7 +169,7 @@ weights, distinct from the normalized concentration in Table 1.
 ### E.1 Spatial checks and image-only norm comparison
 
 The supplementary norm scan records extrema within the first 20 image positions.
-Table 6 reports that scan alongside the attention-profile checks; dashes denote
+Table 6 reports that scan alongside the attention-profile checks. Dashes denote
 quantities not included for those seeds. These positions are scan extrema, not proven
 global extrema over all 128 positions.
 
@@ -205,7 +205,7 @@ on the norm ratio at the attention sink.
 ## F. Measurement and rendering details
 
 **Figure 2 trajectories.** Moving-average windows contain five probes horizontally and
-nine vertically. Faint points show unsmoothed values; open circles and final diamonds
+nine vertically. Faint points show unsmoothed values. Open circles and final diamonds
 use raw endpoints. All conditions use seed 0 and their full available trajectories.
 The horizontal maximum and the thresholded fraction in Table 1 are different summaries
 of the same head-level attention scores.
@@ -255,7 +255,7 @@ signature measurements.
 An output gate could reduce the need to suppress a value vector, consistent with the
 milder value drain in g1gate. A scale-matched ungated control is needed to distinguish
 that explanation from initial output scaling. Under sigmoid attention, removing the
-sum-to-one constraint permits a small total attention update; testing how this relates
+sum-to-one constraint permits a small total attention update. Testing how this relates
 to value amplification requires measuring effective updates as well as norms.
 Text initialization may transfer a first-position circuit to the visual prefix.
 Ablating that circuit before alignment would test its role in the inherited profile.
@@ -282,7 +282,7 @@ Crossing times are interval-censored by the 100-step probe cadence. All runs use
 <figure id="figA5">
 <img src="figures/figA4_birthmap.svg" alt="First attention-threshold crossing by layer and head">
 <figcaption><b>Figure 8: First concentration crossing by layer and query head.</b>
-Colors show the first step with mean attention to position 0 above 0.3; white cells
+Colors show the first step with mean attention to position 0 above 0.3. White cells
 never cross during the recorded trajectory. The fractions crossing at least once are
 1% for g1gate, 89% for sigmoid and 87% for textinit. Baseline and RF have no crossing
 heads. Layers increase downward and query-head indices increase to the right.</figcaption>

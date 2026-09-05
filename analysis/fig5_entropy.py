@@ -45,7 +45,7 @@ def tokens_at(arm):
 
 def main():
     d = np.load(NPZ)
-    fig, ax = plt.subplots(figsize=(7.6, 5.0))
+    fig, ax = plt.subplots(figsize=(5.5, 3.4))
     rows = []
     for arm in fc.MAIN_ARMS + ['rf']:
         pref = ARM_KEY[arm]
@@ -58,14 +58,12 @@ def main():
             H = norm_entropy(a).mean()            # mean over layers+heads
             xs.append(max(tok(st), FLOOR_M)); ys.append(float(H))
         c = fc.ARM_COLORS[arm]
-        ax.plot(xs, ys, 'o-', color=c, lw=1.7, ms=4.5, label=fc.ARM_LABELS[arm])
+        ax.plot(xs, ys, 'o-', color=c, lw=1.3, ms=3.5, label=fc.ARM_LABELS[arm])
         rows.append((arm, ys[0], ys[-1]))
     ax.set_xscale('log')
-    ax.set_xlabel('tokens (millions, log)', fontsize=9)
-    ax.set_ylabel('key-marginal entropy  H / log(128), mean over heads', fontsize=9)
-    ax.set_title('Entropy of the attention distribution over key positions',
-                 fontsize=10.5, weight='bold')
-    ax.legend(fontsize=8, loc='lower left', framealpha=0.92)
+    ax.set_xlabel('tokens (millions, log)', fontsize=7.5)
+    ax.set_ylabel('key-marginal entropy  H / log(128), mean over heads', fontsize=7.5)
+    ax.legend(fontsize=7, loc='lower left', framealpha=0.92)
     fc.style_ax(ax)
     fig.tight_layout()
     out = 'analysis/fig5_entropy.svg'
