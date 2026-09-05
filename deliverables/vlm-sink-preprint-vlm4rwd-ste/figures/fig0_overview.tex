@@ -31,13 +31,13 @@
     \node[tok, fill=black!22]        (ttok\i) at ($(t0) + (2.42 + \i*0.205, 0)$) {};
 }
 \node[lab, above=1pt of tok5]  {49 image tokens};
-\node[lab, above=1pt of ttok2] {79 text tokens};
+\node[lab, above=1pt of ttok2] {79 text positions};
 \draw[->, black!60] (enc.east) -- ++(2.5mm,0) |- ($(tok0.west) + (-1mm, 1.2pt)$);
 \draw[->, black!60] (tkz.east) -- ++(2.5mm,0) |- ($(tok0.west) + (-1mm,-1.2pt)$);
 
 \node[box, right=5mm of ttok5, minimum width=8.4em, minimum height=4.6em, anchor=west] (dec)
       {\textbf{decoder}\\[-1pt]{\scriptsize SmolLM2-135M architecture}\\[-2pt]
-       {\scriptsize 30 layers, GQA 9q/3kv, random init}};
+       {\scriptsize 30 layers, GQA 9q/3kv}};
 \draw[->] (ttok5.east) -- (dec.west |- ttok5.east);
 
 % position-0 callout, under the strip
@@ -52,15 +52,15 @@
   \textbf{probe at position 0, every 100 optimizer steps}\\[2pt]
   \begin{tabular}{@{}l@{\hspace{5pt}}l@{\hspace{6pt}}r@{}}
     concentration & $\mathrm{Sink}^{\epsilon}_1$: share of heads with attn$\to$pos0 $>\epsilon$ & 270 heads\\
-    v-ratio & $\|v_0\|\,/\,\overline{\|v_{i>0}\|}$, drain ${<}1{<}$ amplified & 90 KV groups\\
-    h-ratio & $\|h_0\|\,/\,\overline{\|h_{i>0}\|}$, massive-activation proxy & 30 layers
+    v-ratio & layer-averaged value-norm ratio (Section 3.3) & 30 layers\\
+    h-ratio & layer-averaged residual-norm ratio (Section 3.3) & 30 layers
   \end{tabular}};
 \draw[->, armtextinit, line width=0.4pt]
       (p0.west) ++(-0.06, 0) -- ++(-0.30, 0) |- ($(probe.north east) + (-0.35, 0)$);
 
 \node[anchor=north west, align=left, font=\scriptsize, inner sep=0pt]
       (arms) at ($(probe.north east) + (0.45, -0.02)$) {%
-  \textbf{one lever per arm, all else byte-identical}\\[1pt]
+  \textbf{attention and initialization conditions}\\[1pt]
   \tikz[baseline=-0.5ex]\fill[armbaseline] (0,0) rectangle (5pt,5pt);\ \textit{baseline}: softmax\\
   \tikz[baseline=-0.5ex]\fill[armg1gate]   (0,0) rectangle (5pt,5pt);\ \textit{g1gate}: softmax + zero-init $\sigma$-gate on the output\\
   \tikz[baseline=-0.5ex]\fill[armsigmoid]  (0,0) rectangle (5pt,5pt);\ \textit{sigmoid}: unnormalized sigmoid, no softmax\\

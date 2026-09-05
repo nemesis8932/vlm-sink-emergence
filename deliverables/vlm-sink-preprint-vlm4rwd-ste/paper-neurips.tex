@@ -33,7 +33,9 @@
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{xcolor}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
+\usepackage{placeins}
+
 
 \title{Attention-Sink Signatures Dissociate During Vision--Language Pretraining}
 
@@ -49,165 +51,160 @@
 
 
 \begin{abstract}
-Attention sinks are a widely studied target of interventions in language models and are often linked, though not causally, to hallucinations in vision-language models. A sink is defined by attention concentration ($\mathrm{Sink}^{\epsilon}_{1}$), but in text LMs it reliably arrives with two companions: a drained value norm (v-ratio) and massive activations (h-ratio) at the same position. We track all three separately during multimodal pretraining, without assuming they are one phenomenon. The model is a 222M vision-language model with a randomly initialized decoder, position 0 being an image token, no BOS, trained under four levers: softmax attention, output-gated softmax, unnormalized sigmoid attention, and initialization from a pretrained text LM. The three signatures dissociate: each training lever produces a different combination of them, consistently across 2-3 seeds per arm. On a 1B fresh-token run (2.39 effective visual epochs, single seed), the massive-activation proxy more than doubles while attention concentration stays at exactly zero at every threshold we test. Value-norm drain emerges as a third axis, beyond the massive-activation vs. sink dissociations known from text-only models.
+Attention concentration, reduced value norms, and unusually large activations often co-occur at attention-sink tokens in language models. Whether these signatures remain coupled during vision-language pretraining is unclear. We track attention concentration, value-norm ratio, and a residual-norm proxy for massive activations throughout pretraining of a 222M-parameter vision-language model. Its first token is an image token, with no BOS token. We compare softmax attention, output-gated softmax, and unnormalized sigmoid attention with randomly initialized decoders, plus a pretrained text-decoder control. Across 2-3 seeds per condition, the signatures form distinct profiles: value norms are reduced under softmax and text initialization but amplified under sigmoid attention, despite strong relative attention concentration in the latter. In a separate single-seed 1B-token run with low data repetition, the residual-norm ratio rises from 1.43 to 3.22 while no head's probe-averaged attention to the first token crosses any tested threshold, 0.2, 0.3, or 0.4. Joint tracking during multimodal pretraining thus reveals value-norm drain as a separately varying third signature, extending the attention-versus-activation dissociations reported in text-only models.
 \end{abstract}
 
 
 \section{Introduction}
 
-Decoder-only transformers pick up a habit early in training. A large share of attention goes to the first token or tokens of a sequence, whatever they contain. Streaming inference depends on that habit \cite{ref1}, the activation outliers that ride along with it make quantization harder \cite{ref2}, and a survey now organizes a subfield around interpreting and removing it \cite{ref3}.
+Decoder-only transformers often allocate disproportionate attention to the first tokens of a sequence, even when their content is uninformative. These attention sinks support streaming inference \cite{ref1} and have become a target of interpretation and mitigation \cite{ref3}. In text language models, attention concentration often coincides with two other signatures: reduced value-vector norms \cite{ref4,ref6} and massive activations in the residual stream \cite{ref2,ref5}. Their co-occurrence motivates a basic measurement question: do all three remain coupled when a model learns from both images and text?
 
-The sink does not arrive alone. Three measurements move together in text language models. Attention concentrates on the sink token. The value vector there drops to a near-zero norm, called value-state drain \cite{ref4}. The residual stream there grows an abnormally large norm, called a massive activation \cite{ref2,ref5}. These effects settle on the same few tokens \cite{ref6} and appear near step 1000 \cite{ref7}, and the field reads the co-occurrence as permission to treat all three as facets of one attention-sink phenomenon.
+Existing results give reasons to distinguish the signatures. Text-model studies report joint emergence and causal links between massive activations and attention sinks \cite{ref7,ref8}, but changes to normalization or value-path gradients can preserve attention sinks while suppressing massive activations \cite{ref9,ref10}. These pairwise dissociations leave open how value-norm drain varies alongside the other two quantities during multimodal pretraining.
 
-\begin{figure}[t]
-  \centering
-  \input{figures/fig0_overview.tex}
-  \caption{\textbf{Setup.} A pretrained SigLIP-B/16 encoder feeds 49 image tokens, then 79 text tokens, into a randomly initialized decoder of the SmolLM2-135M architecture. There is no BOS token, so position 0 is the first image token. A probe reads three signatures there every 100 steps, each at its own granularity. Four levers change one thing each, and RF repeats the baseline recipe on a fresh 1B-token stream.}
-  \label{fig:fig0}
-\end{figure}
+The distinction matters when evaluating sink interventions. Reducing attention to a token does not establish that its value norm or residual activation has changed. A study measuring only concentration can therefore miss a persistent norm signature. In vision-language models, sink interventions have also been evaluated for hallucination and visual grounding \cite{ref12,ref13,ref14,ref15}. Interpreting such interventions requires identifying which internal quantity changes, then testing its relationship to behavior. Here we address the measurement step by tracking all three quantities throughout training.
 
-Whether they really are one phenomenon is contested. One line argues for causal unity: massive activations mathematically require representational compression, and ablating them removes both compression valleys and sink formation \cite{ref7}, while a related view holds that outlier-driven rescaling by attention and residual sinks is essential to stable training \cite{ref8}. Two recent text-only studies pull the other way, each separating one pair of the signatures, by normalization scheme \cite{ref9} or by value scale \cite{ref10}. Neither separates all three.
+Multimodal pretraining lets us study this question when the first token carries visual content. Our sequences begin with 49 image tokens and contain no BOS token, so position 0 is the first image token. Earlier multimodal studies distinguish sinks originating in vision encoders and language decoders \cite{ref11,ref12}; their training-time evidence uses a pretrained decoder and follows a single activation magnitude \cite{ref11}. We instead follow all three signatures from initialization in a model whose decoder starts from random weights, with a text-pretrained decoder as an inheritance control.
 
-Which signature a study measures decides what it can conclude. If the three move independently, a lever that clears concentration while leaving the value path alone reads as a fix under one metric and a failure under the next, and two papers can disagree while both are right. Sink-like attention has also been tied to hallucination and weak visual grounding in deployed vision--language models \cite{ref13,ref14,ref15,ref16}, so a mitigation credited with removing the sink may leave the signature that mattered untouched. We measure all three at once, throughout training, and test no downstream behavior.
+We use a 222M-parameter nanoVLM \cite{ref17} to compare softmax attention, output-gated softmax, unnormalized sigmoid attention, and pretrained text initialization. The encoder is pretrained and trainable in every condition. Probes every 100 steps give a joint view of the signatures at 2-3 seeds per condition. A separate softmax run on a larger image pool extends the study to one billion tokens at 2.39 effective visual epochs, testing whether residual-norm growth without attention concentration persists under lower data repetition.
 
-Vision--language models suit the question, because the multimodal setting changes what position 0 \textit{is}. Our sequence starts with 49 image tokens and has no BOS token, so the candidate sink token is a visual token, without the special-token machinery that text-LM sink accounts lean on. The multimodal sink studies we know analyze mostly frozen, already-trained backbones at inference time \cite{ref11,ref12}, and the one training-time view follows a single magnitude rather than three signatures (Section 2). Telling whether the signatures arrive together, in sequence, or independently takes a randomly initialized decoder with all three logged separately from step 0.
-
-We work at small scale by choice. The model is a 222M-parameter nanoVLM \cite{ref17} with a pretrained SigLIP-B/16 encoder \cite{ref18} and a randomly initialized decoder of the SmolLM2-135M architecture \cite{ref19}, trained under four levers that each target one sink-relevant mechanism (Section 3): softmax attention (\textit{baseline}), a zero-initialized Qiu-style G1 output gate \cite{ref20} (\textit{g1gate}), unnormalized sigmoid attention, which removes the normalization sinks are argued to come from \cite{ref6} (\textit{sigmoid}), and initialization from the pretrained SmolLM2 text model (\textit{textinit}). A validated probe logs all three signatures every 100 steps. Because the four-arm comparison reuses a small image pool, we re-test the central negative result on a fresh stream of one billion tokens (\textit{RF}, 2.39 effective visual epochs).
-
-This paper reports three observations from that setup. Decoupling itself is not new \cite{ref9,ref10} and we do not claim it. What is new is the conjunction: all three signatures tracked jointly, from step 0, under randomly initialized decoders in a multimodal model, with value-norm drain as a third axis. First, across four levers (n = 2--3 seeds per arm) the arms reach four different corners of the three-signature space, no two sharing a triple, and the value-norm ratio alone is strongly drained, mildly drained or amplified depending on the lever (Fig. 2, Table 1). The arms are not a factorial design, so these are intervention-associated profiles rather than isolated causal effects. Second, on a fresh stream at 2.39 effective visual epochs, with training healthy throughout (Section 3), the massive-activation proxy rises from an h-ratio of 1.43 to 3.22, about 2.3$\times$, while concentration stays at exactly zero and no head ever crosses the sink threshold (Sections 4.2 and 5, one seed). Third, the per-head correlation between concentration and value-norm flips sign across arms at seed 0, +0.76 in baseline to $-$0.79 in textinit with a pooled $-$0.20, over 90 KV groups per arm, reported descriptively (Section 4.3).
+The experiments establish three results. First, the training conditions produce distinct signature profiles, with value norms reduced or amplified depending on the condition (Figure 2, Table 1). Second, in the single-seed 1B-token run, the residual-norm ratio grows from 1.43 to 3.22 while attention concentration remains absent at every recorded probe (Section 4.2). Third, the concentration--value-norm correlation across layer/KV-group pairs changes sign between conditions, from +0.76 under baseline softmax to $-$0.79 under text initialization at seed 0 (Section 4.3). The contribution is joint measurement of these three signatures during multimodal pretraining, including value-norm drain beyond the two-signature dissociations established in text models \cite{ref9,ref10}.
 
 \section{Related work}
 
-\paragraph{Sinks and their companions in text language models} Gu et al. \cite{ref6} give the canonical account. The sink token acts ``more like key biases, storing extra attention scores,'' carries small key and value norms, and connects to massive residual-stream activations \cite{ref2,ref5}. They also show that unnormalized sigmoid attention prevents sink formation in text models up to 1B parameters, which our \textit{sigmoid} arm builds on. Guo et al. \cite{ref4} call the concentration and value-drain coupling ``active-dormant'' heads. Queipo-de-Llano, Arroyo et al. \cite{ref7} make the strongest unity claim, and the only causal one. Ablating a model's layer-0 massive activation removes both compression valleys and sink formation (Section 1). We reserve ``causally unified'' for that result. Peng et al. \cite{ref24} trace a first-position sink circuit emerging early in from-scratch text pretraining, without separating the signatures.
+\paragraph{Coupled signatures in text models} Gu et al. \cite{ref6} connect attention concentration to small value norms and large residual activations, interpreting the sink as a key bias. Guo et al. \cite{ref4} study the associated value-drain mechanism through active-dormant attention heads. Queipo-de-Llano et al. \cite{ref7} link massive activations to compression valleys, layers where token representations become less diverse. Their targeted activation ablations also suppress sink formation in the studied text models. Qiu et al. \cite{ref8} explain attention and residual sinks through outlier-driven rescaling, while Peng et al. \cite{ref24} trace a position-zero sink circuit during text pretraining. These accounts motivate measuring the signatures together without assuming their relationship transfers unchanged to VLMs.
 
-\paragraph{Prior decoupling results, text-only, two axes} Two papers already separate pairs of these signatures, and we scope our claim around them. Sun, Canziani, LeCun and Zhu \cite{ref9} show that a change of normalization scheme crushes the massive-activation spike while the sink ratio survives. Chen and Yao \cite{ref10} go the other way, from scratch. A value-scale intervention in 0.1--0.3B text models keeps the sinks and suppresses massive activations. Neither treats value-norm drain as a third axis, and neither is multimodal. Fesser et al. \cite{ref23} give the closest support for tracking the value norm separately. One sink pattern can hide an ``adaptive nop'' with negligible value norms or a ``broadcast'' that redistributes global information, though that work diagnoses trained vision transformers rather than tracking emergence. Qiu et al. \cite{ref8} argue the opposite case, that outlier-driven rescaling by attention and residual sinks is essential to stable training. The field has settled neither question.
+\paragraph{Dissociations and interventions} Sun et al. \cite{ref9} preserve attention sinks while suppressing massive activations by changing normalization. Chen, Lin and Yao \cite{ref10} obtain a related dissociation with V-scale, which modifies gradients on the value path. Our study adds joint tracking of value-norm drain during multimodal pretraining. Fesser et al. \cite{ref23} further distinguish a negligible-value sink that suppresses a head's update from a broadcast sink that redistributes information in trained vision transformers. Their analysis supports separating attention allocation from the value vectors it weights. For interventions, we adapt the unnormalized sigmoid attention studied by Gu et al. \cite{ref6} and the attention-output gate of Qiu et al. \cite{ref20}. Our gate's initialization and associated scale change are specified in Section 3.1.
 
-\paragraph{Multimodal sinks, mostly frozen backbones at inference time} Luo et al. \cite{ref11} separate ViT-propagated from LLM-emerged sinks. Their Appendix A.4 tracks sink-dimension magnitudes across alignment checkpoints, so a training-time view has precedent, but on a frozen vision transformer with a pretrained language model, following one magnitude rather than three signatures. Choi et al. \cite{ref12} likewise distinguish vision-sinks from language-sinks in a frozen model and gate them by layer. Both establish distinct vision-side and language-side origins, which our \textit{textinit} inheritance result fits. Neither gives dense, joint tracking of the three quantities in a decoder that starts from random weights. Vision transformers also grow high-norm ``register'' tokens of their own \cite{ref25}, hence the pretrained-encoder limitation in Section 5. A separate line ties these signatures to hallucination and grounding failure in deployed models and intervenes at inference time \cite{ref13,ref14,ref15,ref16}, the practical reason it matters which signature a mitigation moves.
-
-\paragraph{The gating lever} Qiu et al. \cite{ref20} introduce the head-specific elementwise sigmoid gate on attention output that our \textit{g1gate} arm adapts. In text models it ``largely reduces the attention score allocated to the first token and decreases massive activations'' while improving quality. Our zero-initialized variant confounds gating with initial output scaling (Sections 3 and 5). With that caveat, concentration is already absent in our baseline, so the gated arm differs on the value-norm axis (the v-ratio of Section 3). The drain becomes milder, 0.69--0.72 to 0.81--0.85, rather than disappearing, a difference invisible unless the three signatures are logged separately.
-
-\paragraph{Positioning} The closest prior work separates at most two of the three axes, in text-only models, and the multimodal studies work on frozen ones. Our claim is the conjunction. We track concentration, value-norm drain and the residual-norm ratio jointly and separately in multimodal pretraining with a randomly initialized decoder, which adds value-norm drain as a third axis beyond the text-only dissociations \cite{ref9,ref10}.
+\paragraph{Multimodal sinks and grounding} Luo et al. \cite{ref11} distinguish vision-encoder-propagated and decoder-emerged sinks. Their alignment-checkpoint analysis provides training-time evidence for activation growth, using a frozen vision encoder and a pretrained language decoder. Choi et al. \cite{ref12} distinguish vision and language sinks and train layer-wise sink gates while keeping the underlying VLM frozen. We study a different regime, jointly tracking attention, value norms and residual norms during pretraining with random decoder initialization. High-norm tokens can also arise inside pretrained vision transformers \cite{ref25}, which matters because our encoder is pretrained. Work on sink-aware visual attention and decoding connects these internal patterns to grounding and hallucination \cite{ref13,ref14,ref15}; sink statistics have also been studied as hallucination signals in text LMs \cite{ref16}. Our experiments concern the training dynamics of the signatures rather than their downstream effects.
 
 \section{Setup}
 
-\subsection{Model and arms}
+\subsection{Model and training conditions}
 
-All runs use a 222M-parameter nanoVLM \cite{ref17}, in which a pretrained, trainable SigLIP-B/16 vision encoder \cite{ref18} feeds a decoder with the SmolLM2-135M architecture \cite{ref19} through a learned projector (Fig. 1A). The decoder has 30 layers of grouped-query attention, 9 query heads per layer sharing 3 KV heads, so there are 270 (layer, query-head) pairs but only 90 (layer, KV-group) value projections. Section 4.3 depends on that distinction. Each sequence is 49 image tokens as a causal prefix followed by 79 left-padded text tokens, 128 in all. There is no BOS token, so \textbf{position 0 is the first image token}.
+All runs use a 222M-parameter nanoVLM \cite{ref17}. A pretrained, trainable SigLIP-B/16 encoder \cite{ref18} feeds a SmolLM2-135M-architecture decoder \cite{ref19} through a learned projector (Figure 1). The decoder has $L=30$ layers, $H=9$ query heads per layer and $G=3$ KV groups, giving 270 layer/query-head pairs and 90 distinct value projections. Each sequence contains 49 image tokens followed by 79 left-padded text positions. There is no BOS token; position 0 is the first image token.
 
-Four training levers each change one thing, and everything else stays byte-identical across arms. \textit{baseline} is plain softmax attention. \textit{g1gate} adds an elementwise $\sigma$-gate on the attention output, zero-initialized, after SDPA, the G1 gate of Qiu et al. \cite{ref20}. \textit{sigmoid} replaces the softmax with an unnormalized sigmoid, after Gu et al. \cite{ref6}. \textit{textinit} keeps softmax but loads the pretrained SmolLM2-135M decoder, so it imports whatever first-position structure text pretraining built into it (Section 4.1). The decoder starts from random weights in every other arm, and the vision encoder is pretrained in all four. The first two levers have established sink effects in text-only models. \textit{textinit} has no precedent and is an inheritance control. \textit{sigmoid} also tests the standard account of why a sink forms: softmax makes every attention row sum to one, so a head with nothing to retrieve must park its mass somewhere \cite{ref6}. One caveat on the gate. Unlike Qiu et al. \cite{ref20}, we initialize it at exactly zero, so it opens at $\sigma$(0) = 0.5 and the arm starts as a half-scale output intervention as well as a gated one. We write ``Qiu-style G1 in our zero-initialized variant'' throughout (Section 5).
+\begin{figure}[!htbp]
+  \centering
+  \input{figures/fig0_overview.tex}
+  \caption{\textbf{Model and measurement setup.} The image encoder and projector produce a 49-token visual prefix. The decoder receives this prefix followed by text. Position 0 is the first image token. Probes measure attention concentration, projected value norms and residual-stream norms every 100 steps. Decoder initialization is random except in \textit{textinit}; RF uses the baseline architecture on a larger image pool.}
+  \label{fig:fig0}
+\end{figure}
 
-\subsection{Data and the two training regimes}
+The four conditions share the architecture and training recipe except for the specified attention operation or decoder initialization. \textit{baseline} uses softmax attention. \textit{g1gate} adds the head-specific elementwise sigmoid gate of Qiu et al. \cite{ref20} after attention aggregation and before the output projection. Our gate weights start at zero, making its initial output multiplier $\sigma(0)=0.5$. \textit{sigmoid} replaces softmax with unnormalized sigmoid attention \cite{ref6}. \textit{textinit} retains softmax and loads pretrained SmolLM2-135M decoder weights as an inheritance control. All other decoders start from random weights. The gated comparison therefore includes both learned gating and initial output scaling.
 
-The four-arm comparison trains on four curated subsets of \texttt{the\_cauldron} \cite{ref21}, about 146K images, matched at about 100M tokens per arm. \textit{textinit} stops at 60M, where its signatures have plateaued (Section 4.1). \textit{baseline} and \textit{sigmoid} have two seeds, \textit{g1gate} and \textit{textinit} three. The optimizer is AdamW with weight decay 0.1, following \cite{ref6}, gradient clip 1.0 and a cosine schedule with 3\% warmup (Appendix A).
+\subsection{Data and training}
 
-At 100M tokens the 146,731-image pool has been cycled about nine times (1.34M samples), a high visual-epoch count. The RF arm (random-fresh) answers that objection. It re-trains the \textit{baseline} recipe on a fresh FineVision stream \cite{ref22} to 1B tokens over about 4.6M natural images, at 2.39 effective visual epochs. Each example is seen 2.39 times on average, so RF is low-repetition rather than repetition-free. We estimate the overlap between the fresh pool and the repeated subsets at under 3\%, from config-level composition rather than image-level deduplication. RF has one seed. Swapping datasets trades the repetition confound for a domain-shift confound (Section 5).
+The four-condition comparison uses the VQAv2, COCO-QA, A-OKVQA and VSR subsets of The Cauldron \cite{ref21}, containing 146,731 images. Table 1 compares checkpoints near 100M tokens, or 60M for \textit{textinit}; full trajectories retain the available later checkpoints. \textit{baseline} and \textit{sigmoid} have two seeds each, and \textit{g1gate} and \textit{textinit} have three.
 
-Training stays healthy in every reported run (held-out losses in Appendix A). Two cautions. The lower \textit{textinit} loss reflects its pretrained decoder, not the lever, so only \textit{baseline}, \textit{g1gate} and \textit{sigmoid} are matched on tokens and initialization, differing in the attention lever alone. And the repeated-data arms show a large train--validation gap (\texttt{val\_seen} near 0.44 against \texttt{val\_unseen} near 1.18), the overfitting signal that motivates RF. RF has no \texttt{val\_seen} split, since at 2.39 visual epochs its loader would re-use the held-out pool, so we report \texttt{val\_unseen} only. It ends at 0.638 with a negative fitted slope over the second half, individual evaluations fluctuating (Section 5).
+At 100M tokens, training has sampled this image pool about nine times. We also train the baseline architecture on a larger FineVision stream \cite{ref22}, about 4.6M images, to 1B tokens at 2.39 effective visual epochs. This random-fresh run, \textit{RF}, has one seed. It tests persistence under lower repetition, with dataset shift considered in Section 5. Token budgets count image tokens plus non-padding text tokens.
 
-\subsection{Three signatures, tracked separately}
+Training uses AdamW, weight decay 0.1, gradient clipping at 1.0, and a cosine learning-rate schedule with 3\% warmup. Appendix A gives learning rates, precision, batches and validation splits; Appendix B records RF's optimizer restart and data-ordering changes.
 
-We log the three sink symptoms the text-LM literature reports together, each at its own granularity, following Gu et al. \cite{ref6} at fixed sequence length. Let $a_{l,h}$ be the mean attention that head $(l,h)$ sends to position 0, and $\|v^{(l)}_i\|$ and $\|h^{(l)}_i\|$ the value-vector and residual-stream norms at position $i$ in layer $l$, all averaged over valid query positions and the fixed probe batch. An overline denotes the mean over the other valid positions $i > 0$. The decoder has $L = 30$ layers, $H = 9$ query heads and $G = 3$ KV groups.
+\subsection{Signature definitions}
 
-\textit{Concentration} is the share of (layer, query-head) pairs whose attention to position 0 exceeds a threshold, the metric of \cite{ref6},
+Every 100 optimizer steps, we evaluate the same 32-example probe batch and validate the probe against the model's forward pass (Appendix A). Let $a_{l,h}$ be attention to position 0, averaged over all non-padding query positions except position 0 itself, pooled across the batch. Sigmoid weights are row-normalized for this diagnostic, following \cite{ref6}; the model's forward pass remains unnormalized. We report raw sigmoid weights separately in Appendix F.
 
-\[
-\mathrm{Sink}^{\epsilon}_1 = \frac{1}{LH}\sum_{l=1}^{L}\sum_{h=1}^{H} \mathbf{1}\!\left[a_{l,h} > \epsilon\right].
-\]
-
-We use their $\epsilon = 0.3$ default and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm tables report the stricter $\epsilon = 0.2$, which makes an absence claim harder to pass.
-
-\textit{Value-norm ratio} compares the value norm at position 0 with the rest of the sequence,
-
-\[
-\text{v-ratio} = \frac{1}{L}\sum_{l=1}^{L} \frac{\|v^{(l)}_0\|}{\overline{\|v^{(l)}_{i}\|}},
-\]
-
-below 1 under value-drain \cite{ref4} and above 1 under amplification. A value vector is shared by the 3 query heads of its KV group, so the ratio rests on $LG = 90$ distinct projections, not 270 (Section 4.3).
-
-\textit{Residual-norm ratio} is the same ratio on the residual stream,
+\textit{Concentration} is the fraction of query heads exceeding a threshold,
 
 \[
-\text{h-ratio} = \frac{1}{L}\sum_{l=1}^{L} \frac{\|h^{(l)}_0\|}{\overline{\|h^{(l)}_{i}\|}}.
+\mathrm{Sink}^{\epsilon}_1=\frac{1}{LH}\sum_{l=1}^{L}\sum_{h=1}^{H}
+\mathbf{1}[a_{l,h}>\epsilon].
 \]
 
-We call it a massive-activation proxy, since the literature defines massive activations by channel-level outliers \cite{ref2,ref5}, which we never measured (Section 5).
+We use $\epsilon=0.3$ \cite{ref6} and check 0.2 and 0.4. Table 1 uses 0.2, a lower threshold that makes the absence of concentration harder to establish. Figure 2 instead uses $a_{\max}=\max_{l,h}a_{l,h}$, the continuous maximum attention across all 270 pairs.
 
-All three anchor on position 0 by construction, and we check that choice. At seed 0, per-position attention mass makes position 0 the maximum-mass token in every arm (Appendix E), and Section 5 covers the seed-level exception. The \textit{sigmoid} arm reports the row-normalized attention view, which keeps concentration comparable across arms, and we also log the raw sigmoid mass (Appendix F).
+\textit{Norm ratios} compare position 0 with the remaining valid image and text positions. For sample $b$, position $i$, layer $l$ and KV group $g$, define $m^{(l)}_{b,i}=G^{-1}\sum_{g=1}^{G}\|v^{(l,g)}_{b,i}\|_2$ and $r^{(l)}_{b,i}=\|h^{(l)}_{b,i}\|_2$. Values are measured after the normalized input's value projection; residuals are measured at the block input. Let $\langle\cdot\rangle_0$ denote the batch mean at position 0 and $\langle\cdot\rangle_+$ the pooled mean over all other non-padding positions. Then
 
-A probe recomputes all three from the live weights every 100 optimizer steps, on the same 32-sample batch for every run and seed, and validates itself against the real forward pass on every call (Appendix A).
+\[
+\text{v-ratio}=\frac{1}{L}\sum_{l=1}^{L}
+\frac{\langle m^{(l)}\rangle_0}{\langle m^{(l)}\rangle_+},
+\qquad
+\text{h-ratio}=\frac{1}{L}\sum_{l=1}^{L}
+\frac{\langle r^{(l)}\rangle_0}{\langle r^{(l)}\rangle_+}.
+\]
+
+A v-ratio below 1 indicates relative value-norm drain, and above 1 amplification. The main v-ratio averages 30 layer ratios after pooling the three KV-group norms within each layer. Section 4.3 separately retains all 90 group ratios. The h-ratio measures residual-norm asymmetry and serves as a proxy for channel-level massive activations \cite{ref2,ref5}. Appendix E checks how position-0 measurements relate to extrema elsewhere in the sequence.
 
 \section{Results}
 
-\begin{figure}[t]
+\subsection{Training conditions produce distinct signature profiles}
+
+Table 1 summarizes per-seed ranges at checkpoints near 100M tokens, or 60M for \textit{textinit} (Appendix D). The clearest separation is between \textit{sigmoid} and \textit{textinit}: both show strong relative concentration, but sigmoid amplifies value norms and retains an h-ratio near 1, whereas text initialization combines value drain with a much larger h-ratio. Figure 2 shows the corresponding trajectories.
+
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig2_phase_portrait.pdf}
-  \caption{\textbf{Decoupling phase-portrait.} Every arm in concentration-against-value-norm space (top) and against the residual-norm ratio (bottom, log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens, 60M for \textit{textinit}, 1B for \textit{RF}), seed 0 unless labelled. The horizontal axis is the \textit{maximum} attention$\rightarrow$pos0 over heads, not Table 1's fraction, so an arm can sit off zero here with Sink$^{\epsilon}$ = 0.000. Smoothed paths, raw end markers (Appendix F). Were the three signatures one phenomenon, these trajectories would move along one direction.}
+  \caption{\textbf{Signature trajectories during pretraining.} (a) Value-norm ratio and (b) residual-norm ratio, on a logarithmic vertical scale, against maximum attention $a_{\max}$ (Section 3.3). Open circles mark initialization and diamonds the final recorded checkpoints: 174M tokens for baseline, 103M for g1gate, 102M for sigmoid, 60M for textinit, and 1B for RF. All paths use seed 0. Faint points are raw probes; lines are smoothed (Appendix F). The dashed horizontal reference is a norm ratio of 1.}
   \label{fig:fig1}
 \end{figure}
 
-\subsection{Each lever lands in a different corner of signature space}
-
-Table 1 collapses the seeds into per-arm ranges, each arm at its final matched checkpoint, about 100M tokens or 60M for \textit{textinit}, whose signatures have plateaued by then (per-seed table in Appendix D). No two arms share a signature triple.
-
-\begin{table}[t]
+\begin{center}
+\begin{minipage}{\linewidth}
+\makeatletter\def\@captype{table}\makeatother
   \centering
   \small
-  \caption{\textbf{The four corners (n = 2--3 seeds per arm).} Concentration is $\mathrm{Sink}^{0.2}_{1}$, the fraction of the 270 (layer, query-head) pairs whose mean attention$\rightarrow$pos0 exceeds 0.2. The v-ratio rests on 90 (layer, KV-group) value projections and the h-ratio on 30 layers (Section 3).}
-  \begin{tabularx}{\linewidth}{lXXX}
+  \caption{\textbf{Signature profiles, ranges over 2-3 seeds per condition.} Concentration uses $\mathrm{Sink}^{0.2}_{1}$; v-ratio and h-ratio are the layer-averaged quantities defined in Section 3.3.}
+  \begin{tabularx}{\linewidth}{lXlc}
     \toprule
-    arm & concentration & value-norm & massive-activation proxy \\
+    arm & concentration & value-norm ratio & residual-norm ratio \\
     \midrule
-    baseline & absent (0.000) & mild drain (0.69--0.72) & moderate (1.7--2.2) \\
-    g1gate & near-absent (0.004--0.011) & \textbf{milder drain} (0.81--0.85) & moderate (1.7--2.2) \\
-    sigmoid & strong (0.76--0.83) & \textbf{amplified} (1.48--1.60) & no strong asymmetry (1.1--1.3) \\
-    textinit & strong (0.56--0.85) & strong drain (0.38--0.63) & extreme (5.5--42.5) \\
+    baseline & absent (0.000) & drain (0.69--0.72) & 1.7--2.2 \\
+    g1gate & near-absent (0.004--0.011) & drain (0.81--0.85) & 1.7--2.2 \\
+    sigmoid & strong (0.76--0.83) & amplified (1.48--1.60) & 1.1--1.3 \\
+    textinit & strong (0.56--0.85) & drain (0.38--0.63) & 5.5--42.5 \\
     \bottomrule
   \end{tabularx}
-\end{table}
+\end{minipage}
+\end{center}
 
-The value-norm axis alone takes three directions, drained hard, drained mildly and amplified, and the corners separate pairwise on single axes. \textit{g1gate} differs from \textit{baseline} on the value-norm axis alone: concentration absent or near-absent and the residual-norm ratio moderate in both, while the gate makes the mild drain milder still, a 15--19\% drain rather than none. \textit{sigmoid} and \textit{textinit} both reach strong concentration and then part on the direction of the value-norm move and on the residual-norm ratio. The \textit{sigmoid} corner is relative, since its concentration is row-normalized over a shrinking raw gate budget, with top-head raw pos0 mass 0.065 at the final checkpoint (Appendix F). The arms are not a factorial design, so these are intervention-associated profiles rather than isolated causal effects. The trajectories in Figure 2 separate early and do not share one origin. \textit{textinit} starts from a pretrained decoder that already carries a subthreshold first-position bias, $\mathrm{Sink}^{0.3}_{1}$ still 0.000 at step 0.
+The \textit{g1gate} and \textit{baseline} profiles overlap on residual-norm ratio and both have little concentration. Their value-norm ranges separate, with less drain in the gated condition. This difference belongs to the combined gate-and-initial-scale intervention in Section 3.1; it does not isolate a benefit of learned gating. Under \textit{sigmoid}, high normalized concentration coexists with decreasing raw attention weights to position 0 (Appendix F). Thus, the relative attention and norm signatures separate even when the absolute attention scale changes.
 
-Reproducibility differs by arm. \textit{g1gate} is tightest, $\mathrm{Sink}^{0.2}_{1}$ of 0.004, 0.011 and 0.0037 across three seeds. The \textit{textinit} corner repeats across seeds and its magnitudes do not: seed 0 sits far above the other two on every signature, h-ratio 42.5 against 5.5--12.2, partly because at seeds 1 and 2 its peaks move off position 0, where our metrics anchor (Appendix D, I). We therefore report its massive-activation proxy as a range, 5.5--42.5$\times$ with a median near 12$\times$, and treat the corner rather than any magnitude as the claim.
+The qualitative \textit{textinit} profile repeats across seeds, while its h-ratio varies from 5.5 to 42.5, with median 12.2. Per-position scans also show that attention and norm extrema can occupy different tokens (Appendix E). Figure 3 shows a first-position attention preference already present before multimodal training in \textit{textinit}, consistent with inheritance from the text decoder. This preference is subthreshold at $\epsilon=0.3$. Threshold-crossing order and spatial dissociations are detailed in Appendix I. Appendix G outlines hypotheses for the profiles, and Appendix H summarizes metric provenance.
 
-The corners also separate in time (Fig. A4, seed 0, Appendix I). \textit{baseline}, \textit{g1gate} and \textit{RF} cross the norm thresholds without ever crossing concentration. \textit{sigmoid} is the mirror image, crossing concentration without either norm threshold. \textit{textinit} starts above both norm thresholds and crosses concentration later. Where a run crosses both kinds, the norm signatures come first, and under text initialization the three need not even settle on the same token (Appendix I). Appendix G offers untested hypotheses for why each lever moves a different axis. Figure 3 shows the separation inside a single head. Its rightmost panel carries the most weight: the textinit stripe is already there at step 0, imported with the text-LM weights before the model has seen one image.
-
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig6_sink_stripe.pdf}
-  \caption{\textbf{The sink stripe.} Query $\times$ key attention of each arm's top sink head, row-normalized, seed 0. Top row is early training (step 250, about 2.4M tokens), bottom row the final checkpoint. The cyan line marks key = pos0, the dotted line the image-to-text boundary. The stripe is absent in baseline throughout, strong in textinit (attn$\rightarrow$pos0 = 0.62 at its final checkpoint), and already present at step 0 in textinit (rightmost panel), inherited from the text LM. The sigmoid heat maps come from an auxiliary streaming batch, while every printed sigmoid number comes from the fixed probe batch (Appendix F).}
+  \caption{\textbf{First-position attention across training conditions.} Selected-head query-by-key maps at early and final checkpoints, plus textinit at initialization, all seed 0. Each map is a batch-mean attention matrix normalized by row; the color scale saturates at 0.5. Cyan marks key position 0, dotted lines the image/text boundary. Heads are selected separately by condition. These qualitative maps use the batches and selection procedure documented in Appendix F.}
   \label{fig:fig2}
 \end{figure}
 
-\subsection{Over 1B fresh tokens the massive-activation proxy more than doubles while concentration stays at zero}
+\subsection{Residual-norm growth without concentration over 1B tokens}
 
-The four-arm comparison reuses a 146K-image pool, so its ``concentration never emerges'' result could be an overfitting artifact. The RF arm answers that with the identical \textit{baseline} recipe on a fresh FineVision stream to one billion tokens at 2.39 effective visual epochs, low repetition rather than none, with a held-out loss that ends at 0.638 on a negative fitted slope over the second half while individual evaluations fluctuate (Sections 3 and 5). Concentration never arrives. \textbf{$\mathrm{Sink}^{0.3}_{1}$ = 0.000 across the entire 0 $\rightarrow$ 1B run}, and no head of the 270 crosses the threshold at any of about 700 probes.
+The repeated-data comparison shows a substantial validation gap, with loss near 0.44 on training images paired with new questions versus 1.18 on held-out images. RF tests whether the absence of concentration persists with less image reuse. Its held-out loss ends at 0.638 and has a negative fitted slope over the second half of training, despite evaluation-to-evaluation fluctuations (Appendix A).
 
-\begin{table}[t]
+Across RF's 698 recorded probes, none of the 270 heads exceeds 0.2 mean attention to position 0; the largest value observed is 0.151. Consequently $\mathrm{Sink}^{\epsilon}_{1}$ is exactly zero at all probes for $\epsilon\in\{0.2,0.3,0.4\}$. Over the same run, the residual-norm ratio rises from 1.43 to 3.22 (Table 2). The result is a growing norm asymmetry without thresholded attention concentration on the fixed probe batch.
+
+\begin{center}
+\begin{minipage}{\linewidth}
+\makeatletter\def\@captype{table}\makeatother
   \centering
   \small
-  \caption{\textbf{RF (fresh stream, n = 1 seed), init $\rightarrow$ 1B tokens.}}
-  \begin{tabularx}{\linewidth}{XccX}
+  \caption{\textbf{RF, one seed, initialization to 1B tokens.}}
+  \begin{tabularx}{\linewidth}{Xccl}
     \toprule
-    signature & @ init & @ 1B & net \\
+    signature & initialization & 1B tokens & change \\
     \midrule
-    $\mathrm{Sink}^{0.3}_{1}$ (concentration) & 0.000 & 0.000 & flat zero, entire run \\
-    max attn$\rightarrow$pos0 & 0.056 & 0.098 & $\approx$flat, far below threshold \\
-    h-ratio (massive-activation proxy) & 1.43 & \textbf{3.22} & \textbf{$\approx$2.3$\times$}, positive long-horizon trend \\
-    v-ratio (value-norm) & 1.00 & 0.69 & net drain, non-monotone \\
+    $\mathrm{Sink}^{0.3}_{1}$ & 0.000 & 0.000 & zero at all 698 probes \\
+    maximum attention $a_{\max}$ & 0.056 & 0.098 & remains below 0.2 \\
+    h-ratio & 1.43 & 3.22 & 2.25-fold increase \\
+    v-ratio & 1.00 & 0.69 & net drain \\
     \bottomrule
   \end{tabularx}
-\end{table}
+\end{minipage}
+\end{center}
 
-Warmup does not explain the rise. The h-ratio climbs from 2.40 at about 57M tokens to 3.22 at 1B, long after the 3\% warmup window closes, though not monotonically at probe resolution, hence a positive long-horizon trend. In Figure 2, right, the violet trajectory climbs and never moves rightward. The v-ratio ends below its initialization value, but about 75\% of that drop happens in the first 57M tokens and part then recovers, so it is supporting context rather than ongoing emergence.
+The h-ratio rises from 2.40 near 57M tokens to 3.22 at 1B, so the increase continues well beyond the initial warmup. Figure 2b shows this change at low concentration. The value-norm ratio follows a different trajectory: about 75\% of its net decline occurs by 57M tokens, followed by partial recovery. It therefore provides evidence of persistent drain, not a monotonic increase in drain throughout training.
 
-\subsection{No consistent-sign head-level concentration--value-norm relationship}
+\subsection{Concentration--value-norm correlations change sign across conditions}
 
-A tight coupling between concentration and value-drain should at least hold the sign of their per-head correlation constant across regimes. It does not. Table 3 gives the Pearson r between attention$\rightarrow$pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the 90 (layer, KV-group) observations, averaging a group's query-head attention rather than triplicating its value observation (Section 3, scatter in Fig. A2, Appendix C).
+Table 3 reports Pearson correlations between attention to position 0 and value-norm ratio over 90 layer/KV-group pairs per condition at seed 0. Each group's attention is averaged over its three query heads; its value ratio is counted once (Figure 5, Appendix C). The correlation is positive under baseline softmax and negative under text initialization.
 
-\begin{table}[t]
+\begin{center}
+\begin{minipage}{\linewidth}
+\makeatletter\def\@captype{table}\makeatother
   \centering
   \small
-  \caption{\textbf{R(attn$\rightarrow$pos0, v-ratio), final checkpoint, seed 0.}}
+  \caption{\textbf{Pearson r across 90 layer/KV-group pairs at the final available reprobe, seed 0.}}
   \begin{tabular}{lccccc}
     \toprule
     baseline & g1gate & sigmoid & textinit & RF & pooled \\
@@ -215,33 +212,26 @@ A tight coupling between concentration and value-drain should at least hold the 
     +0.76 & +0.57 & $-$0.03 & $-$0.79 & +0.51 & $-$0.20 \\
     \bottomrule
   \end{tabular}
-\end{table}
+\end{minipage}
+\end{center}
 
-These correlations are descriptive, not inferential. Heads within a layer are not independent and each arm rests on a single seed here, so a p-value would mislead and we report none. Collapsing to the 90 KV groups removes the pseudoreplication a per-query-head reading would introduce, and the picture does not change (Appendix F). The pattern is about sign, which pseudoreplication does not manufacture. Heads attending more to position 0 have larger value norms in the baseline regime and smaller ones under text initialization, and the pooled correlation is weak only because arms of opposite sign cancel. We claim that no consistent-sign relationship holds across arms, not that no coupling law exists. A fixed coupling would show one sign everywhere, and it does not.
+These are descriptive associations within trained models. Layer dependence and the single seed per condition preclude treating the 90 observations as independent experimental replicates. The sign change shows that greater first-position attention is associated with larger values in one condition and smaller values in another. It does not establish statistical independence or rule out a nonlinear or layer-dependent relationship. The pooled value combines within-condition and between-condition variation and is not evidence that the signatures are unrelated.
 
 \section{Limitations}
 
-Across the arms the three signatures land in different corners, and no single one predicts the others. For VLM work the consequence is direct. An intervention judged on concentration alone can leave value-norm drain or the residual-norm ratio where they were, and a model with no concentration sink can still grow a residual-norm asymmetry, as RF does. What that licenses depends on the five limits below. Appendix B expands each with its evidence, and Section 6 turns the ones we can close into next steps.
+\paragraph{Measurement scope} The h-ratio measures residual-norm asymmetry; channel-level outlier statistics are needed to establish massive activations in the stricter sense of \cite{ref2,ref5}. All headline metrics use one fixed 32-example probe batch and position 0. Their denominators include both image and text positions. Supplementary image-only norm profiles retain the RF asymmetry at the inspected checkpoint, while spatial scans show that textinit's attention and norm extrema can separate (Appendix E). The reported textinit ratios are position-specific measurements, not estimates of each run's largest possible asymmetry.
 
-\paragraph{The h-ratio is only a proxy} The literature defines massive activations by channel-level outliers \cite{ref2,ref5}. We measured a position-specific residual-norm ratio and never computed channel-level statistics (Section 3). A large h-ratio is consistent with massive activations without establishing them.
+\paragraph{Training controls} The four conditions are not a factorial experiment. In g1gate, learned gating and the initial 0.5 output scale are inseparable without a scale-matched control. The vision encoder is pretrained and trainable in every run; increasing residual norms may involve adaptation of inherited visual structure as well as decoder learning. A random-encoder control would test that contribution. Textinit also differs in prior training and token budget, so its lower validation loss is not evidence for a superior attention intervention.
 
-\paragraph{RF is one seed and one run} The 1B-token result rests on a single seed with one weights-only optimizer restart at about 57M tokens, the weights reloaded and the AdamW moments discarded. The audit verified continuity across that seam (Appendix B). Concentration was reproducibly zero across both repeated-data baseline seeds, which supports the negative claim, and a second fresh-data seed would strengthen it. RF also has no seen split, and it buys low repetition by changing dataset, so it trades the repetition confound for a domain-shift one. The under-3\% overlap figure is config-level, not image-level.
-
-\paragraph{The gate arm carries a scale confound} Zero-initializing the G1 gate opens it at $\sigma$(0) = 0.5 and halves attention output at step 0, where Qiu et al. \cite{ref20} use ordinary initialization. Gating and initial output scaling are confounded in \textit{g1gate}, and a scale-matched control is future work.
-
-\paragraph{No arm is fully from scratch, and the metrics anchor on position 0} The SigLIP encoder is pretrained in every arm, and vision transformers grow high-norm tokens of their own \cite{ref25}, so part of the residual-norm signal could be inherited. Our defense is the trajectory. The h-ratio starts at 1.0--1.4 and rises to 3.22 across 1B tokens in RF, where a static inherited source predicts a high, flat value from step 0. Position 0 is the maximum-mass token in every arm at seed 0 and at every seed for the random-decoder arms, but not for \textit{textinit} at seeds 1 and 2, where the peaks move (Appendix E). Those magnitudes understate the arm's peaks, so we report \textit{textinit} as a corner and a range, 5.5--42.5$\times$, and not as a magnitude.
-
-\paragraph{Scale and scope} Runs reach at most 1B tokens against roughly 5B canonical in the text-LM sink literature \cite{ref6}. Text-LM sinks form near step 1000 \cite{ref7}, well inside our range, but a signature absent at 1B could still emerge later. The seed-0 probes for the four-arm comparison come from a checksummed archive summary, and seeds 1 and 2 were re-derived first-hand (Appendix B.5, Appendix H). We ran no downstream benchmark on any arm and make no capability claim.
+\paragraph{RF and generalization} RF provides one seed at 1B tokens. It includes a weights-only restart near 57M tokens and a smaller shuffle buffer later in training (Appendix B). Changing from The Cauldron to FineVision reduces repetition but also changes the training distribution. Its probe remains on The Cauldron, and no separate seen-image validation split is available. The study uses one 222M architecture and 128-position sequences; later sink emergence, larger models and other sequence layouts remain untested. We evaluate internal signatures, without downstream grounding or hallucination benchmarks.
 
 \section{Conclusion}
 
-In text language models the three attention-sink signatures arrive together. In a vision--language model with a randomly initialized decoder, they need not. Tracked separately, they come apart under each training lever applied. Across four interventions the arms occupy separate corners of signature space, with value norms strongly drained, mildly drained or amplified. The sharpest case is the fresh-data run, where over one billion tokens the massive-activation proxy more than doubles while attention concentration stays at exactly zero. This extends the two-way dissociations of text-only models \cite{ref9,ref10} to a separately measured third axis, value-norm drain, in multimodal pretraining. Massive activations can causally produce sinks in text LMs \cite{ref7}. Here the coupling can also fail to form.
+Joint measurement during multimodal pretraining reveals distinct attention-sink signature profiles. Under sigmoid attention, strong relative concentration accompanies amplified value norms and little residual-norm asymmetry. Under text initialization, strong concentration accompanies value drain and much larger residual norms. In the low-repetition 1B-token softmax run, the residual-norm ratio more than doubles while concentration stays below every tested threshold at every recorded probe. Value-norm drain therefore adds a separately varying third signature to the attention-versus-activation dissociations known from text models \cite{ref9,ref10}.
 
-\paragraph{Practical implications} The takeaway for VLM deployment and evaluation is that no single signature acted as a reliable proxy for the others in our arms. A model without a concentration sink can still develop a growing residual-norm asymmetry, and an intervention judged successful by one metric may leave the other signatures unchanged. A sink mitigation should therefore report all three.
+For VLM evaluation, these results motivate reporting attention concentration, value norms and residual activations separately when assessing sink interventions. Their downstream relevance requires behavioral evaluation. The most direct extensions are channel-level activation measurements, a scale-matched gate control, and replication on a second fresh-data seed.
 
-\paragraph{Status and next steps} This is work in progress at small scale, and Section 5 names the gaps. Next steps are a randomly initialized vision encoder to isolate the decoder's contribution to the residual-norm signal, a second fresh-data seed and fresh-data runs past 1B tokens, a scale-matched gate control to separate gating from the half-scale initialization confound, and channel-level statistics to turn the h-ratio proxy into a measurement of massive activations.
-
-\paragraph{Reproducibility} A self-validating probe (Section 3) computes all signatures on a fixed probe batch from logs taken every 100 steps, and the Appendix holds the per-seed tables. We will release the code, the probe, the run configurations, the per-run logs and the training checkpoints upon acceptance. The links are withheld here for double-blind review.
+\paragraph{Reproducibility} Appendix A specifies the probe and training recipe, and Appendix D lists per-seed results. We will release code, configurations, logs and checkpoints upon acceptance; identifying links are withheld for double-blind review.
 
 \small
 \begin{thebibliography}{25}
@@ -265,19 +255,19 @@ N. Cancedda. \textit{Spectral Filters, Dark Signals, and Attention Sinks.} ACL 2
 X. Gu, T. Pang, C. Du, Q. Liu, F. Zhang, C. Du, Y. Wang, M. Lin. \textit{When Attention Sink Emerges in Language Models: An Empirical View.} ICLR 2025. arXiv:2410.10781.
 
 \bibitem{ref7}
-N. Queipo-de-Llano, D. Arroyo, F. Barbero, Y. Dong, M. Bronstein, Y. LeCun, R. Shwartz-Ziv. \textit{Attention Sinks and Compression Valleys in LLMs are Two Sides of the Same Coin.} arXiv:2510.06477, 2025.
+E. Queipo-de-Llano, Á. Arroyo, F. Barbero, X. Dong, M. Bronstein, Y. LeCun, R. Shwartz-Ziv. \textit{Attention Sinks and Compression Valleys in LLMs are Two Sides of the Same Coin.} arXiv:2510.06477, 2025.
 
 \bibitem{ref8}
 Z. Qiu et al. \textit{A Unified View of Attention and Residual Sinks: Outlier-Driven Rescaling is Essential for Transformer Training.} arXiv:2601.22966, 2026.
 
 \bibitem{ref9}
-M. Sun, A. Canziani, Y. LeCun, C. Zhu. \textit{The Spike, the Sparse and the Sink: Anatomy of Massive Activations and Attention Sinks.} arXiv:2603.05498, 2026.
+S. Sun, A. Canziani, Y. LeCun, J. Zhu. \textit{The Spike, the Sparse and the Sink: Anatomy of Massive Activations and Attention Sinks.} arXiv:2603.05498, 2026.
 
 \bibitem{ref10}
-Y. Chen, Z. Yao. \textit{Attention Sinks Induce Gradient Sinks.} arXiv:2603.17771, 2026.
+Y. Chen, Z. Lin, Q. Yao. \textit{Attention Sinks Induce Gradient Sinks: Massive Activations as Gradient Regulators in Transformers.} arXiv:2603.17771v2, 2026.
 
 \bibitem{ref11}
-Y. Luo et al. \textit{To Sink or Not to Sink: Visual Information Pathways in LVLMs.} arXiv:2510.08510, 2025.
+Y. Luo et al. \textit{To Sink or Not to Sink: Visual Information Pathways in Large Vision-Language Models.} arXiv:2510.08510, 2025.
 
 \bibitem{ref12}
 J. Choi, J. Kim, S. Kim, S. Hong, J.-H. Park. \textit{When Sinks Help or Hurt: Unified Framework for Attention Sink in Large Vision-Language Models.} ECCV 2026. arXiv:2604.03316.
@@ -316,7 +306,7 @@ L. Wiedmann, O. Zohar, A. Mahla, X. Wang, R. Li, T. Frere, L. von Werra, A. Roy 
 L. Fesser, M. Jacobs, T. Fel, A. Keller, S. Kakade. \textit{A Unifying View of Attention Sinks: Two Algorithms, Two Solutions.} arXiv:2606.08105, 2026.
 
 \bibitem{ref24}
-R. Peng, R. Li, M. Chen, Y. Zhou, Q. Guo, X. Qiu. \textit{How Attention Sinks Emerge in Large Language Models: An Interpretability Perspective.} arXiv:2603.06591, 2026.
+R. Peng, R. Li, M. Chen, Y. Zhou, Q. Guo, X. Qiu, Y. Lu, C. Zhao. \textit{What Makes Position Zero Special? A Mechanistic Study of Position Zero Attention Sinks in LLMs.} arXiv:2603.06591v2, 2026.
 
 \bibitem{ref25}
 T. Darcet, M. Oquab, J. Mairal, P. Bojanowski. \textit{Vision Transformers Need Registers.} ICLR 2024. arXiv:2309.16588.
@@ -328,81 +318,84 @@ T. Darcet, M. Oquab, J. Mairal, P. Bojanowski. \textit{Vision Transformers Need 
 \newpage
 \appendix
 
+\FloatBarrier
 \section{Extended methodology}
 
-\textit{Probe.} The function \texttt{probe\_sinks()} re-walks the decoder from the live module weights in eager mode, fp32, no gradients, independent of the training path (fused SDPA kernels, autocast, \texttt{torch.compile}). Every call validates its hidden states against the real forward pass to a relative error below 10$^{-2}$, so the probe cannot drift from what the trained model computes. The probe batch is fixed across all runs and seeds, which keeps every number comparable, and probes fire every 100 optimizer steps.
+\textit{Probe.} The function \texttt{probe\_sinks()} recomputes the decoder in eager mode, fp32, without gradients. Every call compares its final hidden states with the model's forward pass: the maximum absolute difference on valid positions divided by the maximum absolute reference value must be below 0.01. Training uses fused attention, bf16 autocast and \texttt{torch.compile}. The diagnostic excludes padding queries and query position 0. Attention averages pool valid queries across examples. Norms are averaged before ratios, as specified in Section 3.3.
 
-\textit{Recipe.} AdamW with weight decay 0.1, following \cite{ref6}, gradient clip 1.0, cosine schedule with 3\% warmup. Arms in a comparison differ only in the lever under test.
+\textit{Optimization.} AdamW uses weight decay 0.1 and gradient clipping at 1.0. Learning rates are $4\times10^{-4}$ for the decoder, $2\times10^{-3}$ for the projector and $10^{-4}$ for the encoder, with cosine decay and 3\% warmup. Batch size is 128. The gated condition adds a zero-initialized output gate, and textinit imports pretrained decoder weights.
 
-\textit{Optimization.} The learning rates are 4 $\times$ 10$^{-4}$ for the language model, 2 $\times$ 10$^{-3}$ for the projector, and 10$^{-4}$ for the vision encoder. We use bf16 autocast, \texttt{torch.compile}, and a batch size of 128.
+\textit{Token accounting.} Budgets count 49 image tokens plus the non-padding text tokens in each example. A step of 128 examples therefore contributes at most 16,384 tokens and about 9.5K in the repeated-data runs. These are processed tokens, not a count of unique examples or solely the tokens used in the text loss.
 
-\textit{Token accounting.} One token is one image token or one non-padding text token. A full sequence contributes 49 image tokens plus its non-padding text tokens, so a step of batch 128 contributes at most 16,384 tokens and about 9.5K on average. All ``M tokens'' figures in this paper use that definition.
+\textit{Probe batches.} Live training trajectories use a fixed 32-example batch from the repeated The Cauldron tail, including for RF. Saved-checkpoint reprobes provide additional per-group and per-position arrays; the local streaming reprobe constructs a different 32-example batch with seed 0. Figure 3 uses batch-mean saved matrices, with its sigmoid column regenerated on that streaming batch (Appendix F). Results from different probe products are identified separately rather than treated as numerically identical.
 
-\textit{Probe batch.} The fixed probe batch holds n = 32 samples, drawn with \texttt{random.seed(0)} from the repeated \texttt{the\_cauldron} tail. We label this probe version \texttt{v1-repeatedtail-32}. RF uses the same probe batch as the repeated arms, so its signatures stay comparable to theirs even though its training stream differs (Section 5).
-
-\textit{Validation.} A 1,024-example held-out pool, evaluated every 500 steps. Each estimate is the mean over the first 512 examples of that pool, in four batches of 128 in fixed order. We report \texttt{val\_unseen}, which holds out images. For the repeated arms we also log \texttt{val\_seen}, which re-uses training images with fresh question--answer text. The RF run has no distinct seen split. At 2.39 visual epochs its \texttt{val\_seen} loader re-uses the held-out pool, so we report only \texttt{val\_unseen} for RF. At the matched 100M-token checkpoint the held-out losses are 1.182 for \textit{baseline}, 1.133 for \textit{g1gate}, 1.206 for \textit{sigmoid} and 0.877 for \textit{textinit}, and RF reaches 0.638 at 1B tokens. The seed-0 archive values for that checkpoint are 1.161 for \textit{baseline}, 1.138 for \textit{g1gate}, 1.108 for \textit{sigmoid}, and 0.832 for \textit{textinit}, so the first set is seed 1 or 2. For RF the held-out loss goes from 1.35 over the first ten evaluations to 0.68 over the last ten, and the fitted slope over the second half of the run stays negative.
+\textit{Validation.} The held-out image pool contains 1,024 examples. Every 500 steps, loss is averaged over its first 512 examples in four fixed batches of 128. Repeated-data runs also evaluate training images with fresh question--answer text (\texttt{val\_seen}). RF's seen-image loader reuses its held-out pool, so only \texttt{val\_unseen} is reported. RF ends at 0.638. Its mean held-out loss falls from 1.35 over the first ten evaluations to 0.68 over the last ten, with a negative fitted slope in the second half.
 
 \textit{LLM assistance.} Large-language-model coding assistants were used to write and refactor the training, probe and analysis code, and to edit prose. The experimental design, the measurements, the analysis decisions and the claims are the authors' own. The released repository keeps its commit history, including the assistant-authored commits.
 
-\textit{Aggregation.} Each per-layer or per-head quantity is first averaged over the probe batch and over valid query positions, then aggregated by the formulas of Section 3.
-
+\FloatBarrier
 \section{Extended limitations}
 
-Section 5 states each limit in one paragraph. This appendix keeps the evidence behind each.
+\subsection{Position and norm aggregation}
 
-\subsection{Metrics anchored on position 0}
+Headline measurements anchor on the first image token. Appendix E checks attention mass across positions and reports a supplementary norm scan. Textinit's attention and norm extrema need not coincide, and their locations vary by seed. The position-0 ratios therefore characterize that position; relocating the measurement to the attention maximum does not necessarily increase the residual-norm ratio. Main norm ratios compare image position 0 with a mixed image/text denominator, while the supplementary image-only profiles use a different aggregation described in Appendix E.
 
-We measure all three signatures at the first image token, and check that anchor by per-position attention \textit{mass} rather than argmax alone. Position 0 is the maximum-mass token in every arm at seed 0, and it stays so for \textit{baseline}, \textit{g1gate} and \textit{sigmoid} at every seed we scanned. It does not in \textit{textinit}, where at seeds 1 and 2 the peaks move to other positions (per-position table in Appendix E). The pos0-anchored textinit magnitudes at those seeds therefore understate its peaks, one more reason to treat that arm's corner rather than its magnitudes as the claim. In \textit{RF} the attention argmax sits at pos1, but with mass 0.053 against 0.044 at pos0, a diffuse profile rather than a displaced sink, so the RF result does not depend on the anchor.
+\subsection{Gating and initialization}
 
-\subsection{The gate arm carries a scale confound}
+Our gate begins at $\sigma(0)=0.5$, halving the attention output before the output projection. The measured difference from baseline combines this initial scale change with subsequent learned gating. A constant half-scale control would distinguish the two explanations; the present comparison cannot do so.
 
-We initialize the G1 gate at exactly zero, so it opens at $\sigma$(0) = 0.5 and halves attention output at step 0, where Qiu et al. \cite{ref20} use ordinary initialization (Section 3). Gating and initial output scaling are therefore confounded in \textit{g1gate}. We cannot attribute its differences from baseline to gating alone, and a scale-matched control is future work.
+\subsection{Pretrained encoder}
 
-\subsection{Pretrained vision encoder}
+The SigLIP encoder is pretrained and trainable throughout. High-norm visual tokens \cite{ref25} or propagated visual sinks \cite{ref11} may contribute to decoder-side signatures. RF's rising h-ratio establishes change during multimodal training, but cannot distinguish new decoder structure from amplification or adaptation of inherited representations. Random-encoder and frozen-encoder controls would separate these possibilities.
 
-The SigLIP encoder is pretrained and trainable in every arm, and \textit{textinit} also uses a pretrained decoder. We study vision--language pretraining with randomly initialized decoders, not from-scratch training of the whole model. Vision transformers grow high-norm register tokens of their own \cite{ref25}, and sinks can propagate from a vision transformer into a vision--language model \cite{ref11}, so part of our residual-norm signal could be inherited rather than decoder-formed. Our defense is the trajectory. The h-ratio starts at 1.0--1.4 and rises to 3.22 across 1B tokens in RF, where inheritance from a static encoder predicts a high, flat h-ratio from step 0. A randomly initialized vision transformer, which would isolate the decoder, is future work.
+\subsection{Seed variation}
 
-\subsection{Reproducibility of textinit magnitudes}
+Textinit's h-ratio spans 5.5--42.5 at the reported checkpoints. Strong concentration and value drain recur across seeds, but their magnitudes and spatial locations vary. The study reports ranges and individual measurements rather than treating seed 0 as representative of the arm's magnitude.
 
-The massive-activation proxy of \textit{textinit} is seed-sensitive, an h-ratio of 5.5--42.5 across three seeds, with seed 0 the outlier on every signature. The reproducible claim is the corner: strong concentration, strong drain, large residual-norm ratio. No specific magnitude is.
+\subsection{RF restart and provenance}
 
-\subsection{Provenance and seed count}
+RF contains one weights-only restart near 57M tokens after an out-of-memory failure: weights were restored and AdamW moments discarded. Recorded v-ratio and h-ratio values agree at the shared checkpoint, and concentration is zero on both sides. The restart remains part of the training trajectory. Main per-seed tables combine archived seed-0 summaries with independently consolidated later seeds; Figures 2 and 4 retain the available seed-0 probe trajectories. Raw checkpoint reprobes support the per-group analysis separately from those archived table summaries.
 
-The seed-0 raw probes for the four-arm comparison come from a checksummed archive summary rather than first-hand re-derivation. Seeds 1 and 2 we did re-derive independently, an audit that caught a metric-labeling error in an earlier internal consolidation (Appendix H). \textit{baseline} and \textit{sigmoid} have two seeds, \textit{g1gate} and \textit{textinit} three, RF a single seed. RF also contains one weights-only optimizer restart at about 57M tokens, forced by an out-of-memory error. We reloaded the weights and discarded the AdamW moment estimates, so RF is not one uninterrupted optimizer trajectory. The audit verified continuity across that seam: v-ratio and h-ratio identical at the shared checkpoint, a double-covered 600-step overlap diverging only within probe noise, concentration 0.000 on both sides. Concentration was reproducibly zero across both repeated-data baseline seeds, adequate support for the negative claim, and a second fresh-data seed would strengthen it.
+\subsection{Data and evaluation scope}
 
-\subsection{What the RF control does and does not establish}
+RF reduces repetition by changing the training mixture to FineVision. The estimated overlap with the repeated subsets is under 3\% by configured dataset composition, without image-level deduplication. Its shuffle buffer decreases from 1,500 to 500 during training for memory reasons. Domain shift, this ordering change and the optimizer restart prevent interpreting RF as an isolated causal test of repetition. RF's signatures are evaluated on The Cauldron probes, so the absence result is specific to that evaluation distribution. A matched fresh/repeated FineVision comparison and a second RF seed are direct follow-ups.
 
-RF has no distinct seen split, so we cannot run for it the \texttt{val\_seen} / \texttt{val\_unseen} comparison that exposes memorization in the repeated arms. The weaker statement its data supports is the falling-slope statement of Section 3. Its streaming shuffle buffer dropped from 1500 to 500 examples partway through, again for memory, so stream ordering is not homogeneous, though the $\mathrm{Sink}^{0.3}_{1}$ = 0.000 result and the h-ratio rise hold within each regime separately. Its probe batch is still the fixed repeated-\texttt{the\_cauldron} tail used by the other arms. That keeps RF's signatures comparable to theirs, which is what the negative result needs, at the cost of measuring them on data from the other distribution. And RF buys lower repetition by changing dataset, so it trades the repetition confound for a domain-shift one, and we chose the fresh pool to minimize shift. The under-3\% overlap figure is config-level, not image-level (Section 3), and the third, domain-matched control we did not run is the known follow-up.
-
+\FloatBarrier
+\clearpage
 \section{Supporting figures}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig1_layerhead_grid.pdf}
-  \caption{\textbf{Where concentration lives in the network.} Mean attention to pos0 for each of the 270 (layer, query-head) pairs through training, row-normalized, seed 0 for every arm, run to each arm's final checkpoint (174M tokens baseline, 103M g1gate, 102M sigmoid, 60M textinit, 1B RF). baseline and RF stay cold throughout. textinit is hot from initialization. sigmoid lights up a band of mid-network layers.}
+  \caption{\textbf{First-position attention by layer and query head.} Initialization, an intermediate checkpoint near one quarter of each run's steps, and the final probe, seed 0. Rows within each panel are layers and columns query heads; inset numbers are optimizer steps. Attention is row-normalized for sigmoid. All panels share a scale saturated at 0.6. Run endpoints are those of Figure 2.}
   \label{fig:figA1}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig3_perhead_scatter.pdf}
-  \caption{\textbf{No consistent-sign head-level relationship.} Concentration against value-norm ratio for each (layer, KV-group) pair at each arm's final checkpoint, seed 0, at n = 90 pairs per arm. Grouping this way avoids triplicating each value-norm observation across the 3 query heads that share it, so these correlations are descriptive and we report no p-values (\S3.3). The sign of the correlation flips by arm, from +0.76 in baseline to $-$0.79 in textinit (Table 3). The pooled cloud is weak, at $-$0.20, only because arms of opposite sign cancel. Do not read it as an uncorrelated cloud. Most individual arms show a strong |r|.}
+  \caption{\textbf{Concentration--value-norm associations by condition.} Each point is one layer/KV-group pair, 90 per condition, at the final available seed-0 reprobe. Attention averages the group's three query heads; its value ratio is counted once. Pearson correlations match Table 3. The observations are descriptive and retain dependence between groups within a layer.}
   \label{fig:figA2}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig5_entropy.pdf}
-  \caption{\textbf{Entropy collapse tracks concentration only.} Mean attention entropy through training, seed 0, to each arm's final checkpoint. Only sigmoid and textinit collapse. baseline, g1gate, and RF stay flat. The entropy-collapse correlate from the text-LM literature therefore follows the concentration axis, not the norm axes.}
+  \caption{\textbf{Entropy of attention over key positions.} Shannon entropy of the query-averaged key distribution, normalized by log(128), then averaged over heads and layers, seed 0. This is marginal entropy, not the average entropy of individual attention rows. Checkpoints are joined by lines; initialization is placed at 0.02M tokens for the logarithmic axis.}
   \label{fig:figA3}
 \end{figure}
 
+\FloatBarrier
 \section{Full per-seed signature table}
 
-This table gives the per-seed values behind the collapsed ranges of Table 1, and adds the maximum attention$\rightarrow$pos0 where we have it. We logged that metric for seeds 1 and 2 only, because the seed-0 archive summary does not include it. We trust the seed-0 values from a checksummed archive rather than re-derive them first-hand (Section 5). Each arm is read at its final matched checkpoint. All three signatures of \textit{textinit} have plateaued at 60M tokens, and its h-ratio changes by less than 10\% from 60M to 100M in the seeds that continued.
+Table 4 provides the values summarized in Table 1. Seed-0 entries use the archived matched-budget table, while Figure 2 uses full live trajectories, including baseline's later 174M endpoint. A dash denotes a maximum not retained in this table's source; it does not mean the metric is unavailable in the trajectory logs.
 
 \begin{center}
+\begin{minipage}{\linewidth}
+\makeatletter\def\@captype{table}\makeatother
+  \centering
   \small
+  \caption{\textbf{Per-seed signatures at the comparison checkpoints.}}
   \begin{tabular}{lccccccc}
     \toprule
     arm & seed & tokens & $\mathrm{Sink}^{0.2}_{1}$ & mean attn$\rightarrow$pos0 & max attn$\rightarrow$pos0 & v-ratio & h-ratio \\
@@ -419,108 +412,116 @@ This table gives the per-seed values behind the collapsed ranges of Table 1, and
     textinit & s2 & 60M & 0.578 & 0.232 & \textasciitilde{}0.59 & 0.484 & 12.2 \\
     \bottomrule
   \end{tabular}
+\end{minipage}
 \end{center}
 
-\textit{baseline} and \textit{sigmoid} are tight across both of their seeds. \textit{textinit} is the loose arm. Seed 0 sits far above the other two on every signature at once, at Sink 0.85 against 0.56--0.58, mean attn$\rightarrow$pos0 0.63 against 0.23, and h-ratio 42.5 against 5.5--12.2. The h-ratio has plateaued by 60--100M tokens in both lower seeds, so the spread is genuine seed sensitivity rather than an unconverged transient. Part of it is positional (Appendix E.2).
+The textinit h-ratio is much larger at seed 0 than at seeds 1 and 2. This variation persists in the later supplementary norm profiles, which also show spatial differences (Appendix E.1). Small g1gate concentration fractions indicate a few heads above 0.2; some seed-0 probes also cross 0.3, as shown in Figures 7 and 8.
 
-A note on g1gate. Both seeds with max-attention data show one head at about 0.21--0.22 maximum attention$\rightarrow$pos0. That single head does clear the strict $\epsilon$ = 0.2 threshold, which is why the arm's $\mathrm{Sink}^{0.2}_{1}$ is small but not exactly zero, and no head comes close to the $\epsilon$ = 0.3 default of \cite{ref6}. The arm mean meanwhile stays near 0.07 and $\mathrm{Sink}^{0.2}_{1}$ stays far below 0.05. That pattern repeats across seeds.
+\FloatBarrier
+\section{Per-position attention and norm profiles}
 
-\section{Per-position attention mass (seed 0)}
-
-This table gives the mean and max-head attention mass by position at seed 0. It confirms that position 0 is the maximum-mass token in every arm, by mass rather than by argmax count alone. It is the direct check behind the position-0 anchoring defense of Section 5.
+Table 5 reports raw attention weights from the final available seed-0 checkpoint reprobes, averaged over valid queries and the batch. Softmax weights are normalized; sigmoid weights are raw and unnormalized. The sigmoid row therefore describes absolute gate weights, distinct from the normalized concentration in Table 1.
 
 \begin{center}
+\begin{minipage}{\linewidth}
+\makeatletter\def\@captype{table}\makeatother
+  \centering
   \small
-  \begin{tabularx}{\linewidth}{lcccX}
+  \caption{\textbf{Raw first-position attention in checkpoint reprobes, seed 0.}}
+  \begin{tabularx}{\linewidth}{lccX}
     \toprule
-    arm & mass@pos0 (mean) & max-head@pos0 & argmax-mass position & reading \\
+    arm & mean at pos0 & maximum head at pos0 & position with greatest mean weight \\
     \midrule
-    baseline & 0.06 & 0.17 & 0 & pos0 max; diffuse (no sink) \\
-    g1gate & 0.07 & 0.23 & 0 & pos0 max; diffuse \\
-    sigmoid & 0.30 & 0.66 & 0 & pos0 max; broad raw-sigmoid mass \\
-    textinit & 0.63 & 0.99 & 0 & pos0 max; razor spike (pos1 = 0.009) \\
+    baseline & 0.059 & 0.165 & 0 \\
+    g1gate & 0.068 & 0.234 & 0 \\
+    sigmoid & 0.301 & 0.659 & 0 \\
+    textinit & 0.627 & 0.986 & 0 \\
+    RF & 0.044 & 0.094 & 1 \\
     \bottomrule
   \end{tabularx}
+\end{minipage}
 \end{center}
 
-\subsection{Per-position scan at the remaining seeds, and for RF}
+\subsection{Spatial checks and image-only norm comparison}
 
-We re-dumped per-position attention mass at the other seeds and for RF, and per-position residual and value norms for all three \textit{textinit} seeds. The table gives the position at which each quantity peaks (for value norms, the position at which the norm is smallest).
+The supplementary norm scan records extrema within the first 20 image positions. Table 6 reports that scan alongside the attention-profile checks; dashes denote quantities not included for those seeds. These positions are scan extrema, not proven global extrema over all 128 positions.
 
 \begin{center}
+\begin{minipage}{\linewidth}
+\makeatletter\def\@captype{table}\makeatother
+  \centering
   \small
-  \begin{tabularx}{\linewidth}{lccccX}
+  \caption{\textbf{Positions of attention maxima and norm extrema in supplementary scans.}}
+  \begin{tabular}{lcccc}
     \toprule
-    run & seed & attention-mass argmax & residual-norm peak & value-norm minimum & reading \\
+    run & seed & attention maximum & residual maximum & value minimum \\
     \midrule
-    baseline & s0, s1 & 0 & --- & --- & pos0 max \\
-    g1gate & s0, s1, s2 & 0 & --- & --- & pos0 max \\
-    sigmoid & s0, s1 & 0 & --- & --- & pos0 max \\
-    textinit & s0 & 0 & 0 & 0 & all three coincide \\
-    textinit & s1 & 0 & 1 & 5 & norms move off pos0 \\
-    textinit & s2 & \textbf{1} & \textbf{13} & \textbf{13} & attention separates from coincident norm extrema \\
-    RF & s0 & 1 & --- & --- & mass 0.053 vs 0.044 at pos0, diffuse, not a sink \\
+    baseline & s0 & 0 & 0 & 1 \\
+    baseline & s1 & 0 & --- & --- \\
+    g1gate & s0 & 0 & 6 & 6 \\
+    g1gate & s1, s2 & 0 & --- & --- \\
+    sigmoid & s0 & 0 & 14 & 13 \\
+    sigmoid & s1 & 0 & --- & --- \\
+    textinit & s0 & 0 & 0 & 0 \\
+    textinit & s1 & 0 & 1 & 5 \\
+    textinit & s2 & 1 & 13 & 13 \\
+    RF & s0 & 1 & 0 & 0 \\
     \bottomrule
-  \end{tabularx}
+  \end{tabular}
+\end{minipage}
 \end{center}
 
-Two readings follow. Position 0 remains the maximum-mass token in every arm with a randomly initialized decoder, so the pos0 anchoring holds where the central negative result lives. In \textit{textinit} the three signatures need not share a token, which is the positional dissociation of Appendix I and the reason the pos0-anchored textinit magnitudes at seeds 1 and 2 understate that arm's peaks.
+At RF step 64,000, the image-only residual-norm ratio is 2.516 and the value-norm ratio 0.623. These supplementary ratios first average norms over layers and, for values, KV groups, then divide position 0 by the median across image positions 1--48. They retain the qualitative norm asymmetry with an image-only reference, but are not numerically interchangeable with the main layer-averaged, mixed-position ratios. The scan has no matched initialization profile and does not independently establish the twofold growth.
 
+For textinit seed 1, the attention maximum stays at position 0 while the residual maximum and value minimum occur at positions 1 and 5. At seed 2, attention peaks at position 1 and both norm extrema at position 13. Measuring at the attention maximum in the seed-2 supplementary profile gives an h-ratio of 9.46, below the position-0 ratio of 14.70. Spatial separation therefore does not make the reported position-0 ratios lower bounds on the norm ratio at the attention sink.
+
+\FloatBarrier
 \section{Measurement and rendering details}
 
-\paragraph{Figure 2 smoothing} Paths are smoothed with a moving average, 5 points on the horizontal axis and 9 on the vertical. The faint dots behind each path are the unsmoothed per-probe values, and the initialization and final markers use raw values.
+\paragraph{Figure 2 trajectories} Moving-average windows contain five probes horizontally and nine vertically. Faint points show unsmoothed values; open circles and final diamonds use raw endpoints. All conditions use seed 0 and their full available trajectories. The horizontal maximum and the thresholded fraction in Table 1 are different summaries of the same head-level attention scores.
 
-\paragraph{Correlations at the uncollapsed 270 pairs} Table 3 collapses to the 90 (layer, KV-group) observations. At the uncollapsed 270 (layer, query-head) pairs the same quantities read +0.67 for baseline, +0.53 for g1gate, $-$0.03 for sigmoid, $-$0.76 for textinit, and +0.43 for RF. Every sign and every ordering survives the collapse.
+\paragraph{Group correlations} Table 3 uses the final available per-head reprobes: baseline step 18,287; g1gate 10,786; sigmoid 10,664; textinit 6,244; RF 64,000. The RF reprobe precedes its final live probe. Value ratios are retained per KV group, with attention averaged over the group's query heads. Uncollapsed query-head correlations are +0.67, +0.53, $-$0.03, $-$0.76 and +0.43 respectively. Collapsing preserves their signs. Neither aggregation removes layer dependence.
 
-\paragraph{Raw against row-normalized sigmoid attention} Row-normalization changes the object being measured, and Gu et al. \cite{ref6} state their result for \textit{unnormalized} sigmoid attention. Head L7H3 of the sigmoid arm sends 0.873 of its row-normalized attention to position 0 at the final checkpoint, which is the arm maximum. Its raw gate mass to position 0 is 0.065, and the raw mass summed over all keys in that row is 0.110. The row does not sum to one, and pos0 takes about 59\% of what little gate mass the head opens at all. Early in training the same head shows the opposite picture: raw pos0 mass 0.309 against a raw row sum of 6.44, so under 5\% of a very large gate budget. The concentration this arm develops is therefore a relative reallocation of a shrinking gate budget onto position 0, not the growth of a large absolute mass there (Appendix I). Raw and row-normalized values here come from the same fixed probe batch as every other number in this paper, masked to valid query positions.
+\paragraph{Raw and normalized sigmoid weights} Gu et al. \cite{ref6} also row-normalize proxy weights when measuring sinks in models trained with unnormalized sigmoid attention. Our normalized diagnostic is consistent with that distinction between measurement and forward computation. In the saved sigmoid reprobe, head L7H3 has mean normalized first-position attention 0.873 at step 10,664, raw first-position weight 0.065, and mean total raw row weight 0.110. At step 250, the corresponding raw quantities are 0.309 and 6.44. The growing relative concentration thus accompanies a shrinking absolute weight budget. The ratio of mean raw weights, about 0.59 at the endpoint, differs from the mean normalized attention, 0.873, because averaging and division do not commute.
 
-\paragraph{Sigmoid heat-map provenance} The sigmoid column of Figure 3 uses head L7H3 (0-indexed), the arm's top sink head on the fixed probe batch. An earlier dump selected heads by raw, unnormalized gate score, picked different heads, and understated the arm. The sigmoid heat maps are re-rendered from an auxiliary streaming batch, because the saved matrices covered the superseded heads. Every printed sigmoid number, in the text and in the tables, comes from the fixed probe batch. The pos0 share printed on each panel is computed over valid query positions, the same convention as the tables.
+\paragraph{Figure 3 batches and selection} The panels show batch-mean matrices over 128 positions: 49 image positions followed by left-padded text. They do not correspond to a single prompt. Each matrix is normalized by row after batch averaging, whereas the headline probe averages normalized weights over valid queries. Scalar headline measurements are therefore not overlaid on the qualitative matrices.
 
-\section{Interpretation (untested hypotheses)}
+For baseline, g1gate and textinit, we choose the higher final-checkpoint first-position share among the two heads retained in the original matrix dump, then hold that head fixed across displayed checkpoints. These are L1H1, L5H5 and L18H8 respectively, using zero-based indices. The sigmoid panels use L7H3, selected using normalized attention in the checkpoint reprobe and regenerated from a streaming batch. The exact decoded text strings were not retained with the matrix archive.
 
-This appendix is \textbf{speculative}. Nothing in it is tested by our experiments, and none of it is a claim of this paper. We include it because a reader is entitled to ask \textit{why} the signatures come apart, and because these hypotheses are cheap to state and testable later.
+Bright off-position-0 cells show query-specific attention to other keys. For example, the final sigmoid map has strong cells in the text-to-text region. Such isolated cells do not by themselves establish a persistent sink or identify the semantic role of the attended tokens. Padding and batch averaging also affect the qualitative display. The common power-law color scale uses exponent 0.5 and saturates at 0.5.
 
-Gu et al. \cite{ref6} account for the sink as a key bias. Softmax must distribute a full unit of attention mass per row, and a head with nothing informative to retrieve parks the surplus on a token whose value contributes little. If that account is right, each of our levers touches a different part of it, which would explain why each moves a different axis.
+\FloatBarrier
+\section{Mechanistic hypotheses}
 
-\begin{itemize}\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}
-  \item \textit{g1gate.} An output gate can suppress whatever the attended position injects into the residual stream. A model with that gate may be able to \textit{afford} concentration, because concentration no longer forces a matching change in the value path. That would be consistent with a gate whose measured effect here is on the value-norm axis rather than the concentration axis. Fesser et al. \cite{ref23} make a compatible argument from another direction. They distinguish two kinds of sink. An ``adaptive nop'' head suppresses its own update by routing attention to a token whose value contributes nothing, and a negligible value norm identifies it. A broadcast head instead spreads global information. They note that gating implicitly assumes the nop mechanism. If that is right, a gate should act on the value-norm axis first, which is where our gated arm differs from baseline.
-  \item \textit{sigmoid.} Removing the softmax removes the sum-to-one constraint itself. A head with nothing to retrieve can simply attend weakly to everything, with no surplus to park. On this reading the value amplification we observe is what the value path does when it is no longer compensating for a forced allocation.
-  \item \textit{textinit.} A pretrained text decoder arrives with sink machinery already built. Our observation that its norm signatures are present at step 0 while concentration crosses later would then reflect import of structure followed by re-targeting onto a visual prefix, rather than formation from scratch.
-\end{itemize}
+The following explanations motivate future controls. They are not established by the signature measurements.
 
-Each of these is a hypothesis about mechanism. Testing them needs interventions we did not run: gate-scale sweeps that separate gating from the half-scale confound of Section 3, sigmoid runs at matched effective attention temperature, and text-initialized runs with the sink machinery ablated before alignment.
+An output gate could reduce the need to suppress a value vector, consistent with the milder value drain in g1gate. A scale-matched ungated control is needed to distinguish that explanation from initial output scaling. Under sigmoid attention, removing the sum-to-one constraint permits a small total attention update; testing how this relates to value amplification requires measuring effective updates as well as norms. Text initialization may transfer a first-position circuit to the visual prefix. Ablating that circuit before alignment would test its role in the inherited profile.
 
-\section{Notes on metric hygiene}
+\FloatBarrier
+\section{Metric provenance}
 
-We record three corrections that we made during the audit of the numbers in this paper. First, an earlier internal consolidation mixed two metrics in one column, mean and max attention$\rightarrow$pos0, and thereby manufactured an apparent seed anomaly in \textit{g1gate}. Re-derived like-for-like, the anomaly disappears, and g1gate becomes the most reproducible arm. Second, an earlier draft claimed that the residual-norm peak of textinit ``stays pinned at pos0.'' We checked that claim against the norm dump. It is wrong. The $\|$h$\|$ peak sits at pos0, pos1 or pos13, depending on the seed (Appendix E.2). That is the positional dissociation reported in Appendix I, which states the corrected form. Third, the per-position script normalized the profile over a 20-position display slice rather than the full 128, which inflated the reported RF masses to 0.100 and 0.083. The true full-sequence values are \textbf{0.053 at pos1 and 0.044 at pos0}. The diffuse-profile reading is unchanged, and the softmax-arm rows of Appendix E were unaffected, because those profiles already sum to one over the full sequence.
+The main per-seed table, live trajectories and checkpoint reprobes are distinct products. Mean attention, maximum attention and the fraction above a threshold are reported under separate names. Positional attention profiles use weights over the full sequence, without renormalizing a displayed slice. Position-0 norm ratios remain labeled by their anchor even when supplementary scans find larger norms elsewhere.
 
-\section{I. ordering, the sigmoid measurement note, and positional dissociation}
+\FloatBarrier
+\section{Threshold ordering and spatial dissociation}
 
-This appendix holds the detail behind the ordering paragraph of Section 4.1.
-
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/fig4_leadlag_top.pdf}
-  \caption{\textbf{When each signature first crosses threshold.} Seed 0 throughout. Time-to-event tracks spanning the tokens over which we observed each arm (60M to 1B). A filled marker is the first probe at which a signature crossed its threshold (h$>$2, v$<$0.8, attn$\rightarrow$pos0$>$0.3). A hollow marker at a track's end means it never crossed. \textbf{Crossing times are interval-censored} at the 100-step probe cadence (head-level map in Fig. A5).}
+  \caption{\textbf{First threshold crossings during training.} Filled markers indicate the first recorded crossing of h-ratio $>$ 2, v-ratio $<$ 0.8, or maximum attention $>$ 0.3. Hollow markers mark conditions with no observed crossing by the end of the track. Initialization is placed at 0.04M tokens on the log axis. Crossing times are interval-censored by the 100-step probe cadence. All runs use seed 0.}
   \label{fig:figA4}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=1.0\linewidth]{figures/figA4_birthmap.pdf}
-  \caption{\textbf{Birth-maps.} The step at which each (layer, query-head) pair first crosses the concentration threshold (attn$\rightarrow$pos0 $>$ 0.3), seed 0, for the three arms in which any head crosses. No \textit{baseline} and no \textit{RF} head ever crosses. 1\% of \textit{g1gate} heads do, against 89\% for \textit{sigmoid} and 87\% for \textit{textinit}. This is the head-level view behind Fig. A4.}
+  \caption{\textbf{First concentration crossing by layer and query head.} Colors show the first step with mean attention to position 0 above 0.3; white cells never cross during the recorded trajectory. The fractions crossing at least once are 1\% for g1gate, 89\% for sigmoid and 87\% for textinit. Baseline and RF have no crossing heads. Layers increase downward and query-head indices increase to the right.}
   \label{fig:figA5}
 \end{figure}
 
-\paragraph{Timings} In the softmax arms with randomly initialized decoders, \textit{baseline} and \textit{g1gate} and \textit{RF}, the residual-norm ratio crosses its threshold within the first few to about 15M tokens and value-drain follows within about 50M. Concentration never comes. No baseline or RF head ever crosses it, and g1gate reaches 1\% of heads, a single-layer blip late in training. \textit{sigmoid} mirrors that pattern, with concentration crossing at about 6M tokens and 89\% of heads eventually, against 87\% for \textit{textinit}, while neither \textit{sigmoid} norm signature ever crosses (Fig. A5). \textit{textinit} inherits its norm signatures rather than growing them. Value-drain and an elevated residual-norm ratio are both present at 0 tokens, imported with the pretrained text-LM weights. Concentration is \textit{not} inherited the same way, since $\mathrm{Sink}^{0.3}_{1}$ is 0.000 at step 0 and crosses before 1M tokens. Even in the arm that imports the most sink structure, the norm signatures precede concentration. Crossing times are interval-censored at the 100-step probe cadence, so two signatures that cross within one interval should not be read as ordered.
+\paragraph{Ordering} In baseline, residual-norm ratio first exceeds 2 at 3.82M tokens and value-norm ratio falls below 0.8 at 11.45M, with no concentration crossing. G1gate crosses the norm thresholds at 5.72M and 20.98M, then crosses concentration at 55.32M in a small number of heads. Sigmoid crosses concentration at 5.72M without crossing either norm threshold. Textinit starts above the residual threshold and below the value threshold, then crosses concentration by 0.95M tokens. RF crosses the norm thresholds at 14.44M and 51.64M without crossing concentration. These are first observed events, not guarantees of sustained crossings.
 
-\textbf{The sigmoid arm needs one measurement note}, because row-normalization changes the object being measured and Gu et al. \cite{ref6} state their result for \textit{unnormalized} sigmoid attention. The concentration this arm develops is a \textbf{relative} reallocation of a shrinking gate budget onto position 0, not the growth of a large absolute mass there (Appendix F). We report the row-normalized view in the tables so the arms stay comparable.
-
-\paragraph{Entropy collapse} Attention-entropy collapse, the text-LM literature's usual correlate of concentration, separates the same way: only \textit{sigmoid} and \textit{textinit} collapse (Fig. A3). It tracks the concentration axis, not the norm axes.
-
-\paragraph{The signatures also dissociate in position} A per-position scan across all three \textit{textinit} seeds shows they need not share a token. At seed 0 they coincide at position 0. At seed 1 the attention maximum stays there while the residual peak moves to pos1 and the value minimum to pos5. At seed 2 they separate furthest, attention at \textbf{pos1} and both norm extrema at \textbf{pos13}. The arms with randomly initialized decoders behave differently: position 0 stays the maximum-mass token in \textit{baseline}, \textit{g1gate} and \textit{sigmoid} at every seed scanned, and in \textit{RF} the attention argmax sits at pos1 with mass 0.053 against 0.044 at position 0, a diffuse profile rather than a sink (Appendix E).
-
-We report this as a supporting observation, not a second headline. It has one consequence for measurement. All three metrics anchor on position 0, so the \textit{textinit} magnitudes at seeds 1 and 2 are read at a token that is no longer the peak and therefore \textbf{understate} the arm's true peaks, a further reason to report that arm as a range and a median (Sections 4.1 and 5). The anchoring holds for the randomly initialized decoders, which carry the central negative result.
+The norm extrema also separate spatially in textinit (Appendix E.1). Together with the temporal patterns, this supports tracking each signature with its own threshold, position and aggregation, rather than inferring one from another.
 
 
 \newpage

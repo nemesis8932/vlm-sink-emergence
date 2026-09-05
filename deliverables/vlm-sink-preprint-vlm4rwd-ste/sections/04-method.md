@@ -1,101 +1,86 @@
 # 3. Setup
 
-## 3.1 Model and arms
+## 3.1 Model and training conditions
 
-All runs use a 222M-parameter nanoVLM [17], in which a pretrained, trainable SigLIP-B/16
-vision encoder [18] feeds a decoder with the SmolLM2-135M architecture [19] through a
-learned projector (Fig. 1A). The decoder has 30 layers of grouped-query attention, 9 query heads per layer
-sharing 3 KV heads, so there are 270 (layer, query-head) pairs but only 90 (layer, KV-group)
-value projections. Section 4.3 depends on that distinction. Each sequence is 49 image tokens as a
-causal prefix followed by 79 left-padded text tokens, 128 in all. There is no BOS token, so
-**position 0 is the first image token**.
+All runs use a 222M-parameter nanoVLM [17]. A pretrained, trainable SigLIP-B/16 encoder [18]
+feeds a SmolLM2-135M-architecture decoder [19] through a learned projector (Figure 1).
+The decoder has $L=30$ layers, $H=9$ query heads per layer and $G=3$ KV groups, giving
+270 layer/query-head pairs and 90 distinct value projections. Each sequence contains
+49 image tokens followed by 79 left-padded text positions. There is no BOS token;
+position 0 is the first image token.
 
-Four training levers each change one thing, and everything else stays byte-identical
-across arms. *baseline* is plain softmax attention. *g1gate* adds an elementwise σ-gate on
-the attention output, zero-initialized, after SDPA, the G1 gate of Qiu et al. [20].
-*sigmoid* replaces the softmax with an unnormalized sigmoid, after Gu et al. [6]. *textinit*
-keeps softmax but loads the pretrained SmolLM2-135M decoder, so it imports whatever
-first-position structure text pretraining built into it (Section 4.1). The decoder starts from
-random weights in every other arm, and the vision encoder is pretrained in all four. The
-first two levers have established sink effects in text-only models. *textinit* has no
-precedent and is an inheritance control. *sigmoid* also tests the standard account of why a sink forms: softmax makes
-every attention row sum to one, so a head with nothing to retrieve must park its mass
-somewhere [6]. One caveat on the gate. Unlike Qiu et al. [20], we initialize it at exactly
-zero, so it opens at σ(0) = 0.5 and the arm starts as a half-scale output intervention as well
-as a gated one. We write "Qiu-style G1 in our zero-initialized variant" throughout (Section 5).
+<figure id="fig0">
+<img src="figures/fig0_overview.tex" alt="Overview: pipeline, position 0 and the probe">
+<figcaption><b>Figure 1: Model and measurement setup.</b> The image encoder and projector
+produce a 49-token visual prefix. The decoder receives this prefix followed by text.
+Position 0 is the first image token. Probes measure attention concentration, projected
+value norms and residual-stream norms every 100 steps. Decoder initialization is random
+except in <em>textinit</em>; RF uses the baseline architecture on a larger image pool.</figcaption>
+</figure>
 
-## 3.2 Data and the two training regimes
+The four conditions share the architecture and training recipe except for the specified
+attention operation or decoder initialization. *baseline* uses softmax attention.
+*g1gate* adds the head-specific elementwise sigmoid gate of Qiu et al. [20] after attention
+aggregation and before the output projection. Our gate weights start at zero, making its
+initial output multiplier $\sigma(0)=0.5$. *sigmoid* replaces softmax with unnormalized
+sigmoid attention [6]. *textinit* retains softmax and loads pretrained SmolLM2-135M decoder
+weights as an inheritance control. All other decoders start from random weights.
+The gated comparison therefore includes both learned gating and initial output scaling.
 
-The four-arm comparison trains on four curated subsets of `the_cauldron` [21], about 146K
-images, matched at about 100M tokens per arm. *textinit* stops at 60M, where its signatures
-have plateaued (Section 4.1). *baseline* and *sigmoid* have two seeds, *g1gate* and *textinit*
-three. The optimizer is AdamW with weight decay 0.1, following [6], gradient clip 1.0 and a
-cosine schedule with 3% warmup (Appendix A).
+## 3.2 Data and training
 
-At 100M tokens the 146,731-image pool has been cycled about nine times (1.34M samples), a
-high visual-epoch count. The RF arm (random-fresh) answers that objection. It re-trains the *baseline* recipe on a fresh
-FineVision stream [22] to 1B tokens over about 4.6M natural images, at 2.39 effective visual
-epochs. Each example is seen 2.39 times on average, so RF is low-repetition rather than
-repetition-free. We estimate the overlap between the fresh pool and the
-repeated subsets at under 3%, from config-level composition rather than image-level
-deduplication. RF has one seed. Swapping datasets trades the repetition confound for a
-domain-shift confound (Section 5).
+The four-condition comparison uses the VQAv2, COCO-QA, A-OKVQA and VSR subsets of
+The Cauldron [21], containing 146,731 images. Table 1 compares checkpoints near 100M
+tokens, or 60M for *textinit*; full trajectories retain the available later checkpoints.
+*baseline* and *sigmoid* have two seeds each, and *g1gate* and *textinit* have three.
 
-Training stays healthy in every reported run (held-out losses in Appendix A). Two cautions.
-The lower *textinit* loss reflects its pretrained decoder, not the lever, so only *baseline*,
-*g1gate* and *sigmoid* are matched on tokens and initialization, differing in the attention
-lever alone. And the
-repeated-data arms show a large train–validation gap (`val_seen` near 0.44 against
-`val_unseen` near 1.18), the overfitting signal that motivates RF. RF has no `val_seen` split,
-since at 2.39 visual epochs its loader would re-use the held-out pool, so we report
-`val_unseen` only. It ends at 0.638 with a negative fitted slope over the second half,
-individual evaluations fluctuating (Section 5).
+At 100M tokens, training has sampled this image pool about nine times. We also train
+the baseline architecture on a larger FineVision stream [22], about 4.6M images, to
+1B tokens at 2.39 effective visual epochs. This random-fresh run, *RF*, has one seed.
+It tests persistence under lower repetition, with dataset shift considered in Section 5.
+Token budgets count image tokens plus non-padding text tokens.
 
-## 3.3 Three signatures, tracked separately
+Training uses AdamW, weight decay 0.1, gradient clipping at 1.0, and a cosine learning-rate
+schedule with 3% warmup. Appendix A gives learning rates, precision, batches and validation
+splits; Appendix B records RF's optimizer restart and data-ordering changes.
 
-We log the three sink symptoms the text-LM literature reports together, each at its own
-granularity, following Gu et al. [6] at fixed sequence length. Let $a_{l,h}$ be the mean
-attention that head $(l,h)$ sends to position 0, and $\|v^{(l)}_i\|$ and $\|h^{(l)}_i\|$
-the value-vector and residual-stream norms at position $i$ in layer $l$, all averaged over
-valid query positions and the fixed probe batch. An overline denotes the mean over the other
-valid positions $i > 0$. The decoder has $L = 30$ layers, $H = 9$ query heads and $G = 3$ KV
-groups.
+## 3.3 Signature definitions
 
-*Concentration* is the share of (layer, query-head) pairs whose attention to position 0
-exceeds a threshold, the metric of [6],
+Every 100 optimizer steps, we evaluate the same 32-example probe batch and validate the
+probe against the model's forward pass (Appendix A). Let $a_{l,h}$ be attention to position 0,
+averaged over all non-padding query positions except position 0 itself, pooled across the
+batch. Sigmoid weights are row-normalized for this diagnostic, following [6]; the model's
+forward pass remains unnormalized. We report raw sigmoid weights separately in Appendix F.
+
+*Concentration* is the fraction of query heads exceeding a threshold,
 
 $$
-\mathrm{Sink}^{\epsilon}_1 = \frac{1}{LH}\sum_{l=1}^{L}\sum_{h=1}^{H} \mathbf{1}\!\left[a_{l,h} > \epsilon\right].
+\mathrm{Sink}^{\epsilon}_1=\frac{1}{LH}\sum_{l=1}^{L}\sum_{h=1}^{H}
+\mathbf{1}[a_{l,h}>\epsilon].
 $$
 
-We use their $\epsilon = 0.3$ default and check $\epsilon \in \{0.2, 0.4\}$. Cross-arm
-tables report the stricter $\epsilon = 0.2$, which makes an absence claim harder to pass.
+We use $\epsilon=0.3$ [6] and check 0.2 and 0.4. Table 1 uses 0.2, a lower threshold
+that makes the absence of concentration harder to establish. Figure 2 instead uses
+$a_{\max}=\max_{l,h}a_{l,h}$, the continuous maximum attention across all 270 pairs.
 
-*Value-norm ratio* compares the value norm at position 0 with the rest of the sequence,
-
-$$
-\text{v-ratio} = \frac{1}{L}\sum_{l=1}^{L} \frac{\|v^{(l)}_0\|}{\overline{\|v^{(l)}_{i}\|}},
-$$
-
-below 1 under value-drain [4] and above 1 under amplification. A value vector is shared by
-the 3 query heads of its KV group, so the ratio rests on $LG = 90$ distinct projections, not
-270 (Section 4.3).
-
-*Residual-norm ratio* is the same ratio on the residual stream,
+*Norm ratios* compare position 0 with the remaining valid image and text positions.
+For sample $b$, position $i$, layer $l$ and KV group $g$, define
+$m^{(l)}_{b,i}=G^{-1}\sum_{g=1}^{G}\|v^{(l,g)}_{b,i}\|_2$ and
+$r^{(l)}_{b,i}=\|h^{(l)}_{b,i}\|_2$. Values are measured after the normalized input's value
+projection; residuals are measured at the block input. Let $\langle\cdot\rangle_0$ denote
+the batch mean at position 0 and $\langle\cdot\rangle_+$ the pooled mean over all other
+non-padding positions. Then
 
 $$
-\text{h-ratio} = \frac{1}{L}\sum_{l=1}^{L} \frac{\|h^{(l)}_0\|}{\overline{\|h^{(l)}_{i}\|}}.
+\text{v-ratio}=\frac{1}{L}\sum_{l=1}^{L}
+\frac{\langle m^{(l)}\rangle_0}{\langle m^{(l)}\rangle_+},
+\qquad
+\text{h-ratio}=\frac{1}{L}\sum_{l=1}^{L}
+\frac{\langle r^{(l)}\rangle_0}{\langle r^{(l)}\rangle_+}.
 $$
 
-We call it a massive-activation proxy, since the literature defines massive activations by
-channel-level outliers [2, 5], which we never measured (Section 5).
-
-All three anchor on position 0 by construction, and we check that choice. At seed 0,
-per-position attention mass makes position 0 the maximum-mass token in every arm (Appendix
-E), and Section 5 covers the seed-level exception. The *sigmoid* arm reports the row-normalized
-attention view, which keeps concentration comparable across arms, and we also log the raw
-sigmoid mass (Appendix F).
-
-A probe recomputes all three from the live weights every 100 optimizer steps, on the same
-32-sample batch for every run and seed, and validates itself against the real forward pass
-on every call (Appendix A).
+A v-ratio below 1 indicates relative value-norm drain, and above 1 amplification.
+The main v-ratio averages 30 layer ratios after pooling the three KV-group norms within
+each layer. Section 4.3 separately retains all 90 group ratios. The h-ratio measures
+residual-norm asymmetry and serves as a proxy for channel-level massive activations [2, 5].
+Appendix E checks how position-0 measurements relate to extrema elsewhere in the sequence.

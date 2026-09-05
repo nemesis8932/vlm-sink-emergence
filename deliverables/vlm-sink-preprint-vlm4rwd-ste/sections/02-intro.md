@@ -1,70 +1,48 @@
 # 1. Introduction
 
-Decoder-only transformers pick up a habit early in training. A large share of attention goes to the
-first token or tokens of a sequence, whatever they contain. Streaming inference depends on that
-habit [1], the activation outliers that ride along with it make quantization harder [2],
-and a survey now organizes a subfield around interpreting and removing it [3].
+Decoder-only transformers often allocate disproportionate attention to the first tokens of
+a sequence, even when their content is uninformative. These attention sinks support
+streaming inference [1] and have become a target of interpretation and mitigation [3].
+In text language models, attention concentration often coincides with two other signatures:
+reduced value-vector norms [4, 6] and massive activations in the residual stream [2, 5].
+Their co-occurrence motivates a basic measurement question: do all three remain coupled
+when a model learns from both images and text?
 
-The sink does not arrive alone. Three measurements move together in text language models.
-Attention concentrates on the sink token. The value vector there drops to a near-zero norm, called
-value-state drain [4]. The residual stream there grows an abnormally large norm, called a massive
-activation [2, 5]. These effects settle on the same few tokens [6] and appear near step 1000 [7],
-and the field reads the co-occurrence as permission to treat all three as facets of one
-attention-sink phenomenon.
+Existing results give reasons to distinguish the signatures. Text-model studies report
+joint emergence and causal links between massive activations and attention sinks [7, 8],
+but changes to normalization or value-path gradients can preserve attention sinks while
+suppressing massive activations [9, 10]. These pairwise dissociations leave open how value-norm
+drain varies alongside the other two quantities during multimodal pretraining.
 
-<figure id="fig0">
-<img src="figures/fig0_overview.tex" alt="Overview: pipeline, position 0 and the probe">
-<figcaption><b>Figure 1: Setup.</b> A pretrained SigLIP-B/16 encoder feeds 49 image tokens,
-then 79 text tokens, into a randomly initialized decoder of the SmolLM2-135M architecture.
-There is no BOS token, so position 0 is the first image token. A probe reads three signatures
-there every 100 steps, each at its own granularity. Four levers change one thing each, and RF
-repeats the baseline recipe on a fresh 1B-token stream.</figcaption>
-</figure>
+The distinction matters when evaluating sink interventions. Reducing attention to a token
+does not establish that its value norm or residual activation has changed. A study measuring
+only concentration can therefore miss a persistent norm signature. In vision-language
+models, sink interventions have also been evaluated for hallucination and visual grounding
+[12–15]. Interpreting such interventions requires identifying which internal quantity
+changes, then testing its relationship to behavior. Here we address the measurement step
+by tracking all three quantities throughout training.
 
-Whether they really are one phenomenon is contested. One line argues for causal unity:
-massive activations mathematically require representational compression, and ablating them
-removes both compression valleys and sink formation [7], while a related view holds that
-outlier-driven rescaling by attention and residual sinks is essential to stable training
-[8]. Two recent text-only studies pull the other way, each separating one pair of the
-signatures, by normalization scheme [9] or by value scale [10]. Neither separates all three.
+Multimodal pretraining lets us study this question when the first token carries visual
+content. Our sequences begin with 49 image tokens and contain no BOS token, so position 0
+is the first image token. Earlier multimodal studies distinguish sinks originating in
+vision encoders and language decoders [11, 12]; their training-time evidence uses a
+pretrained decoder and follows a single activation magnitude [11]. We instead follow all
+three signatures from initialization in a model whose decoder starts from random weights,
+with a text-pretrained decoder as an inheritance control.
 
-Which signature a study measures decides what it can conclude. If the three move
-independently, a lever that clears concentration while leaving the value path alone reads as
-a fix under one metric and a failure under the next, and two papers can disagree while both
-are right. Sink-like attention has also been tied to hallucination and weak visual grounding
-in deployed vision–language models [13–16], so a mitigation credited with removing the sink
-may leave the signature that mattered untouched. We measure all three at once, throughout
-training, and test no downstream behavior.
+We use a 222M-parameter nanoVLM [17] to compare softmax attention, output-gated softmax,
+unnormalized sigmoid attention, and pretrained text initialization. The encoder is pretrained
+and trainable in every condition. Probes every 100 steps give a joint view of the signatures
+at 2-3 seeds per condition. A separate softmax run on a larger image pool extends the study
+to one billion tokens at 2.39 effective visual epochs, testing whether residual-norm growth
+without attention concentration persists under lower data repetition.
 
-Vision–language models suit the question, because the multimodal setting changes what position 0
-*is*. Our sequence starts with 49 image tokens and has no BOS token, so the candidate sink token is
-a visual token, without the special-token machinery that text-LM sink accounts lean on. The
-multimodal sink studies we know analyze mostly frozen, already-trained backbones at inference time
-[11, 12], and the one training-time view follows a single magnitude rather than three signatures
-(Section 2). Telling whether the signatures arrive together, in sequence, or independently takes a
-randomly initialized decoder with all three logged separately from step 0.
-
-We work at small scale by choice. The model is a 222M-parameter nanoVLM [17] with a
-pretrained SigLIP-B/16 encoder [18] and a randomly initialized decoder of the SmolLM2-135M
-architecture [19], trained under four levers that each target one sink-relevant mechanism
-(Section 3): softmax attention (*baseline*), a zero-initialized Qiu-style G1 output gate [20]
-(*g1gate*), unnormalized sigmoid attention, which removes the normalization sinks are argued
-to come from [6] (*sigmoid*), and initialization from the pretrained SmolLM2 text model
-(*textinit*). A validated probe logs all three signatures every 100 steps. Because the
-four-arm comparison reuses a small image pool, we re-test the central negative result on a
-fresh stream of one billion tokens (*RF*, 2.39 effective visual epochs).
-
-This paper reports three observations from that setup. Decoupling itself is not new [9, 10]
-and we do not claim it. What is new is the conjunction: all three signatures tracked
-jointly, from step 0, under randomly initialized decoders in a multimodal model, with
-value-norm drain as a third axis. First, across four levers (n = 2–3 seeds per arm) the
-arms reach four different corners of the three-signature space, no two sharing a triple,
-and the value-norm ratio alone is strongly drained, mildly drained or amplified depending on
-the lever (Fig. 2, Table 1). The arms are not a factorial design, so these are
-intervention-associated profiles rather than isolated causal effects. Second, on a fresh
-stream at 2.39 effective visual epochs, with training healthy throughout (Section 3), the
-massive-activation proxy rises from an h-ratio of 1.43 to 3.22, about 2.3×, while
-concentration stays at exactly zero and no head ever crosses the sink threshold (Sections
-4.2 and 5, one seed). Third, the per-head correlation between concentration and value-norm
-flips sign across arms at seed 0, +0.76 in baseline to −0.79 in textinit with a pooled
-−0.20, over 90 KV groups per arm, reported descriptively (Section 4.3).
+The experiments establish three results. First, the training conditions produce distinct
+signature profiles, with value norms reduced or amplified depending on the condition
+(Figure 2, Table 1). Second, in the single-seed 1B-token run, the residual-norm ratio grows
+from 1.43 to 3.22 while attention concentration remains absent at every recorded probe
+(Section 4.2). Third, the concentration–value-norm correlation across layer/KV-group pairs
+changes sign between conditions, from +0.76 under baseline softmax to −0.79 under text
+initialization at seed 0 (Section 4.3). The contribution is joint measurement of these
+three signatures during multimodal pretraining, including value-norm drain beyond the
+two-signature dissociations established in text models [9, 10].

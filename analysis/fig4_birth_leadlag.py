@@ -52,7 +52,7 @@ def main():
     # birth-maps then live in the appendix and their percentages are stated in prose.
     top_only = '--top-only' in sys.argv
     if top_only:
-        fig = plt.figure(figsize=(11, 3.9))
+        fig = plt.figure(figsize=(5.5, 3.4))
         gs = fig.add_gridspec(1, 4)
     else:
         fig = plt.figure(figsize=(11, 7.6))
@@ -67,9 +67,9 @@ def main():
     axT = fig.add_subplot(gs[0, :])
     # signature colors deliberately OFF the arm palette (magenta/teal/black) so a
     # marker's hue can't be misread as an arm identity
-    sig_styles = [('h_ratio_pos0', 2.0, True, '^', 'massive-act  ‖h‖>2', '#B5487A'),
-                  ('v_ratio_pos0', 0.8, False, 's', 'value-drain  ‖v‖<0.8', '#0F7F8B'),
-                  ('max_attn_pos0', EPS_CONC, True, '*', 'concentration  attn→pos0>0.3', '#111111')]
+    sig_styles = [('h_ratio_pos0', 2.0, True, '^', 'h-ratio > 2', '#B5487A'),
+                  ('v_ratio_pos0', 0.8, False, 's', 'v-ratio < 0.8', '#0F7F8B'),
+                  ('max_attn_pos0', EPS_CONC, True, '*', 'max attention > 0.3', '#111111')]
     # wider lane spacing than the first pass — two markers landing at ~the same x
     # (textinit's two "@init" crossings; sigmoid's late massive-act crossing sitting
     # right next to its "never crosses" value-drain marker at track end) were touching
@@ -91,7 +91,7 @@ def main():
         init_dy = []
         for (key, thr, gt, mk, lab, col), dy in zip(sig_styles, LANE):
             t = first_cross_tokens(S, key, thr, gt)
-            ms = 170 if mk == '*' else 80
+            ms = 70 if mk == '*' else 35
             if t is not None:
                 axT.scatter([t], [y + dy], marker=mk, s=ms, color=col, zorder=5,
                             edgecolors='white', linewidths=0.6)
@@ -103,30 +103,27 @@ def main():
         if init_dy:   # one shared label at the vertical center of the co-located markers
             mean_dy = sum(d for d, _ in init_dy) / len(init_dy)
             label_col = init_dy[0][1] if len(init_dy) == 1 else '#444444'
-            axT.text(FLOOR_M * 1.35, y + mean_dy, '@init (inherited)', fontsize=6.6,
+            axT.text(FLOOR_M * 1.35, y + mean_dy, 'init', fontsize=7,
                       color=label_col, ha='left', va='center', style='italic')
     axT.set_yticks(yticks); axT.set_yticklabels(ylabels, fontsize=8.5)
     for tick, arm in zip(axT.get_yticklabels(), ARMS):
         tick.set_color(fc.ARM_COLORS[arm]); tick.set_fontweight('bold')
     axT.set_xscale('log'); axT.set_xlim(FLOOR_M * 0.8, 4000)
     axT.set_ylim(-0.6, len(ARMS) + 1.1)   # headroom so the legend clears baseline's top-lane marker
-    axT.set_xlabel('tokens (millions, log) — shaded track = observed run per arm', fontsize=9)
-    axT.set_title('Lead–lag: when each sink signature first crosses threshold',
-                  fontsize=10, weight='bold')
+    axT.set_xlabel('tokens (millions, log scale)', fontsize=8)
     fc.style_ax(axT)
     handles = [Line2D([0], [0], marker=mk, color=col, lw=0, markersize=10 if mk == '*' else 8,
                       markeredgecolor='white', label=lab) for _, _, _, mk, lab, col in sig_styles]
     handles += [Line2D([0], [0], marker='o', color='#555555', lw=0, markersize=8,
                        label='filled = first crossing'),
                 Line2D([0], [0], marker='o', color='#555555', markerfacecolor='white',
-                       lw=0, markersize=8, label='hollow at track end = never crosses')]
+                       lw=0, markersize=8, label='hollow = no crossing')]
     axT.legend(handles=handles, fontsize=7.3, loc='upper left', frameon=True,
                framealpha=0.95, ncol=2, columnspacing=1.2)
 
     # ---- BOTTOM: birth-maps for arms that form concentration ----
     if top_only:
-        fig.suptitle('Sink birth & ordering: norm signatures lead; concentration is late, '
-                     'mirror-imaged, or never', fontsize=11, weight='bold', y=1.02)
+        fig.tight_layout()
         out = 'analysis/fig4_leadlag_top.svg'
         fig.savefig(out, bbox_inches='tight')
         fig.savefig(out.replace('.svg', '.png'), dpi=150, bbox_inches='tight')

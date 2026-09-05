@@ -20,19 +20,20 @@ Mechanistically Demystifying Extreme-Token Phenomena in LLMs.* CPAL 2025. arXiv:
 [6] X. Gu, T. Pang, C. Du, Q. Liu, F. Zhang, C. Du, Y. Wang, M. Lin. *When Attention Sink
 Emerges in Language Models: An Empirical View.* ICLR 2025. arXiv:2410.10781.
 
-[7] N. Queipo-de-Llano, D. Arroyo, F. Barbero, Y. Dong, M. Bronstein, Y. LeCun,
+[7] E. Queipo-de-Llano, Á. Arroyo, F. Barbero, X. Dong, M. Bronstein, Y. LeCun,
 R. Shwartz-Ziv. *Attention Sinks and Compression Valleys in LLMs are Two Sides of the Same
 Coin.* arXiv:2510.06477, 2025.
 
 [8] Z. Qiu et al. *A Unified View of Attention and Residual Sinks: Outlier-Driven Rescaling
 is Essential for Transformer Training.* arXiv:2601.22966, 2026.
 
-[9] M. Sun, A. Canziani, Y. LeCun, C. Zhu. *The Spike, the Sparse and the Sink: Anatomy of
+[9] S. Sun, A. Canziani, Y. LeCun, J. Zhu. *The Spike, the Sparse and the Sink: Anatomy of
 Massive Activations and Attention Sinks.* arXiv:2603.05498, 2026.
 
-[10] Y. Chen, Z. Yao. *Attention Sinks Induce Gradient Sinks.* arXiv:2603.17771, 2026.
+[10] Y. Chen, Z. Lin, Q. Yao. *Attention Sinks Induce Gradient Sinks: Massive Activations
+as Gradient Regulators in Transformers.* arXiv:2603.17771v2, 2026.
 
-[11] Y. Luo et al. *To Sink or Not to Sink: Visual Information Pathways in LVLMs.*
+[11] Y. Luo et al. *To Sink or Not to Sink: Visual Information Pathways in Large Vision-Language Models.*
 arXiv:2510.08510, 2025.
 
 [12] J. Choi, J. Kim, S. Kim, S. Hong, J.-H. Park. *When Sinks Help or Hurt: Unified Framework
@@ -74,8 +75,9 @@ A. Roy Gosthipaty, A. Marafioti. *FineVision: Open Data Is All You Need.* arXiv:
 [23] L. Fesser, M. Jacobs, T. Fel, A. Keller, S. Kakade. *A Unifying View of Attention Sinks:
 Two Algorithms, Two Solutions.* arXiv:2606.08105, 2026.
 
-[24] R. Peng, R. Li, M. Chen, Y. Zhou, Q. Guo, X. Qiu. *How Attention Sinks Emerge in Large
-Language Models: An Interpretability Perspective.* arXiv:2603.06591, 2026.
+[24] R. Peng, R. Li, M. Chen, Y. Zhou, Q. Guo, X. Qiu, Y. Lu, C. Zhao. *What Makes Position
+Zero Special? A Mechanistic Study of Position Zero Attention Sinks in LLMs.*
+arXiv:2603.06591v2, 2026.
 
 [25] T. Darcet, M. Oquab, J. Mairal, P. Bojanowski. *Vision Transformers Need Registers.*
 ICLR 2024. arXiv:2309.16588.

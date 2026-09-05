@@ -1,122 +1,105 @@
 # 4. Results
 
+## 4.1 Training conditions produce distinct signature profiles
+
+Table 1 summarizes per-seed ranges at checkpoints near 100M tokens, or 60M for *textinit*
+(Appendix D). The clearest separation is between *sigmoid* and *textinit*: both show
+strong relative concentration, but sigmoid amplifies value norms and retains an h-ratio
+near 1, whereas text initialization combines value drain with a much larger h-ratio.
+Figure 2 shows the corresponding trajectories.
+
 <figure id="fig1">
-<img src="figures/fig2_phase_portrait.svg" alt="Decoupling phase portrait">
-<figcaption><b>Figure 2: Decoupling phase-portrait.</b> Every arm in
-concentration-against-value-norm space (top) and against the residual-norm ratio (bottom,
-log scale). Circles mark initialization, diamonds the final checkpoint (about 100M tokens,
-60M for <em>textinit</em>, 1B for <em>RF</em>), seed 0 unless labelled. The horizontal axis
-is the <em>maximum</em> attention→pos0 over heads, not Table 1's fraction, so an arm can
-sit off zero here with Sink<sup>ε</sup> = 0.000. Smoothed paths, raw end markers
-(Appendix F). Were the three signatures one phenomenon, these trajectories would move
-along one direction.</figcaption>
+<img src="figures/fig2_phase_portrait.svg" alt="Attention maximum versus value and residual norm ratios">
+<figcaption><b>Figure 2: Signature trajectories during pretraining.</b>
+(a) Value-norm ratio and (b) residual-norm ratio, on a logarithmic vertical scale, against
+maximum attention $a_{\max}$ (Section 3.3). Open circles mark initialization and diamonds
+the final recorded checkpoints: 174M tokens for baseline, 103M for g1gate, 102M for
+sigmoid, 60M for textinit, and 1B for RF. All paths use seed 0. Faint points are raw probes;
+lines are smoothed (Appendix F). The dashed horizontal reference is a norm ratio of 1.</figcaption>
 </figure>
 
-## 4.1 Each lever lands in a different corner of signature space
+**Table 1: Signature profiles, ranges over 2-3 seeds per condition.** Concentration uses
+Sink^0.2_1; v-ratio and h-ratio are the layer-averaged quantities defined in Section 3.3.
 
-Table 1 collapses the seeds into per-arm ranges, each arm at its final matched checkpoint,
-about 100M tokens or 60M for *textinit*, whose signatures have plateaued by then (per-seed
-table in Appendix D). No two arms share a signature triple.
-
-**Table 1: the four corners (n = 2–3 seeds per arm).** Concentration is Sink^0.2, the
-fraction of the 270 (layer, query-head) pairs whose mean attention→pos0 exceeds 0.2. The
-v-ratio rests on 90 (layer, KV-group) value projections and the h-ratio on 30 layers (Section 3).
-
-| arm | concentration | value-norm | massive-activation proxy |
+| arm | concentration | value-norm ratio | residual-norm ratio |
 |---|---|---|---|
-| baseline | absent (0.000) | mild drain (0.69–0.72) | moderate (1.7–2.2) |
-| g1gate | near-absent (0.004–0.011) | **milder drain** (0.81–0.85) | moderate (1.7–2.2) |
-| sigmoid | strong (0.76–0.83) | **amplified** (1.48–1.60) | no strong asymmetry (1.1–1.3) |
-| textinit | strong (0.56–0.85) | strong drain (0.38–0.63) | extreme (5.5–42.5) |
+| baseline | absent (0.000) | drain (0.69–0.72) | 1.7–2.2 |
+| g1gate | near-absent (0.004–0.011) | drain (0.81–0.85) | 1.7–2.2 |
+| sigmoid | strong (0.76–0.83) | amplified (1.48–1.60) | 1.1–1.3 |
+| textinit | strong (0.56–0.85) | drain (0.38–0.63) | 5.5–42.5 |
 
-The value-norm axis alone takes three directions, drained hard, drained mildly and
-amplified, and the corners separate pairwise on single axes. *g1gate* differs from
-*baseline* on the value-norm axis alone: concentration absent or near-absent and the
-residual-norm ratio moderate in both, while the gate makes the mild drain milder still, a
-15–19% drain rather than none. *sigmoid* and *textinit* both reach strong concentration and
-then part on the direction of the value-norm move and on the residual-norm ratio. The
-*sigmoid* corner is relative, since its concentration is row-normalized over a shrinking raw
-gate budget, with top-head raw pos0 mass 0.065 at the final checkpoint (Appendix F). The
-arms are not a factorial design, so these are intervention-associated profiles rather than
-isolated causal effects. The trajectories in Figure 2 separate early and do not share one
-origin. *textinit* starts from a pretrained decoder that already carries a subthreshold
-first-position bias, Sink^0.3 still 0.000 at step 0.
+The *g1gate* and *baseline* profiles overlap on residual-norm ratio and both have little
+concentration. Their value-norm ranges separate, with less drain in the gated condition.
+This difference belongs to the combined gate-and-initial-scale intervention in Section 3.1;
+it does not isolate a benefit of learned gating. Under *sigmoid*, high normalized
+concentration coexists with decreasing raw attention weights to position 0 (Appendix F).
+Thus, the relative attention and norm signatures separate even when the absolute
+attention scale changes.
 
-Reproducibility differs by arm. *g1gate* is tightest, Sink^0.2 of 0.004, 0.011 and 0.0037
-across three seeds. The *textinit* corner repeats across seeds and its magnitudes do not:
-seed 0 sits far above the other two on every signature, h-ratio 42.5 against 5.5–12.2,
-partly because at seeds 1 and 2 its peaks move off position 0, where our metrics anchor
-(Appendix D, I). We therefore report its massive-activation proxy as a range, 5.5–42.5× with
-a median near 12×, and treat the corner rather than any magnitude as the claim.
-
-The corners also separate in time (Fig. A4, seed 0, Appendix I). *baseline*, *g1gate* and
-*RF* cross the norm thresholds without ever crossing concentration. *sigmoid* is the mirror
-image, crossing concentration without either norm threshold. *textinit* starts above both
-norm thresholds and crosses concentration later. Where a run crosses both kinds, the norm
-signatures come first, and under text initialization the three need not even settle on the
-same token (Appendix I). Appendix G offers untested hypotheses for why each lever moves a
-different axis. Figure 3 shows the separation inside a single head. Its rightmost panel
-carries the most weight: the textinit stripe is already there at step 0, imported with the
-text-LM weights before the model has seen one image.
+The qualitative *textinit* profile repeats across seeds, while its h-ratio varies from
+5.5 to 42.5, with median 12.2. Per-position scans also show that attention and norm extrema
+can occupy different tokens (Appendix E). Figure 3 shows a first-position attention
+preference already present before multimodal training in *textinit*, consistent with
+inheritance from the text decoder. This preference is subthreshold at $\epsilon=0.3$.
+Threshold-crossing order and spatial dissociations are detailed in Appendix I.
+Appendix G outlines hypotheses for the profiles, and Appendix H summarizes metric provenance.
 
 <figure id="fig2">
-<img src="figures/fig6_sink_stripe.svg" alt="Query-by-key attention maps, top sink head per arm">
-<figcaption><b>Figure 3: The sink stripe.</b> Query &times; key attention of each arm's top
-sink head, row-normalized, seed 0. Top row is early training (step 250, about 2.4M tokens),
-bottom row the final checkpoint. The cyan line marks key = pos0, the dotted line the
-image-to-text boundary. The stripe is absent in baseline throughout, strong in textinit
-(attn→pos0 = 0.62 at its final checkpoint), and already present at step 0 in textinit
-(rightmost panel), inherited from the text LM. The sigmoid heat maps come from an auxiliary
-streaming batch, while every printed sigmoid number comes from the fixed probe batch
-(Appendix F).</figcaption>
+<img src="figures/fig6_sink_stripe.svg" alt="Selected-head query-by-key attention maps">
+<figcaption><b>Figure 3: First-position attention across training conditions.</b>
+Selected-head query-by-key maps at early and final checkpoints, plus textinit at
+initialization, all seed 0. Each map is a batch-mean attention matrix normalized by row;
+the color scale saturates at 0.5. Cyan marks key position 0, dotted lines the image/text
+boundary. Heads are selected separately by condition. These qualitative maps use the
+batches and selection procedure documented in Appendix F.</figcaption>
 </figure>
 
-## 4.2 Over 1B fresh tokens the massive-activation proxy more than doubles while concentration stays at zero
+## 4.2 Residual-norm growth without concentration over 1B tokens
 
-The four-arm comparison reuses a 146K-image pool, so its "concentration never emerges"
-result could be an overfitting artifact. The RF arm answers that with the identical
-*baseline* recipe on a fresh FineVision stream to one billion tokens at 2.39 effective visual
-epochs, low repetition rather than none, with a held-out loss that ends at 0.638 on a
-negative fitted slope over the second half while individual evaluations fluctuate (Sections 3 and 5).
-Concentration never arrives. **Sink^0.3 = 0.000 across the entire 0 → 1B run**, and no head
-of the 270 crosses the threshold at any of about 700 probes.
+The repeated-data comparison shows a substantial validation gap, with loss near 0.44
+on training images paired with new questions versus 1.18 on held-out images. RF tests
+whether the absence of concentration persists with less image reuse. Its held-out loss
+ends at 0.638 and has a negative fitted slope over the second half of training, despite
+evaluation-to-evaluation fluctuations (Appendix A).
 
-**Table 2: RF (fresh stream, n = 1 seed), init → 1B tokens.**
+Across RF's 698 recorded probes, none of the 270 heads exceeds 0.2 mean attention to
+position 0; the largest value observed is 0.151. Consequently Sink^ε_1 is exactly zero
+at all probes for $\epsilon\in\{0.2,0.3,0.4\}$. Over the same run, the residual-norm ratio
+rises from 1.43 to 3.22 (Table 2). The result is a growing norm asymmetry without
+thresholded attention concentration on the fixed probe batch.
 
-| signature | @ init | @ 1B | net |
+**Table 2: RF, one seed, initialization to 1B tokens.**
+
+| signature | initialization | 1B tokens | change |
 |---|---|---|---|
-| Sink^0.3 (concentration) | 0.000 | 0.000 | flat zero, entire run |
-| max attn→pos0 | 0.056 | 0.098 | ≈flat, far below threshold |
-| h-ratio (massive-activation proxy) | 1.43 | **3.22** | **≈2.3×**, positive long-horizon trend |
-| v-ratio (value-norm) | 1.00 | 0.69 | net drain, non-monotone |
+| Sink^0.3_1 | 0.000 | 0.000 | zero at all 698 probes |
+| maximum attention $a_{\max}$ | 0.056 | 0.098 | remains below 0.2 |
+| h-ratio | 1.43 | 3.22 | 2.25-fold increase |
+| v-ratio | 1.00 | 0.69 | net drain |
 
-Warmup does not explain the rise. The h-ratio climbs from 2.40 at about 57M tokens to 3.22
-at 1B, long after the 3% warmup window closes, though not monotonically at probe resolution,
-hence a positive long-horizon trend. In Figure 2, right, the violet trajectory climbs and
-never moves rightward. The v-ratio ends below its initialization value, but about 75% of
-that drop happens in the first 57M tokens and part then recovers, so it is supporting
-context rather than ongoing emergence.
+The h-ratio rises from 2.40 near 57M tokens to 3.22 at 1B, so the increase continues
+well beyond the initial warmup. Figure 2b shows this change at low concentration.
+The value-norm ratio follows a different trajectory: about 75% of its net decline occurs
+by 57M tokens, followed by partial recovery. It therefore provides evidence of persistent
+drain, not a monotonic increase in drain throughout training.
 
-## 4.3 No consistent-sign head-level concentration–value-norm relationship
+## 4.3 Concentration–value-norm correlations change sign across conditions
 
-A tight coupling between concentration and value-drain should at least hold the sign of
-their per-head correlation constant across regimes. It does not. Table 3 gives the Pearson r
-between attention→pos0 and value-norm ratio at each arm's final checkpoint, seed 0, over the
-90 (layer, KV-group) observations, averaging a group's query-head attention rather than
-triplicating its value observation (Section 3, scatter in Fig. A2, Appendix C).
+Table 3 reports Pearson correlations between attention to position 0 and value-norm ratio
+over 90 layer/KV-group pairs per condition at seed 0. Each group's attention is averaged
+over its three query heads; its value ratio is counted once (Figure 5, Appendix C).
+The correlation is positive under baseline softmax and negative under text initialization.
 
-**Table 3: r(attn→pos0, v-ratio), final checkpoint, seed 0.**
+**Table 3: Pearson r across 90 layer/KV-group pairs at the final available reprobe, seed 0.**
 
 | baseline | g1gate | sigmoid | textinit | RF | pooled |
 |---|---|---|---|---|---|
 | +0.76 | +0.57 | −0.03 | −0.79 | +0.51 | −0.20 |
 
-These correlations are descriptive, not inferential. Heads within a layer are not
-independent and each arm rests on a single seed here, so a p-value would mislead and we
-report none. Collapsing to the 90 KV groups removes the pseudoreplication a per-query-head
-reading would introduce, and the picture does not change (Appendix F). The pattern is about
-sign, which pseudoreplication does not manufacture. Heads attending more to position 0 have
-larger value norms in the baseline regime and smaller ones under text initialization, and
-the pooled correlation is weak only because arms of opposite sign cancel. We claim that no
-consistent-sign relationship holds across arms, not that no coupling law exists. A fixed
-coupling would show one sign everywhere, and it does not.
+These are descriptive associations within trained models. Layer dependence and the
+single seed per condition preclude treating the 90 observations as independent experimental
+replicates. The sign change shows that greater first-position attention is associated
+with larger values in one condition and smaller values in another. It does not establish
+statistical independence or rule out a nonlinear or layer-dependent relationship.
+The pooled value combines within-condition and between-condition variation and is not
+evidence that the signatures are unrelated.

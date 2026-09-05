@@ -175,7 +175,8 @@ def figure_block(b, width):
     cap = joinlines(cap.split("\n"))
     # \caption already prints "Figure N:", so strip the number we carry in the source
     cap = re.sub(r"^<b>\s*Figure\s+[A-Z]?\d+:\s*", "<b>", cap)
-    return ("\\begin{figure}[t]\n  \\centering\n"
+    # Float figures normally; appendix barriers keep them in their own sections.
+    return ("\\begin{figure}[!htbp]\n  \\centering\n"
             + graphic +
             f"  \\caption{{{inline(cap)}}}\n  \\label{{fig:{fid}}}\n"
             "\\end{figure}")
@@ -202,7 +203,8 @@ def table_block(lines, caption):
     # A table with no caption cannot be numbered or referenced, and as a float it drifts to
     # the top of some later page away from the sentence that introduces it. Keep those inline.
     floating = bool(caption)
-    out = (["\\begin{table}[t]", "  \\centering", "  \\small"] if floating
+    out = (["\\begin{center}", "\\begin{minipage}{\\linewidth}", "\\makeatletter\\def\\@captype{table}\\makeatother",
+            "  \\centering", "  \\small"] if floating
            else ["\\begin{center}", "  \\small"])
     if caption:
         out.append(f"  \\caption{{{inline(caption)}}}")     # CFP: caption BEFORE the table
@@ -214,7 +216,7 @@ def table_block(lines, caption):
         out.append("    " + " & ".join(inline(c) for c in r) + " \\\\")
     out.append("    \\bottomrule")
     out.append(f"  \\end{{{env}}}")
-    out.append("\\end{table}" if floating else "\\end{center}")
+    out.append("\\end{minipage}\n\\end{center}" if floating else "\\end{center}")
     return "\n".join(out)
 
 
@@ -257,7 +259,7 @@ def convert(text, fig_width, top="section"):
         for marks, lvl in (("### ", 2), ("## ", 1), ("# ", 0)):
             if first.startswith(marks):
                 title = first[len(marks):].strip()
-                title = re.sub(r"^(?:\d+(?:\.\d+)*\.?|[A-H](?:\.\d+)*\.?)\s+", "", title)
+                title = re.sub(r"^(?:\d+(?:\.\d+)*\.?|[A-Z](?:\.\d+)*\.?)\s+", "", title)
                 out.append(f"\\{levels[min(depth+lvl,3)]}{{{inline(lower_head(title), cite=False)}}}")
                 break
         else:
@@ -328,7 +330,9 @@ PREAMBLE = r"""\documentclass{article}
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{xcolor}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
+\usepackage{placeins}
+
 
 \title{%(title)s}
 
@@ -364,8 +368,7 @@ def references(text):
 
 
 def main():
-    # 0.68 is the measured ceiling: the body lands on exactly 8 pages, the VLM4RWD limit.
-    # 0.72 and above spill the conclusion onto a 9th page. Override with --figwidth=.
+    # Full text width preserves readable figure labels. Recheck page count after edits.
     fig_width = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--figwidth=")), "1.0")
     opt = "[preprint]" if PREPRINT else ""
     tex = [PREAMBLE % dict(opt=opt, title=TITLE,
@@ -386,7 +389,7 @@ def main():
     app = re.sub(r"^# Appendix\s*\n", "", app)      # \appendix already supplies the part title
     app = re.sub(r"^## ", "# ", app, flags=re.M)     # promote A/B/C... to \section -> A, B, C
     app = re.sub(r"^### ", "## ", app, flags=re.M)
-    tex.append(convert(app, fig_width))
+    tex.append(convert(app, fig_width).replace("\\section{", "\\FloatBarrier\n\\section{").replace("\\section{Supporting figures}", "\\clearpage\n\\section{Supporting figures}"))
 
     checklist = HERE / "checklist.tex"
     if checklist.exists():

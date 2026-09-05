@@ -1,53 +1,35 @@
 # 2. Related work
 
-**Sinks and their companions in text language models.** Gu et al. [6] give the canonical
-account. The sink token acts "more like key biases, storing extra attention scores," carries
-small key and value norms, and connects to massive residual-stream activations [2, 5]. They
-also show that unnormalized sigmoid attention prevents sink formation in text models up to
-1B parameters, which our *sigmoid* arm builds on. Guo et al. [4] call the concentration and
-value-drain coupling "active-dormant" heads. Queipo-de-Llano, Arroyo et al. [7] make the
-strongest unity claim, and the only causal one. Ablating a model's layer-0 massive
-activation removes both compression valleys and sink formation (Section 1). We reserve "causally
-unified" for that result. Peng et al. [24] trace a first-position sink circuit emerging
-early in from-scratch text pretraining, without separating the signatures.
+**Coupled signatures in text models.** Gu et al. [6] connect attention concentration to
+small value norms and large residual activations, interpreting the sink as a key bias.
+Guo et al. [4] study the associated value-drain mechanism through active-dormant attention
+heads. Queipo-de-Llano et al. [7] link massive activations to compression valleys, layers
+where token representations become less diverse. Their targeted activation ablations
+also suppress sink formation in the studied text models. Qiu et al. [8] explain attention
+and residual sinks through outlier-driven rescaling, while Peng et al. [24] trace a
+position-zero sink circuit during text pretraining. These accounts motivate measuring the
+signatures together without assuming their relationship transfers unchanged to VLMs.
 
-**Prior decoupling results, text-only, two axes.** Two papers already separate pairs of
-these signatures, and we scope our claim around them. Sun, Canziani, LeCun and Zhu [9] show
-that a change of normalization scheme crushes the massive-activation spike while the sink
-ratio survives. Chen and Yao [10] go the other way, from scratch. A value-scale
-intervention in 0.1–0.3B text models keeps the sinks and suppresses massive activations.
-Neither treats value-norm drain as a third axis, and neither is multimodal. Fesser et al.
-[23] give the closest support for tracking the value norm separately. One sink pattern can
-hide an "adaptive nop" with negligible value norms or a "broadcast" that redistributes
-global information, though that work diagnoses trained vision transformers rather than
-tracking emergence. Qiu et al. [8] argue the opposite case, that outlier-driven rescaling by
-attention and residual sinks is essential to stable training. The field has settled neither
-question.
+**Dissociations and interventions.** Sun et al. [9] preserve attention sinks while
+suppressing massive activations by changing normalization. Chen, Lin and Yao [10] obtain
+a related dissociation with V-scale, which modifies gradients on the value path. Our study
+adds joint tracking of value-norm drain during multimodal pretraining. Fesser et al. [23]
+further distinguish a negligible-value sink that suppresses a head's update from a
+broadcast sink that redistributes information in trained vision transformers. Their
+analysis supports separating attention allocation from the value vectors it weights.
+For interventions, we adapt the unnormalized sigmoid attention studied by Gu et al. [6]
+and the attention-output gate of Qiu et al. [20]. Our gate's initialization and associated
+scale change are specified in Section 3.1.
 
-**Multimodal sinks, mostly frozen backbones at inference time.** Luo et al. [11] separate
-ViT-propagated from LLM-emerged sinks. Their Appendix A.4 tracks sink-dimension magnitudes
-across alignment checkpoints, so a training-time view has precedent, but on a frozen vision
-transformer with a pretrained language model, following one magnitude rather than three
-signatures. Choi et al. [12] likewise distinguish vision-sinks from language-sinks in a
-frozen model and gate them by layer. Both establish distinct vision-side and language-side
-origins, which our *textinit* inheritance result fits. Neither gives dense, joint tracking
-of the three quantities in a decoder that starts from random weights. Vision transformers
-also grow high-norm "register" tokens of their own [25], hence the pretrained-encoder
-limitation in Section 5. A separate line ties these signatures to hallucination and grounding
-failure in deployed models and intervenes at inference time [13–16], the practical reason it
-matters which signature a mitigation moves.
-
-**The gating lever.** Qiu et al. [20] introduce the head-specific elementwise sigmoid gate
-on attention output that our *g1gate* arm adapts. In text models it "largely reduces the
-attention score allocated to the first token and decreases massive activations" while
-improving quality. Our zero-initialized variant confounds gating with initial output scaling
-(Sections 3 and 5). With that caveat, concentration is already absent in our baseline, so the gated
-arm differs on the value-norm axis (the v-ratio of Section 3). The drain becomes milder, 0.69–0.72
-to 0.81–0.85, rather than disappearing, a difference invisible unless the three signatures
-are logged separately.
-
-**Positioning.** The closest prior work separates at most two of the three axes, in
-text-only models, and the multimodal studies work on frozen ones. Our claim is the
-conjunction. We track concentration, value-norm drain and the residual-norm ratio jointly
-and separately in multimodal pretraining with a randomly initialized decoder, which adds
-value-norm drain as a third axis beyond the text-only dissociations [9, 10].
+**Multimodal sinks and grounding.** Luo et al. [11] distinguish vision-encoder-propagated
+and decoder-emerged sinks. Their alignment-checkpoint analysis provides training-time
+evidence for activation growth, using a frozen vision encoder and a pretrained language
+decoder. Choi et al. [12] distinguish vision and language sinks and train layer-wise sink
+gates while keeping the underlying VLM frozen. We study a different regime, jointly
+tracking attention, value norms and residual norms during pretraining with random decoder
+initialization. High-norm tokens can also arise inside pretrained vision transformers
+[25], which matters because our encoder is pretrained. Work on sink-aware visual attention
+and decoding connects these internal patterns to grounding and hallucination [13–15];
+sink statistics have also been studied as hallucination signals in text LMs [16]. Our
+experiments concern the training dynamics of the signatures rather than their downstream
+effects.
