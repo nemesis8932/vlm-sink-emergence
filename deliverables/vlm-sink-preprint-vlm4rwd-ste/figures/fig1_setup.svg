@@ -88,17 +88,19 @@
   <polygon points="123.0568 37.8 119.0568 36 119.0568 39.6 123.0568 37.8" style="fill: #505050;"/>
   <line x1="36" y1="70.6135" x2="40" y2="70.6135" style="fill: none; stroke: #505050; stroke-width: .7px;"/>
   <polygon points="44 70.6135 40 68.8135 40 72.4135 44 70.6135" style="fill: #505050;"/>
-  <g style="isolation: isolate;">
+  <g>
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
-        <text transform="translate(189.6172 36.9639) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">49 image tokens</tspan></text>
+        <g style="isolation: isolate;">
+          <text transform="translate(191.9111 36.2432) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">49 image tokens</tspan></text>
+        </g>
       </g>
     </g>
-  </g>
-  <g style="isolation: isolate;">
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
-        <text transform="translate(192.3828 41.9961) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">positions 0–48</tspan></text>
+        <g style="isolation: isolate;">
+          <text transform="translate(194.7939 41.4893) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">positions 0–48</tspan></text>
+        </g>
       </g>
     </g>
   </g>
@@ -106,14 +108,14 @@
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
         <g style="isolation: isolate;">
-          <text transform="translate(255.5806 36.6269)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">79 text positions</tspan></text>
+          <text transform="translate(255.7568 36.8252)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">79 text positions</tspan></text>
         </g>
       </g>
     </g>
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
         <g style="isolation: isolate;">
-          <text transform="translate(252.4194 41.4862)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">left-padded, 49–127</tspan></text>
+          <text transform="translate(252.4189 41.957)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">left-padded, 49–127</tspan></text>
         </g>
       </g>
     </g>
@@ -150,14 +152,14 @@
   <g style="isolation: isolate;">
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
-        <text transform="translate(177.3835 68.6852)" style="fill: #333; font-family: Arial-BoldMT, Arial; font-size: 7px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">position 0</tspan></text>
+        <text transform="translate(171.5319 67.755)" style="fill: #333; font-family: Arial-BoldMT, Arial; font-size: 7px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">position 0</tspan></text>
       </g>
     </g>
   </g>
   <g style="isolation: isolate;">
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
-        <text transform="translate(156.8806 76.6852)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">first image token; no BOS</tspan></text>
+        <text transform="translate(150.4465 73.6311)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">first image token; no BOS</tspan></text>
       </g>
     </g>
   </g>
