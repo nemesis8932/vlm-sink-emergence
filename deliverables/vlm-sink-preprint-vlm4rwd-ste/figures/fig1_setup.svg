@@ -41,7 +41,7 @@
   <g style="isolation: isolate;">
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
-        <text transform="translate(56.5531 44.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">pretrained, trainable</tspan></text>
+        <text transform="translate(56.5531 44.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.9725px; isolation: isolate;"><tspan x="0" y="0">pretrained, trainable</tspan></text>
       </g>
     </g>
   </g>
@@ -56,7 +56,7 @@
   <g style="isolation: isolate;">
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
-        <text transform="translate(137.7299 44.8784)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">learned</tspan></text>
+        <text transform="translate(137.7299 44.8784)" style="fill: #333; font-family: ArialMT, Arial; font-size: 5.4644px; isolation: isolate;"><tspan x="0" y="0">learned</tspan></text>
       </g>
     </g>
   </g>
@@ -92,14 +92,14 @@
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
         <g style="isolation: isolate;">
-          <text transform="translate(191.9111 36.2432) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">49 image tokens</tspan></text>
+          <text transform="translate(191.9111 36.2432) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.4632px; isolation: isolate;"><tspan x="0" y="0">49 image tokens</tspan></text>
         </g>
       </g>
     </g>
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
         <g style="isolation: isolate;">
-          <text transform="translate(194.7939 41.4893) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">positions 0–48</tspan></text>
+          <text transform="translate(194.7939 41.4893) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.2663px; isolation: isolate;"><tspan x="0" y="0">positions 0–48</tspan></text>
         </g>
       </g>
     </g>
@@ -108,14 +108,14 @@
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
         <g style="isolation: isolate;">
-          <text transform="translate(255.7568 36.8252)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">79 text positions</tspan></text>
+          <text transform="translate(255.7568 36.8252)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.3775px; isolation: isolate;"><tspan x="0" y="0">79 text positions</tspan></text>
         </g>
       </g>
     </g>
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
         <g style="isolation: isolate;">
-          <text transform="translate(252.4189 41.957)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">left-padded, 49–127</tspan></text>
+          <text transform="translate(252.4189 41.957)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.2454px; isolation: isolate;"><tspan x="0" y="0">left-padded, 49–127</tspan></text>
         </g>
       </g>
     </g>
@@ -238,7 +238,7 @@
   <g style="isolation: isolate;">
     <g style="isolation: isolate;">
       <g style="isolation: isolate;">
-        <text transform="translate(85.7246 103.6314)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">Fixed 32-example probe · every 100 steps</tspan></text>
+        <text transform="translate(85.7246 103.6314)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.6729px; isolation: isolate;"><tspan x="0" y="0">Fixed 32-example probe · every 100 steps</tspan></text>
       </g>
     </g>
   </g>
@@ -646,7 +646,7 @@
   </g>
   <g style="isolation: isolate;">
     <g style="isolation: isolate;">
-      <text transform="translate(146.5569 161.2953)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6px; isolation: isolate;"><tspan x="0" y="0">0: at position 0 · +: pooled over other valid positions</tspan></text>
+      <text transform="translate(146.5569 161.2953)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.6536px; isolation: isolate;"><tspan x="0" y="0">0: at position 0 · +: pooled over other valid positions</tspan></text>
     </g>
   </g>
 </svg>
