@@ -1,20 +1,30 @@
 # 6. Conclusion
 
-Joint measurement during multimodal pretraining reveals distinct attention-sink signature
-profiles. Under sigmoid attention, strong relative concentration accompanies amplified
-value norms and little residual-norm asymmetry. Under text initialization, strong
-concentration accompanies value drain and much larger residual norms. In the low-repetition
-1B-token softmax run, the residual-norm ratio more than doubles while concentration stays
-below every tested threshold at every recorded probe. Value-norm drain therefore adds a
-separately varying third signature to the attention-versus-activation dissociations known
-from text models [9, 10].
+In text language models the three attention-sink signatures arrive together. In a
+vision-language model with a randomly initialized decoder, they need not. Tracked
+separately, they come apart under each training lever applied. Across four interventions
+the arms occupy separate corners of signature space, with value norms strongly drained,
+mildly drained or amplified. The sharpest case is the fresh-data run, where over one
+billion tokens the massive-activation proxy more than doubles while attention
+concentration stays at exactly zero. This extends the two-way dissociations of text-only
+models [9, 10] to a separately measured third axis, value-norm drain, in multimodal
+pretraining. Massive activations can causally produce sinks in text LMs [7]. Here the
+coupling can also fail to form.
 
-For VLM evaluation, these results motivate reporting attention concentration, value norms
-and residual activations separately when assessing sink interventions. Their downstream
-relevance requires behavioral evaluation. The most direct extensions are channel-level
-activation measurements, a scale-matched gate control, and replication on a second
-fresh-data seed.
+**Practical implications.** No single signature acted as a reliable proxy for the others
+in our arms. A model without a concentration sink can still develop a growing
+residual-norm asymmetry, and an intervention judged successful by one metric may leave the
+other signatures unchanged. A sink mitigation for VLMs should therefore report all three.
+Their downstream relevance, for grounding or hallucination, requires behavioral evaluation.
 
-**Reproducibility.** Appendix A specifies the probe and training recipe, and Appendix D
-lists per-seed results. We will release code, configurations, logs and checkpoints upon
-acceptance; identifying links are withheld for double-blind review.
+**Status and next steps.** This is work in progress at small scale, and Section 5 names the
+gaps. Next steps are a randomly initialized vision encoder to isolate the decoder's
+contribution to the residual-norm signal, a second fresh-data seed and fresh-data runs past
+1B tokens, a scale-matched gate control to separate gating from the half-scale
+initialization confound, and channel-level statistics to turn the h-ratio proxy into a
+measurement of massive activations.
+
+**Reproducibility.** Appendix A specifies the self-validating probe and the training
+recipe, and Appendix D lists per-seed results. We will release the code, run
+configurations, logs and checkpoints upon acceptance. Identifying links are withheld for
+double-blind review.

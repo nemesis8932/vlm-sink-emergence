@@ -29,7 +29,7 @@ gates while keeping the underlying VLM frozen. We study a different regime, join
 tracking attention, value norms and residual norms during pretraining with random decoder
 initialization. High-norm tokens can also arise inside pretrained vision transformers
 [25], which matters because our encoder is pretrained. Work on sink-aware visual attention
-and decoding connects these internal patterns to grounding and hallucination [13–15];
-sink statistics have also been studied as hallucination signals in text LMs [16]. Our
+and decoding connects these internal patterns to grounding and hallucination [13–15].
+Sink statistics have also been studied as hallucination signals in text LMs [16]. Our
 experiments concern the training dynamics of the signatures rather than their downstream
 effects.
