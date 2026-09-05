@@ -95,6 +95,11 @@ A matched fresh/repeated FineVision comparison and a second RF seed are direct f
 
 ## C. Supporting figures
 
+Figures 4 to 6 support Sections 4.1 and 4.3. Figure 4 locates concentration by layer
+and query head, Figure 5 shows the per-group associations summarized in Table 3, and
+Figure 6 records the attention entropy over the same runs, which falls in the two
+conditions with strong concentration and does not in the others.
+
 <figure id="figA1">
 <img src="figures/fig1_layerhead_grid.svg" alt="Layer-by-head first-position attention at three checkpoints">
 <figcaption><b>Figure 4: First-position attention by layer and query head.</b>
