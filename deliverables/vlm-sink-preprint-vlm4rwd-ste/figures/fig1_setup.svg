@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 396 208.4252">
+  <!-- Generator: Adobe Illustrator 30.8.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 1)  -->
+  <rect width="396" height="208.4252" style="fill: #fff;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(17.4961 14.8982)" style="fill: #616874; font-family: Arial-BoldMT, Arial; font-size: 7.5px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">a</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(25.0815 14.8979)" style="fill: #27313d; font-family: Arial-BoldMT, Arial; font-size: 8px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">Model and token sequence</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="1.7798" y="25.3" width="34.2202" height="23.8262" rx="2" ry="2" style="fill: #f3f0e8; stroke: #707070; stroke-width: .7px;"/>
+  <g>
+    <rect x="4.4749" y="32.4331" width="9.56" height="9.56" rx="1" ry="1" style="fill: #cfe4f7; stroke: #6f8ba6; stroke-width: .3px;"/>
+    <circle cx="7.3429" cy="35.3747" r="1.2502" style="fill: #f2b441;"/>
+    <path d="M5.2838,41.1107l3.0151-4.6329,2.5003,4.6329h-5.5154Z" style="fill: #4f9e6a;"/>
+    <path d="M9.0343,41.1107l2.1326-3.2357,2.0591,3.2357h-4.1917Z" style="fill: #2e7d5b;"/>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(14.97 40.3)" style="fill: #333; font-family: ArialMT, Arial; font-size: 7px; isolation: isolate;"><tspan x="0" y="0">image</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="44" y="24.8" width="69" height="25" rx="2" ry="2" style="fill: #f7f0e3; stroke: #707070; stroke-width: .7px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(56.8812 37.8003)" style="fill: #333; font-family: Arial-BoldMT, Arial; font-size: 8px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">SigLIP-B/16</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(56.5531 44.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.9725px; isolation: isolate;"><tspan x="0" y="0">pretrained, trainable</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="123.0568" y="25.3" width="47" height="25" rx="2" ry="2" style="fill: #f7f0e3; stroke: #707070; stroke-width: .7px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(130.6 36.8196)" style="fill: #333; font-family: Arial-BoldMT, Arial; font-size: 7.5px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">projector</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(137.7299 44.8784)" style="fill: #333; font-family: ArialMT, Arial; font-size: 5.4644px; isolation: isolate;"><tspan x="0" y="0">learned</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="1.7798" y="59.427" width="34.2202" height="22.373" rx="2" ry="2" style="fill: #eef2f5; stroke: #707070; stroke-width: .7px;"/>
+  <g>
+    <rect x="4.3845" y="65.4521" width="9.6504" height="10.3229" rx=".8" ry=".8" style="fill: #fff; stroke: #6f8ba6; stroke-width: .3px;"/>
+    <rect x="6.1143" y="67.7549" width="6.1909" height="1.1117" style="fill: #3272ae;"/>
+    <rect x="6.1143" y="70.1371" width="6.1909" height="1.1117" style="fill: #3272ae;"/>
+    <rect x="6.1143" y="72.5193" width="4.0058" height="1.1117" style="fill: #8fb4d6;"/>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(17.4962 73.0754)" style="fill: #333; font-family: ArialMT, Arial; font-size: 7px; isolation: isolate;"><tspan x="0" y="0">text</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="44.2145" y="61.6135" width="69" height="18" rx="2" ry="2" style="fill: #eef2f5; stroke: #707070; stroke-width: .7px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(63.4984 73.1135)" style="fill: #333; font-family: ArialMT, Arial; font-size: 7.5px; isolation: isolate;"><tspan x="0" y="0">tokenizer</tspan></text>
+      </g>
+    </g>
+  </g>
+  <line x1="36" y1="37.8" x2="40" y2="37.8" style="fill: none; stroke: #505050; stroke-width: .7px;"/>
+  <polygon points="44 37.8 40 36 40 39.6 44 37.8" style="fill: #505050;"/>
+  <line x1="113" y1="37.8" x2="119.0568" y2="37.8" style="fill: none; stroke: #505050; stroke-width: .7px;"/>
+  <polygon points="123.0568 37.8 119.0568 36 119.0568 39.6 123.0568 37.8" style="fill: #505050;"/>
+  <line x1="36" y1="70.6135" x2="40" y2="70.6135" style="fill: none; stroke: #505050; stroke-width: .7px;"/>
+  <polygon points="44 70.6135 40 68.8135 40 72.4135 44 70.6135" style="fill: #505050;"/>
+  <g>
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <g style="isolation: isolate;">
+          <text transform="translate(191.9111 36.2432) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.4632px; isolation: isolate;"><tspan x="0" y="0">49 image tokens</tspan></text>
+        </g>
+      </g>
+    </g>
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <g style="isolation: isolate;">
+          <text transform="translate(194.7939 41.4893) scale(1.1019 1)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.2663px; isolation: isolate;"><tspan x="0" y="0">positions 0–48</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g>
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <g style="isolation: isolate;">
+          <text transform="translate(255.7568 36.8252)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.3775px; isolation: isolate;"><tspan x="0" y="0">79 text positions</tspan></text>
+        </g>
+      </g>
+    </g>
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <g style="isolation: isolate;">
+          <text transform="translate(252.4189 41.957)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.2454px; isolation: isolate;"><tspan x="0" y="0">left-padded, 49–127</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+  <rect x="181" y="45.8" width="9" height="9" style="fill: #ded6c5;"/>
+  <rect x="191.9111" y="45.6852" width="9" height="9" style="fill: #ded6c5;"/>
+  <rect x="202.9111" y="45.6852" width="9" height="9" style="fill: #ded6c5;"/>
+  <rect x="224.9111" y="45.6852" width="9" height="9" style="fill: #ded6c5;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(214.1611 52.6852)" style="fill: #333; font-family: ArialMT, Arial; font-size: 7.5px; isolation: isolate;"><tspan x="0" y="0">…</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="245" y="45.8" width="9" height="9" style="fill: #dde5ec;"/>
+  <rect x="256" y="45.8" width="9" height="9" style="fill: #dde5ec;"/>
+  <rect x="267" y="45.8" width="9" height="9" style="fill: #dde5ec;"/>
+  <rect x="289" y="45.8" width="9" height="9" style="fill: #dde5ec;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(278.25 52.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 7.5px; isolation: isolate;"><tspan x="0" y="0">…</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="180.9111" y="45.6852" width="9" height="9" style="fill: #ded6c5; stroke: #333; stroke-width: .9px;"/>
+  <line x1="238" y1="42.8" x2="238" y2="57.8" style="fill: none; stroke: #929292; stroke-width: .4px;"/>
+  <polyline points="170.3739 37.8 174.8171 37.8 174.8171 50.3 176.75 50.3" style="fill: none; stroke: #505050; stroke-width: .7px;"/>
+  <polygon points="180.4329 50.3 176.4329 48.5 176.4329 52.1 180.4329 50.3" style="fill: #505050;"/>
+  <polyline points="113.5834 70.6135 120 70.6135 120 83.8 249.5 83.8 249.5 58.1852" style="fill: none; stroke: #505050; stroke-width: .7px;"/>
+  <polygon points="249.5 54.8 247.7 58.8 251.3 58.8 249.5 54.8" style="fill: #505050;"/>
+  <line x1="185.4111" y1="55.6852" x2="185.4111" y2="60.6852" style="fill: none; stroke: #444; stroke-width: .5px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(171.5319 67.755)" style="fill: #333; font-family: Arial-BoldMT, Arial; font-size: 7px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">position 0</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(150.4465 73.6311)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">first image token; no BOS</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="307" y="24.8" width="85" height="52" rx="2" ry="2" style="fill: #f0edf6; stroke: #707070; stroke-width: .7px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(333.4941 34.8)" style="fill: #333; font-family: Arial-BoldMT, Arial; font-size: 8px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">Decoder</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(308.6782 44.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">SmolLM2-135M architecture</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(312.8264 53.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">30 layers · 9 query heads</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(331.6139 62.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">3 KV groups</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(312 71.0001)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Random init except</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(370 71.0001)" style="fill: #222; font-family: Arial-ItalicMT, Arial; font-size: 6.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">textinit</tspan></text>
+      </g>
+    </g>
+  </g>
+  <line x1="298" y1="50.3" x2="303" y2="50.3" style="fill: none; stroke: #505050; stroke-width: .7px;"/>
+  <polygon points="307 50.3 303 48.5 303 52.1 307 50.3" style="fill: #505050;"/>
+  <line x1="349.5" y1="76.8" x2="349.5" y2="90.8" style="fill: none; stroke: #505050; stroke-dasharray: 2 2; stroke-width: .7px;"/>
+  <line x1="349.5" y1="90.8" x2="8.1842" y2="90.8" style="fill: none; stroke: #505050; stroke-dasharray: 2 2; stroke-width: .7px;"/>
+  <line x1="8.1842" y1="90.8" x2="8.1842" y2="101.4614" style="fill: none; stroke: #505050; stroke-dasharray: 2 2; stroke-width: .7px;"/>
+  <line x1="8.1842" y1="101.4614" x2="13.0085" y2="101.4614" style="fill: none; stroke: #505050; stroke-dasharray: 2 2; stroke-width: .7px;"/>
+  <polygon points="17.0085 101.4614 13.0085 99.6614 13.0085 103.2614 17.0085 101.4614" style="fill: #505050;"/>
+  <rect x="272.5474" y="85.8" width="50.295" height="10" style="fill: #fff;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(275.2357 92.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">read-only probe</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(17.4961 104.0029)" style="fill: #616874; font-family: Arial-BoldMT, Arial; font-size: 7.5px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">b</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(24.5137 104.2128)" style="fill: #27313d; font-family: Arial-BoldMT, Arial; font-size: 8px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">Measurements</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(85.7246 103.6314)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.6729px; isolation: isolate;"><tspan x="0" y="0">Fixed 32-example probe · every 100 steps</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="4.6" y="109.6001" width="126" height="47" rx="2" ry="2" style="fill: #e4e7ec;"/>
+  <rect x="4" y="108.8" width="126" height="47" rx="2" ry="2" style="fill: #f5f6f8; stroke: #dde1e8; stroke-width: .35px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(10 119.8)" style="fill: #27313d; font-family: Arial-BoldMT, Arial; font-size: 7.5px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">Attention concentration</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="135.6" y="109.6001" width="126" height="47" rx="2" ry="2" style="fill: #e4e7ec;"/>
+  <rect x="135" y="108.8" width="126" height="47" rx="2" ry="2" style="fill: #f5f6f8; stroke: #dde1e8; stroke-width: .35px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(141 119.8)" style="fill: #27313d; font-family: Arial-BoldMT, Arial; font-size: 7.5px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">Value-norm ratio</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="266.6" y="109.6001" width="126" height="47" rx="2" ry="2" style="fill: #e4e7ec;"/>
+  <rect x="266" y="108.8" width="126" height="47" rx="2" ry="2" style="fill: #f5f6f8; stroke: #dde1e8; stroke-width: .35px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(272 119.8)" style="fill: #27313d; font-family: Arial-BoldMT, Arial; font-size: 7.5px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">Residual-norm ratio</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(17.7661 168.0519)" style="fill: #616874; font-family: Arial-BoldMT, Arial; font-size: 7.5px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">c</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(25.0815 168.0517)" style="fill: #27313d; font-family: Arial-BoldMT, Arial; font-size: 8px; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">Training conditions</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="4.5" y="172.5" width="72" height="28" rx="2" ry="2" style="fill: #e7e9ee;"/>
+  <rect x="4" y="171.8" width="72" height="28" rx="2" ry="2" style="fill: #edf3f8;"/>
+  <rect x="4" y="174.8" width="1.5" height="22" style="fill: #3272ae;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(9 180.8)" style="fill: #222; font-family: Arial-BoldItalicMT, Arial; font-size: 7.5px; font-style: italic; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">baseline</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(9 188.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Softmax</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(9 195.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Random decoder</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="83.5" y="172.5" width="72" height="28" rx="2" ry="2" style="fill: #e7e9ee;"/>
+  <rect x="83" y="171.8" width="72" height="28" rx="2" ry="2" style="fill: #eef6f0;"/>
+  <rect x="83" y="174.8" width="1.5" height="22" style="fill: #2e9459;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(88 180.8)" style="fill: #222; font-family: Arial-BoldItalicMT, Arial; font-size: 7.5px; font-style: italic; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">g1gate</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(88 188.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Output-gated softmax</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(88 195.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Initial multiplier 0.5</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="162.5" y="172.5" width="72" height="28" rx="2" ry="2" style="fill: #e7e9ee;"/>
+  <rect x="162" y="171.8" width="72" height="28" rx="2" ry="2" style="fill: #fbf0ed;"/>
+  <rect x="162" y="174.8" width="1.5" height="22" style="fill: #c23b2c;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(167 180.8)" style="fill: #222; font-family: Arial-BoldItalicMT, Arial; font-size: 7.5px; font-style: italic; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">sigmoid</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(167 188.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Unnormalized</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(167 195.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">sigmoid attention</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="241.5" y="172.5" width="72" height="28" rx="2" ry="2" style="fill: #e7e9ee;"/>
+  <rect x="241" y="171.8" width="72" height="28" rx="2" ry="2" style="fill: #fcf4e8;"/>
+  <rect x="241" y="174.8" width="1.5" height="22" style="fill: #d2790d;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(246 180.8)" style="fill: #222; font-family: Arial-BoldItalicMT, Arial; font-size: 7.5px; font-style: italic; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">textinit</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(246 188.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Softmax</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(246 195.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Pretrained decoder</tspan></text>
+      </g>
+    </g>
+  </g>
+  <rect x="320.5" y="172.5" width="72" height="28" rx="2" ry="2" style="fill: #e7e9ee;"/>
+  <rect x="320" y="171.8" width="72" height="28" rx="2" ry="2" style="fill: #f3f0f8;"/>
+  <rect x="320" y="174.8" width="1.5" height="22" style="fill: #7e63ac;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(325 180.8)" style="fill: #222; font-family: Arial-BoldItalicMT, Arial; font-size: 7.5px; font-style: italic; font-weight: 700; isolation: isolate;"><tspan x="0" y="0">RF</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(325 188.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Baseline architecture</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <g style="isolation: isolate;">
+        <text transform="translate(325 195.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.5px; isolation: isolate;"><tspan x="0" y="0">Fresh 1B-token run</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(17 134.8)" style="fill: #333; font-family: TimesNewRomanPSMT, &apos;Times New Roman&apos;; font-size: 8px; isolation: isolate;"><tspan x="0" y="0">Sink</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(33 129.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 6px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">ε</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(33 137.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 6px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">1</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(39 134.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">=</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(54.9834 129.8665)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">1</tspan></text>
+    </g>
+  </g>
+  <line x1="49" y1="131.8" x2="63" y2="131.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(50.0215 138.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">270</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(64.4212 134.9202)" style="fill: #333; font-family: TimesNewRomanPSMT, &apos;Times New Roman&apos;; font-size: 13px; isolation: isolate;"><tspan x="0" y="0">Σ</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(64.6293 139.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">l,h</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(73.5 133.4202)" style="fill: #333; font-family: ArialMT, Arial; font-size: 9px; isolation: isolate;"><tspan x="0" y="0">1</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(78.5 133.4202)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">[a</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(85.5 136.4202)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">l,h</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(95.5 133.4202)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">&gt; ε]</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(10 151.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">a</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(14 151.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.3px; isolation: isolate;"><tspan x="0" y="0">: mean attention to position 0</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(147 134.8)" style="fill: #333; font-family: TimesNewRomanPSMT, &apos;Times New Roman&apos;; font-size: 8px; isolation: isolate;"><tspan x="0" y="0">v-ratio</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(171 134.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">=</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(183.5 128.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">1</tspan></text>
+    </g>
+  </g>
+  <line x1="180" y1="131.8" x2="191" y2="131.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(182 138.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">30</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(196 136.8)" style="fill: #333; font-family: TimesNewRomanPSMT, &apos;Times New Roman&apos;; font-size: 13px; isolation: isolate;"><tspan x="0" y="0">Σ</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(197 126.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">30</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(194.7956 141.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">l = 1</tspan></text>
+    </g>
+  </g>
+  <line x1="215" y1="120.8" x2="212" y2="124.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <line x1="212" y1="124.8" x2="215" y2="128.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(218 127.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">m</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(226 123.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">(l)</tspan></text>
+    </g>
+  </g>
+  <line x1="234" y1="120.8" x2="237" y2="124.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <line x1="237" y1="124.8" x2="234" y2="128.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(239 129.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">0</tspan></text>
+    </g>
+  </g>
+  <line x1="215" y1="133.8" x2="212" y2="137.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <line x1="212" y1="137.8" x2="215" y2="141.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(218 140.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">m</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(226 136.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">(l)</tspan></text>
+    </g>
+  </g>
+  <line x1="234" y1="133.8" x2="237" y2="137.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <line x1="237" y1="137.8" x2="234" y2="141.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(239 142.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">+</tspan></text>
+    </g>
+  </g>
+  <line x1="211" y1="131.8" x2="245" y2="131.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(278 134.8)" style="fill: #333; font-family: TimesNewRomanPSMT, &apos;Times New Roman&apos;; font-size: 8px; isolation: isolate;"><tspan x="0" y="0">h-ratio</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(302 134.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">=</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(314.5 128.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">1</tspan></text>
+    </g>
+  </g>
+  <line x1="311" y1="131.8" x2="322" y2="131.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(313 138.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">30</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(327 136.8)" style="fill: #333; font-family: TimesNewRomanPSMT, &apos;Times New Roman&apos;; font-size: 13px; isolation: isolate;"><tspan x="0" y="0">Σ</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(328 126.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">30</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(325.5327 141.8002)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">l = 1</tspan></text>
+    </g>
+  </g>
+  <line x1="346" y1="120.8" x2="343" y2="124.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <line x1="343" y1="124.8" x2="346" y2="128.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(349 127.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">r</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(357 123.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">(l)</tspan></text>
+    </g>
+  </g>
+  <line x1="365" y1="120.8" x2="368" y2="124.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <line x1="368" y1="124.8" x2="365" y2="128.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(370 129.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">0</tspan></text>
+    </g>
+  </g>
+  <line x1="346" y1="133.8" x2="343" y2="137.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <line x1="343" y1="137.8" x2="346" y2="141.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(349 140.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 9px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">r</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(357 136.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">(l)</tspan></text>
+    </g>
+  </g>
+  <line x1="365" y1="133.8" x2="368" y2="137.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <line x1="368" y1="137.8" x2="365" y2="141.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(370 142.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 5.5px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">+</tspan></text>
+    </g>
+  </g>
+  <line x1="342" y1="131.8" x2="376" y2="131.8" style="fill: none; stroke: #333; stroke-width: .45px;"/>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(141 151.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">m</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(147 151.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.1px; isolation: isolate;"><tspan x="0" y="0">: value norm over 3 KV groups</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(272 151.8)" style="fill: #333; font-family: Times-Italic, Times; font-size: 7px; font-style: italic; isolation: isolate;"><tspan x="0" y="0">r</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(276 151.8)" style="fill: #333; font-family: ArialMT, Arial; font-size: 6.3px; isolation: isolate;"><tspan x="0" y="0">: residual norm at block input</tspan></text>
+    </g>
+  </g>
+  <g style="isolation: isolate;">
+    <g style="isolation: isolate;">
+      <text transform="translate(146.5569 161.2953)" style="fill: #333; font-family: ArialMT, Arial; font-size: 4.6536px; isolation: isolate;"><tspan x="0" y="0">0: at position 0 · +: pooled over other valid positions</tspan></text>
+    </g>
+  </g>
+</svg>
